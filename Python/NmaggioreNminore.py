@@ -1,6 +1,7 @@
+l = int(input("Inserisci la lunghezza dell'array: "))
 arr = []
 
-for i in range(5):
+for i in range(l):
     element = int(input("Inserisci un numero ".format(i)))
     arr.append(element)
 

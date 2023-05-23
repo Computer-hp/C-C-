@@ -1,0 +1,11 @@
+C:\Users\Antic\OneDrive\Desktop\AnticDaniel\progettopubblico-DanielAntic05\WindowForCS\bin\Debug\net4.7.2\WindowForCS.exe.config
+C:\Users\Antic\OneDrive\Desktop\AnticDaniel\progettopubblico-DanielAntic05\WindowForCS\bin\Debug\net4.7.2\WindowForCS.exe
+C:\Users\Antic\OneDrive\Desktop\AnticDaniel\progettopubblico-DanielAntic05\WindowForCS\bin\Debug\net4.7.2\WindowForCS.pdb
+C:\Users\Antic\OneDrive\Desktop\AnticDaniel\progettopubblico-DanielAntic05\WindowForCS\obj\Debug\net4.7.2\WindowForCS.csproj.AssemblyReference.cache
+C:\Users\Antic\OneDrive\Desktop\AnticDaniel\progettopubblico-DanielAntic05\WindowForCS\obj\Debug\net4.7.2\WindowForCS.csproj.SuggestedBindingRedirects.cache
+C:\Users\Antic\OneDrive\Desktop\AnticDaniel\progettopubblico-DanielAntic05\WindowForCS\obj\Debug\net4.7.2\WindowForCS.GeneratedMSBuildEditorConfig.editorconfig
+C:\Users\Antic\OneDrive\Desktop\AnticDaniel\progettopubblico-DanielAntic05\WindowForCS\obj\Debug\net4.7.2\WindowForCS.AssemblyInfoInputs.cache
+C:\Users\Antic\OneDrive\Desktop\AnticDaniel\progettopubblico-DanielAntic05\WindowForCS\obj\Debug\net4.7.2\WindowForCS.AssemblyInfo.cs
+C:\Users\Antic\OneDrive\Desktop\AnticDaniel\progettopubblico-DanielAntic05\WindowForCS\obj\Debug\net4.7.2\WindowForCS.csproj.CoreCompileInputs.cache
+C:\Users\Antic\OneDrive\Desktop\AnticDaniel\progettopubblico-DanielAntic05\WindowForCS\obj\Debug\net4.7.2\WindowForCS.exe
+C:\Users\Antic\OneDrive\Desktop\AnticDaniel\progettopubblico-DanielAntic05\WindowForCS\obj\Debug\net4.7.2\WindowForCS.pdb

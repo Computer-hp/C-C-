@@ -1,0 +1,58 @@
+{
+  "format": 1,
+  "restore": {
+    "C:\\Users\\Antic\\OneDrive\\Desktop\\AnticDaniel\\progettopubblico-DanielAntic05\\WindowForCS\\WindowForCS.csproj": {}
+  },
+  "projects": {
+    "C:\\Users\\Antic\\OneDrive\\Desktop\\AnticDaniel\\progettopubblico-DanielAntic05\\WindowForCS\\WindowForCS.csproj": {
+      "version": "1.0.0",
+      "restore": {
+        "projectUniqueName": "C:\\Users\\Antic\\OneDrive\\Desktop\\AnticDaniel\\progettopubblico-DanielAntic05\\WindowForCS\\WindowForCS.csproj",
+        "projectName": "WindowForCS",
+        "projectPath": "C:\\Users\\Antic\\OneDrive\\Desktop\\AnticDaniel\\progettopubblico-DanielAntic05\\WindowForCS\\WindowForCS.csproj",
+        "packagesPath": "C:\\Users\\Antic\\.nuget\\packages\\",
+        "outputPath": "C:\\Users\\Antic\\OneDrive\\Desktop\\AnticDaniel\\progettopubblico-DanielAntic05\\WindowForCS\\obj\\",
+        "projectStyle": "PackageReference",
+        "configFilePaths": [
+          "C:\\Users\\Antic\\AppData\\Roaming\\NuGet\\NuGet.Config"
+        ],
+        "originalTargetFrameworks": [
+          "net4.7.2"
+        ],
+        "sources": {
+          "https://api.nuget.org/v3/index.json": {}
+        },
+        "frameworks": {
+          "net472": {
+            "targetAlias": "net4.7.2",
+            "projectReferences": {}
+          }
+        },
+        "warningProperties": {
+          "warnAsError": [
+            "NU1605"
+          ]
+        }
+      },
+      "frameworks": {
+        "net472": {
+          "targetAlias": "net4.7.2",
+          "dependencies": {
+            "Microsoft.NETFramework.ReferenceAssemblies": {
+              "suppressParent": "All",
+              "target": "Package",
+              "version": "[1.0.3, )",
+              "autoReferenced": true
+            }
+          },
+          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\7.0.202\\RuntimeIdentifierGraph.json"
+        }
+      },
+      "runtimes": {
+        "win7-x86": {
+          "#import": []
+        }
+      }
+    }
+  }
+}

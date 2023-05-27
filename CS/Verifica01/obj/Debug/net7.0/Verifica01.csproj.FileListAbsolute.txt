@@ -1,0 +1,15 @@
+C:\Users\AnticHp\Desktop\AnticGit\progettopubblico-DanielAntic05\CS\Verifica01\obj\Debug\net7.0\Verifica01.csproj.AssemblyReference.cache
+C:\Users\AnticHp\Desktop\AnticGit\progettopubblico-DanielAntic05\CS\Verifica01\obj\Debug\net7.0\Verifica01.GeneratedMSBuildEditorConfig.editorconfig
+C:\Users\AnticHp\Desktop\AnticGit\progettopubblico-DanielAntic05\CS\Verifica01\obj\Debug\net7.0\Verifica01.AssemblyInfoInputs.cache
+C:\Users\AnticHp\Desktop\AnticGit\progettopubblico-DanielAntic05\CS\Verifica01\obj\Debug\net7.0\Verifica01.AssemblyInfo.cs
+C:\Users\AnticHp\Desktop\AnticGit\progettopubblico-DanielAntic05\CS\Verifica01\obj\Debug\net7.0\Verifica01.csproj.CoreCompileInputs.cache
+C:\Users\AnticHp\Desktop\AnticGit\progettopubblico-DanielAntic05\CS\Verifica01\bin\Debug\net7.0\Verifica01.exe
+C:\Users\AnticHp\Desktop\AnticGit\progettopubblico-DanielAntic05\CS\Verifica01\bin\Debug\net7.0\Verifica01.deps.json
+C:\Users\AnticHp\Desktop\AnticGit\progettopubblico-DanielAntic05\CS\Verifica01\bin\Debug\net7.0\Verifica01.runtimeconfig.json
+C:\Users\AnticHp\Desktop\AnticGit\progettopubblico-DanielAntic05\CS\Verifica01\bin\Debug\net7.0\Verifica01.dll
+C:\Users\AnticHp\Desktop\AnticGit\progettopubblico-DanielAntic05\CS\Verifica01\bin\Debug\net7.0\Verifica01.pdb
+C:\Users\AnticHp\Desktop\AnticGit\progettopubblico-DanielAntic05\CS\Verifica01\obj\Debug\net7.0\Verifica01.dll
+C:\Users\AnticHp\Desktop\AnticGit\progettopubblico-DanielAntic05\CS\Verifica01\obj\Debug\net7.0\refint\Verifica01.dll
+C:\Users\AnticHp\Desktop\AnticGit\progettopubblico-DanielAntic05\CS\Verifica01\obj\Debug\net7.0\Verifica01.pdb
+C:\Users\AnticHp\Desktop\AnticGit\progettopubblico-DanielAntic05\CS\Verifica01\obj\Debug\net7.0\Verifica01.genruntimeconfig.cache
+C:\Users\AnticHp\Desktop\AnticGit\progettopubblico-DanielAntic05\CS\Verifica01\obj\Debug\net7.0\ref\Verifica01.dll

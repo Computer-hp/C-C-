@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <script>
+    let v = [1,2,3,4,5,6,7,9,10];
+    checkSorted(v);
+
+function checkSorted(v){
+    if (checkSortedRic(v,0) == true){
+        document.write("L'array e' ordinato in senso crescente.");
+    } else
+        document.write("L'array non e' ordinato in senso crescente.");
+}
+function checkSortedRic(v, start){
+    let ris = true;
+    if (start == v.length-1)
+         ris = true;
+    else if (v[start] <= v[start+1]){
+            ris = checkSortedRic(v,start+1);
+    } else   
+        ris = false;
+
+    return ris;
+}
+    </script>
+</body>
+</html>

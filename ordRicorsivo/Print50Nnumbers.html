@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <script>
+    /*
+    Write a program to print first 50 natural numbers using recursion:
+    */
+    let n = Number(prompt("Inserisci un numero"));
+    let arr=new Array(50);
+    // prima pos array = n
+    arr[0] = n;
+    let last;
+    if (n == 0){
+        last = 49;
+    } else{
+        last = n*50;
+    }
+    
+
+    let i = 0;
+    arr = plus(arr, last, i);
+    
+    for (let j=0; j<arr.length; j++){
+        if (j%10 == 0){
+             document.write("<br>" + arr[j] + " ");
+        } else
+            document.write(arr[j] + " ");
+        
+    }
+    
+
+    function plus(arr, last, i){
+    
+        if (arr[i] == last){
+            return arr;
+        }
+        else{
+            arr[i+1]=arr[i]+1;
+            plus(arr,last,i+1);
+        }
+        return arr;
+    }
+
+    </script>
+</body>
+</html>

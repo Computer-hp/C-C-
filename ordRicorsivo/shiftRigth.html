@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <script>
+        /*
+        Dato un array trasferire l'ultimo elemento a destra 
+        nella prima posizione senza alterare l'ordine dell'array:
+        3 4 5 6 7
+        7 3 4 5 6
+
+        */
+        let v = new Array(5);
+        for (let i = 0; i<v.length; i++){
+            v[i] = Number(prompt("Inserisci un numero"));
+        }
+        document.write("Original array: ");
+        for (let i = 0; i<v.length; i++){
+            document.write(v[i] + " ");
+        }
+        
+        shiftRigth(v);
+
+        function shiftRigth(v){
+            let tmp = v[v.length-1];
+        // metodo non ricorsivo
+        //     for (let i=v.length-1; i>0; i--){
+        //         v[i] = v[i-1];
+        //     }
+        //     v[0]=tmp;
+        let i = v.length-1;
+        v = switchLeft(tmp, v, i);
+
+        document.write("<br>Modified array: ");
+        for (let i=0; i<v.length; i++){
+            document.write(v[i] + " ");
+        }
+            
+        }
+        function switchLeft(tmp, v, i){
+            if (i > 0){
+                v[i] = v[i-1];
+                switchLeft(tmp, v, i-1);
+            }else{
+                v[0] = tmp;
+            }
+
+            return v;
+            
+        }
+
+    </script>
+</body>
+</html>

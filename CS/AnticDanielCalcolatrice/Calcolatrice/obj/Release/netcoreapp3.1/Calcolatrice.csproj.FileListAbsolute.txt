@@ -1,0 +1,17 @@
+C:\Users\AnticHp\Desktop\AnticGit\progettopubblico-DanielAntic05\CS\AnticDanielCalcolatrice\Calcolatrice\bin\Release\netcoreapp3.1\Calcolatrice.exe
+C:\Users\AnticHp\Desktop\AnticGit\progettopubblico-DanielAntic05\CS\AnticDanielCalcolatrice\Calcolatrice\bin\Release\netcoreapp3.1\Calcolatrice.deps.json
+C:\Users\AnticHp\Desktop\AnticGit\progettopubblico-DanielAntic05\CS\AnticDanielCalcolatrice\Calcolatrice\bin\Release\netcoreapp3.1\Calcolatrice.runtimeconfig.json
+C:\Users\AnticHp\Desktop\AnticGit\progettopubblico-DanielAntic05\CS\AnticDanielCalcolatrice\Calcolatrice\bin\Release\netcoreapp3.1\Calcolatrice.runtimeconfig.dev.json
+C:\Users\AnticHp\Desktop\AnticGit\progettopubblico-DanielAntic05\CS\AnticDanielCalcolatrice\Calcolatrice\bin\Release\netcoreapp3.1\Calcolatrice.dll
+C:\Users\AnticHp\Desktop\AnticGit\progettopubblico-DanielAntic05\CS\AnticDanielCalcolatrice\Calcolatrice\bin\Release\netcoreapp3.1\Calcolatrice.pdb
+C:\Users\AnticHp\Desktop\AnticGit\progettopubblico-DanielAntic05\CS\AnticDanielCalcolatrice\Calcolatrice\obj\Release\netcoreapp3.1\Calcolatrice.csproj.AssemblyReference.cache
+C:\Users\AnticHp\Desktop\AnticGit\progettopubblico-DanielAntic05\CS\AnticDanielCalcolatrice\Calcolatrice\obj\Release\netcoreapp3.1\Calcolatrice.Form1.resources
+C:\Users\AnticHp\Desktop\AnticGit\progettopubblico-DanielAntic05\CS\AnticDanielCalcolatrice\Calcolatrice\obj\Release\netcoreapp3.1\Calcolatrice.Properties.Resources.resources
+C:\Users\AnticHp\Desktop\AnticGit\progettopubblico-DanielAntic05\CS\AnticDanielCalcolatrice\Calcolatrice\obj\Release\netcoreapp3.1\Calcolatrice.csproj.GenerateResource.cache
+C:\Users\AnticHp\Desktop\AnticGit\progettopubblico-DanielAntic05\CS\AnticDanielCalcolatrice\Calcolatrice\obj\Release\netcoreapp3.1\Calcolatrice.GeneratedMSBuildEditorConfig.editorconfig
+C:\Users\AnticHp\Desktop\AnticGit\progettopubblico-DanielAntic05\CS\AnticDanielCalcolatrice\Calcolatrice\obj\Release\netcoreapp3.1\Calcolatrice.AssemblyInfoInputs.cache
+C:\Users\AnticHp\Desktop\AnticGit\progettopubblico-DanielAntic05\CS\AnticDanielCalcolatrice\Calcolatrice\obj\Release\netcoreapp3.1\Calcolatrice.AssemblyInfo.cs
+C:\Users\AnticHp\Desktop\AnticGit\progettopubblico-DanielAntic05\CS\AnticDanielCalcolatrice\Calcolatrice\obj\Release\netcoreapp3.1\Calcolatrice.csproj.CoreCompileInputs.cache
+C:\Users\AnticHp\Desktop\AnticGit\progettopubblico-DanielAntic05\CS\AnticDanielCalcolatrice\Calcolatrice\obj\Release\netcoreapp3.1\Calcolatrice.dll
+C:\Users\AnticHp\Desktop\AnticGit\progettopubblico-DanielAntic05\CS\AnticDanielCalcolatrice\Calcolatrice\obj\Release\netcoreapp3.1\Calcolatrice.pdb
+C:\Users\AnticHp\Desktop\AnticGit\progettopubblico-DanielAntic05\CS\AnticDanielCalcolatrice\Calcolatrice\obj\Release\netcoreapp3.1\Calcolatrice.genruntimeconfig.cache

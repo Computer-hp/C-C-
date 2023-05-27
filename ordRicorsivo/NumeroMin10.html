@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <!-- <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title> -->
+</head>
+<body>
+    <script>
+        /*
+        Creare una funzione ricorsiva che ricevuto un numero restituisce la somma delle cifre del numero se questa è minore di 10 
+        o il risultato della ri-applicazione della funzione sulla somma delle cifre del numero altrimenti.
+        Esempi: f(15)=1+5=6, f(392)=f(14)=f(5)=5 dove 3+9+2=14 e 1+4=5.
+        */
+        
+        let n = Number(prompt("Inserisci un numero"));
+
+        let result = controlloCifre(n);
+
+        document.write(result);
+
+        function controlloCifre(n){
+            let somma = 0;
+            while (n != 0){
+            somma = somma + n%10;
+            // n = Math.trunc(n/10);
+            n = n/10;
+            }
+            if (somma>10){
+                return controlloCifre(somma);
+            } else
+                return somma;
+    }
+
+    </script>
+</body>
+</html>

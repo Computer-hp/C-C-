@@ -15,6 +15,12 @@ int main()
     // array stringhe in cui salvo stringa in input
     char input_string[100], file_content[100]; // array stringhe in cui verrà salvato il contenuto del file F.txt
 
+    /*
+    per creare un file
+    f = fopen("C:\\Users\\AnticHp\\Desktop\\AnticGit\\DanielA\\C\\EserciziFile\\Es1\\F.txt")", "r");
+    */
+
+    // apro il file
     f = fopen("F.txt", "r");
 
     if (f == NULL){
@@ -25,8 +31,7 @@ int main()
     printf("Inserisci una parola: ");
     scanf("%s", input_string);
 
-    // salvo il contenuto del file F.txt nella stringa file_content
-    // salvo la prima stringa del file
+    // salvo la prima stringa del file F.txt nella stringa file_content
     fscanf(f, "%s", file_content);
 
     // finche' il while non giunge alla fine del file, EOF --> siccome appartiene al file diventa feof()

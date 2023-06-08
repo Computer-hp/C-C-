@@ -2,7 +2,15 @@
 Si scriva un programma in linguaggio C che, data una matrice quadrata NxN, stampi
 gli elementi di tale matrice secondo un ordinamento a spirale, partendo dalla cornice più
 esterna e procedendo verso l’interno
+
+*****
+ ** *
+ ** *   
+ *  *
+ ****
 */
+#include <stdio.h>
+#include <stdlib.h>
 
 void fill(char **matrix, int volte, int l, int rip, int end)
 {
@@ -47,10 +55,10 @@ int main()
     int l, carattere = 0;
     printf("Inserisci lunghezza lato: ");
     scanf("%i", &l);
-    char **matrix = (int**)malloc((l+1)*sizeof(int*));
+    char **matrix = (char**)malloc((l+1)*sizeof(char*));
 
     for (int i = 0; i < l; i++){
-        matrix[i] = (int*)malloc((l+1)*sizeof(int));
+        matrix[i] = (char*)malloc((l+1)*sizeof(char));
     }
     /*
     prima riga full, ultima colonna full,

@@ -1,17 +1,17 @@
 {
   "format": 1,
   "restore": {
-    "C:\\Users\\AnticHp\\Desktop\\AnticGit\\progettopubblico-DanielAntic05\\CS\\AnticDanielCalcolatrice\\Calcolatrice\\Calcolatrice.csproj": {}
+    "C:\\Users\\AnticHp\\Desktop\\AnticGit\\DanielA\\CS\\AnticDanielCalcolatrice\\Calcolatrice\\Calcolatrice.csproj": {}
   },
   "projects": {
-    "C:\\Users\\AnticHp\\Desktop\\AnticGit\\progettopubblico-DanielAntic05\\CS\\AnticDanielCalcolatrice\\Calcolatrice\\Calcolatrice.csproj": {
+    "C:\\Users\\AnticHp\\Desktop\\AnticGit\\DanielA\\CS\\AnticDanielCalcolatrice\\Calcolatrice\\Calcolatrice.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "C:\\Users\\AnticHp\\Desktop\\AnticGit\\progettopubblico-DanielAntic05\\CS\\AnticDanielCalcolatrice\\Calcolatrice\\Calcolatrice.csproj",
+        "projectUniqueName": "C:\\Users\\AnticHp\\Desktop\\AnticGit\\DanielA\\CS\\AnticDanielCalcolatrice\\Calcolatrice\\Calcolatrice.csproj",
         "projectName": "Calcolatrice",
-        "projectPath": "C:\\Users\\AnticHp\\Desktop\\AnticGit\\progettopubblico-DanielAntic05\\CS\\AnticDanielCalcolatrice\\Calcolatrice\\Calcolatrice.csproj",
+        "projectPath": "C:\\Users\\AnticHp\\Desktop\\AnticGit\\DanielA\\CS\\AnticDanielCalcolatrice\\Calcolatrice\\Calcolatrice.csproj",
         "packagesPath": "C:\\Users\\AnticHp\\.nuget\\packages\\",
-        "outputPath": "C:\\Users\\AnticHp\\Desktop\\AnticGit\\progettopubblico-DanielAntic05\\CS\\AnticDanielCalcolatrice\\Calcolatrice\\obj\\",
+        "outputPath": "C:\\Users\\AnticHp\\Desktop\\AnticGit\\DanielA\\CS\\AnticDanielCalcolatrice\\Calcolatrice\\obj\\",
         "projectStyle": "PackageReference",
         "configFilePaths": [
           "C:\\Users\\AnticHp\\AppData\\Roaming\\NuGet\\NuGet.Config",
@@ -58,7 +58,7 @@
               "privateAssets": "none"
             }
           },
-          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\7.0.203\\RuntimeIdentifierGraph.json"
+          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\7.0.302\\RuntimeIdentifierGraph.json"
         }
       }
     }

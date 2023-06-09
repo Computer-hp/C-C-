@@ -31,7 +31,7 @@ class Dino:
             self.canvas.coords(self.dino_id, x, y)
             return
         self.canvas.move(self.dino_id, 0, +self.jumpSpeed)
-        window.after(2, self.down)
+        window.after(10, self.down)
 
     def jump(self):
         dino_coords = self.canvas.coords(self.dino_id)
@@ -39,8 +39,10 @@ class Dino:
         if dino_coords[1] <= 90:  # Check if the cactus is completely outside the canvas
             self.down()
             return
+        # elif dino_coords[1] <= 140:
+        #     self.canvas.move(self.dino_id, 0, -self.jumpSpeed)
         self.canvas.move(self.dino_id, 0, -self.jumpSpeed)
-        window.after(2, self.jump)
+        window.after(10, self.jump)
 
 class Cactus:
     def __init__(self, canvas):
@@ -73,15 +75,19 @@ class Cactus:
         if (self.width == 25):
             image = Image.open("Cactus\\SmallCactus1.png")
             image = image.resize((self.width, self.height), Image.LANCZOS)
+
         elif (self.width == 40):
             image = Image.open("Cactus\\SmallCactus2.png")
             image = image.resize((self.width, self.height), Image.LANCZOS)
+
         elif (self.width == 45):
             image = Image.open("Cactus\\SmallCactus3.png")
             image = image.resize((self.width, self.height), Image.LANCZOS)
+
         elif (self.width == 30):
             image = Image.open("Cactus\\LargeCactus1.png")
             image = image.resize((self.width, self.height), Image.LANCZOS)
+            
         elif (self.width == 60):
             image = Image.open("Cactus\\LargeCactus2.png")
             image = image.resize((self.width, self.height), Image.LANCZOS)
@@ -110,7 +116,7 @@ def animate():
     # widget.after(delay_in_milliseconds, function_name)
     window.after(10, animate)
 
-DINOJUMP = 5
+DINOJUMP = 7
 CACTUSSPEED = 5
 # window
 window = Tk()

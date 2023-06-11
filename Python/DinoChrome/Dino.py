@@ -12,8 +12,7 @@ class Dino:
         x = 20
         y = 300 - self.height - 10
         self.canvas = canvas
-        
-        from PIL import Image, ImageTk
+
         # Load and resize the image
         image = Image.open("Dino\\DinoJump.png")  # Replace "dino.png" with the path to your Dino image
         image = image.resize((self.width, self.height), Image.LANCZOS)
@@ -69,7 +68,6 @@ class Cactus:
         return
 
     def setImage(self):
-        from PIL import Image
         image = None
 
         if (self.width == 25):

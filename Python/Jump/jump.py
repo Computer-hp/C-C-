@@ -30,13 +30,13 @@ m = 1
 
 # Indicates pygame is running
 run = True
-
+clock = pygame.time.Clock()
 # infinite loop
 while run:
-
 	# completely fill the surface object
 	# with black colour
 	win.fill((0, 0, 0))
+	clock.tick(60)
 
 	# drawing object on screen which is rectangle here
 	pygame.draw.rect(win, (255, 0, 0), (x, y, width, height))
@@ -77,7 +77,7 @@ while run:
 		if v<0:
 			
 			# negative sign is added to counter negative velocity
-			m =-1
+			m =-0.5
 
 		# objected reaches its original state
 		if v == -11:
@@ -91,7 +91,7 @@ while run:
 			m = 1
 	
 	# creates time delay of 10ms
-	pygame.time.delay(20)
+	# pygame.time.delay(20)
 
 	# it refreshes the window
 	pygame.display.update()

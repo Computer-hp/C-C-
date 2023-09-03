@@ -12,6 +12,8 @@ namespace WinFormsApp1
         private int turn = 0; // 0 for white, 1 for black
         private string currentPlayer = "";
 
+        private string[] rowLetter = { "a", "b", "c", "d", "e", "f", "g", "h"};
+
         CPiece selectedPiece = null;
 
         private CMatrixBoard ChessBoard;
@@ -98,19 +100,16 @@ namespace WinFormsApp1
                         ChessBoard.Pawns(ChessBoard.Board[x, y]);
                         break;
 
-                    case "Ra":
-                    case "Rh":
+                    case "R":
                         ChessBoard.Straight(ChessBoard.Board[x, y]);
                         break;
 
-                    case "Nb":
-                    case "Ng":
+                    case "N":
                         ChessBoard.Jump(ChessBoard.Board[x, y]);
                         ChessBoard.checkMoves(ChessBoard.Board[x, y]);
                         break;
 
-                    case "Bc":
-                    case "Bf":
+                    case "B":
                         ChessBoard.Diagonal(ChessBoard.Board[x, y]);
                         break;
 
@@ -132,9 +131,22 @@ namespace WinFormsApp1
                     Button originalSquare = GetButtonAtPosition(selectedPiece.x, selectedPiece.y);
                     originalSquare.Text = "";
 
-
                     ChessBoard.Board[selectedPiece.x, selectedPiece.y] = null;
-                    ChessBoard.Board[x, y] = selectedPiece;
+
+                    // pawn promotions
+                    if (selectedPiece.pieceName == "P" && (selectedPiece.y + 1 == 7 && selectedPiece.pieceType == "White" || selectedPiece.y - 1 == 0 && selectedPiece.pieceType == "Black"))
+                    {
+                        /*Console.WriteLine("Promuovi a: ");
+                        string promotion = Console.ReadLine().ToUpper();*/
+                        var promotion = new Form2();
+                        promotion.ShowDialog();
+
+                        ChessBoard.Board[x, y] = new CPiece(selectedPiece.x, selectedPiece.y, promotion.pieceName, selectedPiece.pieceType);
+                    } else
+                    {
+                        ChessBoard.Board[x, y] = selectedPiece;
+                    }
+
                     ChessBoard.Board[x, y].x = x;
                     ChessBoard.Board[x, y].y = y;
                     clickedButton.Text = ChessBoard.Board[x, y].pieceName;

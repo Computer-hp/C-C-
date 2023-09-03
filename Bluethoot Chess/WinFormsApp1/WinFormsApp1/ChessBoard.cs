@@ -27,7 +27,7 @@ namespace WinFormsApp1
         // add pieces
         public void InitializePieces()
         {
-            string[] pieces = { "Ra", "Nb", "Bc", "Q", "K", "Bf", "Ng", "Rh" };
+            string[] pieces = { "R", "N", "B", "Q", "K", "B", "N", "R" };
 
             for (int x = 0; x < 8; x++)
             {
@@ -45,9 +45,10 @@ namespace WinFormsApp1
         {
             //Debug.WriteLine(P.pieceType + " " + P.pieceName);
 
-            if ((P.pieceType == "White" && P.y < boardSize)) 
+            if (P.pieceType == "White" && P.y < boardSize) 
             {
-                validMoves.Add(new CSquare(P.x, P.y + 1));
+                if (this.Board[P.x, P.y + 1] == null)
+                    validMoves.Add(new CSquare(P.x, P.y + 1));
 
                 checkRigth(1, 1, P, this);
 
@@ -58,7 +59,8 @@ namespace WinFormsApp1
             }
             else if (P.pieceType == "Black" && P.y >= 0)
             {
-                validMoves.Add(new CSquare(P.x, P.y - 1));
+                if (this.Board[P.x, P.y - 1] == null)
+                    validMoves.Add(new CSquare(P.x, P.y - 1));
 
                 checkRigth(1, -1, P, this);
 
@@ -94,80 +96,6 @@ namespace WinFormsApp1
         public void Straight(CPiece P)
         {
             findStraight(this, P, 8);
-            /*bool right = true, left = true, up = true, down = true;
-
-            int x = P.x;
-            int y = P.y;
-            int counter = 2;
-
-            for (int i = 0; i < boardSize; i++)
-            {
-                x++;
-                // opposite side
-                int differenceX = x - counter;
-
-                // right
-                if (x < boardSize && right)
-                {
-                    if (this.Board[x, P.y] == null)
-                        validMoves.Add(new CSquare(x, P.y));
-                    else if (this.Board[x, P.y] != null && this.Board[x, P.y].pieceType != P.pieceType)
-                    {
-                        validMoves.Add(new CSquare(x, P.y));
-                        right = false;
-                    }
-                    else
-                        right = false;
-                }
-
-                // left
-                if (differenceX >= 0 && left)
-                {
-                    if (this.Board[differenceX, P.y] == null)
-                        validMoves.Add(new CSquare(differenceX, P.y));
-                    else if (this.Board[differenceX, P.y] != null && this.Board[differenceX, P.y].pieceType != P.pieceType)
-                    {
-                        validMoves.Add(new CSquare(differenceX, P.y));
-                        left = false;
-                    }
-                    else
-                        left = false;
-                }
-
-                y++;
-                // opposite side
-                int differenceY = y - counter;
-
-                // up
-                if (y < boardSize && up)
-                {
-                    if (this.Board[P.x, y] == null)
-                        validMoves.Add(new CSquare(P.x, y));
-                    else if (this.Board[P.x, y] != null && this.Board[P.x, y].pieceType != P.pieceType)
-                    {
-                        validMoves.Add(new CSquare(P.x, y));
-                        up = false;
-                    }
-                    else
-                        up = false;
-                }
-
-                // down
-                if (differenceY >= 0 && down)
-                {
-                    if (this.Board[P.x, differenceY] == null)
-                        validMoves.Add(new CSquare(P.x, differenceY));
-                    else if (this.Board[P.x, differenceY] != null && this.Board[P.x, differenceY].pieceType != P.pieceType)
-                    {
-                        validMoves.Add(new CSquare(P.x, differenceY));
-                        down = false;
-                    }
-                    else
-                        down = false;
-                }
-
-                counter += 2;
-            }*/
         }
         private void findStraight(CMatrixBoard B, CPiece P, int times)
         {
@@ -250,73 +178,6 @@ namespace WinFormsApp1
         public void Diagonal(CPiece P)
         {
             findDiagonal(this, P, 8);
-            /*bool rightUp = true, rightDown = true, leftUp = true, leftDown = true;
-
-            int x = P.x;
-            int y = P.y;
-            int counter = 2;
-
-            for (int i = 0; i < boardSize; i++)
-            {
-                x++;
-                y++;
-                // opposite side
-                int differenceX = x - counter, differenceY = y - counter;
-                // right
-                if (x < boardSize)
-                {
-                    if (y < boardSize && rightUp)
-                        if (this.Board[x, y] == null)
-                            validMoves.Add(new CSquare(x, y));
-                        else if (this.Board[x, y] != null && this.Board[x, y].pieceType != P.pieceType)
-                        {
-                            validMoves.Add(new CSquare(x, y));
-                            rightUp = false;
-                        }
-                        else
-                            rightUp = false;
-
-
-                    if (differenceY >= 0 && rightDown)
-                        if (this.Board[x, differenceY] == null)
-                            validMoves.Add(new CSquare(x, differenceY));
-                        else if (this.Board[x, differenceY] != null && this.Board[x, differenceY].pieceType != P.pieceType)
-                        {
-                            validMoves.Add(new CSquare(x, differenceY));
-                            rightDown = false;
-                        }
-                        else
-                            rightDown = false;
-                }
-                // left
-                if (differenceX >= 0) 
-                {
-                    if (y < boardSize && leftUp)
-                        if (this.Board[differenceX, y] == null)
-                            validMoves.Add(new CSquare(differenceX, y));
-                        else if (this.Board[differenceX, y] != null && this.Board[differenceX, y].pieceType != P.pieceType)
-                        {
-                            validMoves.Add(new CSquare(differenceX, y));
-                            leftUp = false;
-                        }
-                        else
-                            leftUp = false;
-
-
-                    if (differenceY >= 0 && leftDown)
-                        if (differenceY < boardSize && leftDown)
-                            if (this.Board[differenceX, differenceY] == null)
-                                validMoves.Add(new CSquare(differenceX, differenceY));
-                            else if (this.Board[differenceX, differenceY] != null && this.Board[differenceX, differenceY].pieceType != P.pieceType)
-                            {
-                                validMoves.Add(new CSquare(differenceX, differenceY));
-                                leftDown = false;
-                            }
-                            else
-                                leftDown = false;
-                }
-                counter += 2;
-            }*/
 
         }
         private void findDiagonal(CMatrixBoard B, CPiece P, int times)
@@ -432,25 +293,6 @@ namespace WinFormsApp1
         {
             findStraight(this, P, 1);
             findDiagonal(this, P, 1);
-            /*int x = P.x;
-            int y = P.y;
-
-            int move = -1;
-
-            for (int i = 0; i < 3; i++)
-            {
-                if (x + move >= 0 && x + move < boardSize)
-                {
-                    if (y - 1 >= 0)
-                        validMoves.Add(new CSquare(x + move, y - 1));
-                    if (y < boardSize)
-                        validMoves.Add(new CSquare(x + move, y));
-                    if (y + 1 < boardSize)
-                        validMoves.Add(new CSquare(x + move, y + 1));
-                }
-                move++;
-            }*/
-
         }
 
         public void checkMoves(CPiece P)

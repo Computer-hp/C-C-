@@ -1,32 +1,32 @@
 {
   "format": 1,
   "restore": {
-    "C:\\Users\\AnticHp\\Desktop\\AnticGit\\DanielA\\CS\\AnticDanielCalcolatrice\\Calcolatrice\\Calcolatrice.csproj": {}
+    "C:\\Users\\Zlatko\\Desktop\\AnticGit\\DanielA\\CS\\AnticDanielCalcolatrice\\Calcolatrice\\Calcolatrice.csproj": {}
   },
   "projects": {
-    "C:\\Users\\AnticHp\\Desktop\\AnticGit\\DanielA\\CS\\AnticDanielCalcolatrice\\Calcolatrice\\Calcolatrice.csproj": {
+    "C:\\Users\\Zlatko\\Desktop\\AnticGit\\DanielA\\CS\\AnticDanielCalcolatrice\\Calcolatrice\\Calcolatrice.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "C:\\Users\\AnticHp\\Desktop\\AnticGit\\DanielA\\CS\\AnticDanielCalcolatrice\\Calcolatrice\\Calcolatrice.csproj",
+        "projectUniqueName": "C:\\Users\\Zlatko\\Desktop\\AnticGit\\DanielA\\CS\\AnticDanielCalcolatrice\\Calcolatrice\\Calcolatrice.csproj",
         "projectName": "Calcolatrice",
-        "projectPath": "C:\\Users\\AnticHp\\Desktop\\AnticGit\\DanielA\\CS\\AnticDanielCalcolatrice\\Calcolatrice\\Calcolatrice.csproj",
-        "packagesPath": "C:\\Users\\AnticHp\\.nuget\\packages\\",
-        "outputPath": "C:\\Users\\AnticHp\\Desktop\\AnticGit\\DanielA\\CS\\AnticDanielCalcolatrice\\Calcolatrice\\obj\\",
+        "projectPath": "C:\\Users\\Zlatko\\Desktop\\AnticGit\\DanielA\\CS\\AnticDanielCalcolatrice\\Calcolatrice\\Calcolatrice.csproj",
+        "packagesPath": "C:\\Users\\Zlatko\\.nuget\\packages\\",
+        "outputPath": "C:\\Users\\Zlatko\\Desktop\\AnticGit\\DanielA\\CS\\AnticDanielCalcolatrice\\Calcolatrice\\obj\\",
         "projectStyle": "PackageReference",
         "configFilePaths": [
-          "C:\\Users\\AnticHp\\AppData\\Roaming\\NuGet\\NuGet.Config",
+          "C:\\Users\\Zlatko\\AppData\\Roaming\\NuGet\\NuGet.Config",
           "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
         ],
         "originalTargetFrameworks": [
-          "netcoreapp3.1"
+          "net6.0-windows"
         ],
         "sources": {
           "C:\\Program Files (x86)\\Microsoft SDKs\\NuGetPackages\\": {},
           "https://api.nuget.org/v3/index.json": {}
         },
         "frameworks": {
-          "netcoreapp3.1": {
-            "targetAlias": "netcoreapp3.1",
+          "net6.0-windows7.0": {
+            "targetAlias": "net6.0-windows",
             "projectReferences": {}
           }
         },
@@ -37,8 +37,8 @@
         }
       },
       "frameworks": {
-        "netcoreapp3.1": {
-          "targetAlias": "netcoreapp3.1",
+        "net6.0-windows7.0": {
+          "targetAlias": "net6.0-windows",
           "imports": [
             "net461",
             "net462",
@@ -58,7 +58,7 @@
               "privateAssets": "none"
             }
           },
-          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\7.0.302\\RuntimeIdentifierGraph.json"
+          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\7.0.400\\RuntimeIdentifierGraph.json"
         }
       }
     }

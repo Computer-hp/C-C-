@@ -1,20 +1,20 @@
 {
   "format": 1,
   "restore": {
-    "C:\\Users\\AnticHp\\Desktop\\AnticGit\\progettopubblico-DanielAntic05\\CS\\Calc\\CS.csproj": {}
+    "C:\\Users\\Zlatko\\Desktop\\AnticGit\\DanielA\\CS\\Calc\\CS.csproj": {}
   },
   "projects": {
-    "C:\\Users\\AnticHp\\Desktop\\AnticGit\\progettopubblico-DanielAntic05\\CS\\Calc\\CS.csproj": {
+    "C:\\Users\\Zlatko\\Desktop\\AnticGit\\DanielA\\CS\\Calc\\CS.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "C:\\Users\\AnticHp\\Desktop\\AnticGit\\progettopubblico-DanielAntic05\\CS\\Calc\\CS.csproj",
+        "projectUniqueName": "C:\\Users\\Zlatko\\Desktop\\AnticGit\\DanielA\\CS\\Calc\\CS.csproj",
         "projectName": "CS",
-        "projectPath": "C:\\Users\\AnticHp\\Desktop\\AnticGit\\progettopubblico-DanielAntic05\\CS\\Calc\\CS.csproj",
-        "packagesPath": "C:\\Users\\AnticHp\\.nuget\\packages\\",
-        "outputPath": "C:\\Users\\AnticHp\\Desktop\\AnticGit\\progettopubblico-DanielAntic05\\CS\\Calc\\obj\\",
+        "projectPath": "C:\\Users\\Zlatko\\Desktop\\AnticGit\\DanielA\\CS\\Calc\\CS.csproj",
+        "packagesPath": "C:\\Users\\Zlatko\\.nuget\\packages\\",
+        "outputPath": "C:\\Users\\Zlatko\\Desktop\\AnticGit\\DanielA\\CS\\Calc\\obj\\",
         "projectStyle": "PackageReference",
         "configFilePaths": [
-          "C:\\Users\\AnticHp\\AppData\\Roaming\\NuGet\\NuGet.Config",
+          "C:\\Users\\Zlatko\\AppData\\Roaming\\NuGet\\NuGet.Config",
           "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
         ],
         "originalTargetFrameworks": [
@@ -55,7 +55,7 @@
               "privateAssets": "all"
             }
           },
-          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\7.0.203\\RuntimeIdentifierGraph.json"
+          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\7.0.400\\RuntimeIdentifierGraph.json"
         }
       }
     }

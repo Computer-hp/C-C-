@@ -11,8 +11,8 @@ namespace Frazioni{
     class Program{
         static void Main(string[] args)
         {
-            CHugeNumber n1 = new CHugeNumber("123456");
-            CHugeNumber n2 = new CHugeNumber("123456");
+            CHugeNumber n1 = new CHugeNumber("123456789");
+            CHugeNumber n2 = new CHugeNumber("123456789");
             CHugeNumber risultato = new CHugeNumber();
 
             // CFrazione f1, f2, f3, f4, f5, r;

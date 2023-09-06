@@ -2,6 +2,8 @@ using System;
 using System.Xml.Linq;
 using static System.Windows.Forms.VisualStyles.VisualStyleElement.TextBox;
 using System.Diagnostics;
+using System.Diagnostics.Eventing.Reader;
+using System.Collections.Generic;
 
 namespace WinFormsApp1
 {
@@ -21,9 +23,6 @@ namespace WinFormsApp1
         public Form1()
         {
             ChessBoard = new CMatrixBoard();
-
-            bool run = true;
-            int turn = 0;  // 0 for white, 1 for black
 
             InitializeComponent();
             ChessBoard.InitializePieces(); //forse sopra riga 16
@@ -92,41 +91,19 @@ namespace WinFormsApp1
             if (ChessBoard.Board[x, y] != null && ChessBoard.Board[x, y].pieceType == currentPlayer)
             {
                 selectedPiece = ChessBoard.Board[x, y];
+                
                 ChessBoard.validMoves.Clear();
 
-                switch (ChessBoard.Board[x, y].pieceName)
-                {
-                    case "P":
-                        ChessBoard.Pawns(ChessBoard.Board[x, y]);
-                        break;
+                ChessBoard = AvaibleSquares(ChessBoard, selectedPiece);
 
-                    case "R":
-                        ChessBoard.Straight(ChessBoard.Board[x, y]);
-                        break;
+                if (selectedPiece.pieceName == "K")
+                    ChessBoard = SaveInvalidSquares(ChessBoard, selectedPiece);
 
-                    case "N":
-                        ChessBoard.Jump(ChessBoard.Board[x, y]);
-                        ChessBoard.checkMoves(ChessBoard.Board[x, y]);
-                        break;
-
-                    case "B":
-                        ChessBoard.Diagonal(ChessBoard.Board[x, y]);
-                        break;
-
-                    case "Q":
-                        ChessBoard.Straight(ChessBoard.Board[x, y]);
-                        ChessBoard.Diagonal(ChessBoard.Board[x, y]);
-                        break;
-
-                    case "K":
-                        ChessBoard.King(ChessBoard.Board[x, y]);
-                        break;
-                }
                 Debug.WriteLine(ChessBoard.ToString());
             }
             else if (selectedPiece != null)
             {
-                if ((ChessBoard.Board[x, y] == null || ChessBoard.Board[x, y].pieceName != currentPlayer) && ChessBoard.validMoves.Exists(item => item.x == x && item.y == y) == true)
+                if ((ChessBoard.Board[x, y] == null || ChessBoard.Board[x, y].pieceType != currentPlayer) && ChessBoard.validMoves.Exists(item => item.x == x && item.y == y) == true)
                 {
                     Button originalSquare = GetButtonAtPosition(selectedPiece.x, selectedPiece.y);
                     originalSquare.Text = "";
@@ -136,8 +113,6 @@ namespace WinFormsApp1
                     // pawn promotions
                     if (selectedPiece.pieceName == "P" && (selectedPiece.y + 1 == 7 && selectedPiece.pieceType == "White" || selectedPiece.y - 1 == 0 && selectedPiece.pieceType == "Black"))
                     {
-                        /*Console.WriteLine("Promuovi a: ");
-                        string promotion = Console.ReadLine().ToUpper();*/
                         var promotion = new Form2();
                         promotion.ShowDialog();
 
@@ -152,6 +127,7 @@ namespace WinFormsApp1
                     clickedButton.Text = ChessBoard.Board[x, y].pieceName;
 
                     ChessBoard.validMoves.Clear();
+
                     // Switch the current player's turn
                     turn = (turn + 1) % 2; // Toggle between 0 (white) and 1 (black)
                     selectedPiece = null;
@@ -176,6 +152,67 @@ namespace WinFormsApp1
                 }
             }
             return null; // Button not found
+        }
+        private CMatrixBoard SaveInvalidSquares(CMatrixBoard B, CPiece P)
+        {
+            // calculate the squares of every piece and compare with validMoves, if there are == moves, save it in the InvalidSquares
+            B.InvalidSquaresKing.Clear();
+
+            B.InvalidSquaresKing.AddRange(B.validMoves);
+
+            for (int i = 0; i < boardSize; i++)
+            {
+                for (int j = 0; j < boardSize; j++)
+                {
+                    B.validMoves.Clear();
+
+                    if (B.Board[i, j] != null && B.Board[i, j].pieceType != P.pieceType && B.Board[i, j].pieceName != P.pieceName)
+                    {
+                        B = AvaibleSquares(B, B.Board[i, j]);
+
+                        B.InvalidSquaresKing.RemoveAll(item => B.validMoves.Contains(item));
+                    }
+
+                }
+                Debug.WriteLine(B.ToString());
+            }
+            B.validMoves.Clear();
+            B.validMoves.AddRange(B.InvalidSquaresKing);
+            return B;
+        }
+
+        private CMatrixBoard AvaibleSquares(CMatrixBoard ChessBoard, CPiece P)
+        {
+
+            switch (P.pieceName)
+            {
+                case "P":
+                    ChessBoard.Pawns(P);
+                    break;
+
+                case "R":
+                    ChessBoard.Straight(P);
+                    break;
+
+                case "N":
+                    ChessBoard.Jump(P);
+                    ChessBoard.checkJump(P);
+                    break;
+
+                case "B":
+                    ChessBoard.Diagonal(P);
+                    break;
+
+                case "Q":
+                    ChessBoard.Straight(P);
+                    ChessBoard.Diagonal(P);
+                    break;
+
+                case "K":
+                    ChessBoard.King(P);
+                    break;
+            }
+            return ChessBoard;
         }
     }
 }

@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Diagnostics.Metrics;
@@ -18,6 +19,8 @@ namespace WinFormsApp1
         public CPiece[,] Board { get { return mBoard; } set { mBoard = value; } }
 
         public List<CSquare> validMoves = new List<CSquare>();
+
+        public List<CSquare> InvalidSquaresKing = new List<CSquare>();
 
         public CMatrixBoard()
         {
@@ -288,27 +291,27 @@ namespace WinFormsApp1
                 counterX += 2;
             }
         }
+        public void checkJump(CPiece P)
+        {
+            for (int x = 0; x < boardSize; x++)
+            {
+                //CSquare S;
+                for (int y = 0; y < boardSize; y++)
+                {
+                    //S = new CSquare(x, y);
+
+                    if (this.Board[x, y] != null && this.Board[x, y].pieceName != P.pieceName)
+                        if (this.validMoves.Exists(item => item.x == x && item.y == y) == true)
+                            this.validMoves.RemoveAll(item => item.x == x && item.y == y);
+                }
+            }
+
+        }
 
         public void King(CPiece P)
         {
             findStraight(this, P, 1);
             findDiagonal(this, P, 1);
-        }
-
-        public void checkMoves(CPiece P)
-        {
-                for (int x = 0; x < boardSize; x++)
-                {
-                    //CSquare S;
-                    for (int y = 0; y < boardSize; y++)
-                    {
-                        //S = new CSquare(x, y);
-
-                        if (this.Board[x, y] != null && this.Board[x, y].pieceName != P.pieceName)
-                            if (this.validMoves.Exists(item => item.x == x && item.y == y) == true)
-                                this.validMoves.RemoveAll(item => item.x == x && item.y == y);
-                    }
-                }
 
         }
 
@@ -321,7 +324,6 @@ namespace WinFormsApp1
             }
             return output;
         }
-
     }
 
     class CSquare

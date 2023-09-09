@@ -4,6 +4,9 @@ using static System.Windows.Forms.VisualStyles.VisualStyleElement.TextBox;
 using System.Diagnostics;
 using System.Diagnostics.Eventing.Reader;
 using System.Collections.Generic;
+using System.Collections;
+using Microsoft.VisualBasic.ApplicationServices;
+using System.Configuration;
 
 namespace WinFormsApp1
 {
@@ -26,10 +29,11 @@ namespace WinFormsApp1
 
             InitializeComponent();
             ChessBoard.InitializePieces(); //forse sopra riga 16
-            InitializeChessBoard();
+            InitializeChessBoard(ChessBoard);
         }
-        private void InitializeChessBoard()
+        private void InitializeChessBoard(CMatrixBoard ChessBoard)
         {
+
             // Calculate the position to center the chessboard
             int centerX = (ClientSize.Width - boardSize * squareSize) / 2;
             int centerY = (ClientSize.Height - boardSize * squareSize) / 2;
@@ -53,7 +57,10 @@ namespace WinFormsApp1
                     square.Tag = (x, y);
 
                     if (ChessBoard.Board[x, y] != null)
-                        square.Text = ChessBoard.Board[x, y].pieceName;
+                    {
+                        Bitmap resizedImage = SetImageToButton(ChessBoard.Board[x, y]);
+                        square.Image = resizedImage;
+                    }
 
                     // click event handler
                     square.Click += Button_Click;
@@ -69,8 +76,37 @@ namespace WinFormsApp1
                     }
                 }
             }
+            Refresh();
         }
 
+        public static Bitmap SetImageToButton(CPiece P)
+        {
+            string DIR = P.pieceType;
+
+            string imagePath = DIR + "\\" + P.pieceName + ".png";
+
+            Bitmap resizedImage = null;
+            try
+            {
+                using (Bitmap originalImage = (Bitmap)Image.FromFile(@"C:\Users\Zlatko\Desktop\AnticGit\DanielA\Bluethoot Chess\WinFormsApp1\" + imagePath))
+                {
+                    double maxImageSize = Math.Min(squareSize, squareSize); // Set this to your desired max size
+                    double aspectRatio = (double)originalImage.Width / originalImage.Height;
+
+                    int newWidth = (int)maxImageSize;
+                    int newHeight = (int)(maxImageSize / aspectRatio);
+
+                    resizedImage = new Bitmap(originalImage, newWidth, newHeight);
+                    Debug.WriteLine(newHeight + ", " + newWidth);
+                    return resizedImage;
+                }
+            }
+            catch (Exception ex)
+            {
+                Debug.WriteLine($"Error loading the image: {ex.Message}");
+                return resizedImage;
+            }
+        }
 
         private void Form1_Load(object sender, EventArgs e)
         {
@@ -106,14 +142,14 @@ namespace WinFormsApp1
                 if ((ChessBoard.Board[x, y] == null || ChessBoard.Board[x, y].pieceType != currentPlayer) && ChessBoard.validMoves.Exists(item => item.x == x && item.y == y) == true)
                 {
                     Button originalSquare = GetButtonAtPosition(selectedPiece.x, selectedPiece.y);
-                    originalSquare.Text = "";
+                    originalSquare.Image = null;
 
                     ChessBoard.Board[selectedPiece.x, selectedPiece.y] = null;
 
                     // pawn promotions
                     if (selectedPiece.pieceName == "P" && (selectedPiece.y + 1 == 7 && selectedPiece.pieceType == "White" || selectedPiece.y - 1 == 0 && selectedPiece.pieceType == "Black"))
                     {
-                        var promotion = new Form2();
+                        var promotion = new Form2(turn);
                         promotion.ShowDialog();
 
                         ChessBoard.Board[x, y] = new CPiece(selectedPiece.x, selectedPiece.y, promotion.pieceName, selectedPiece.pieceType);
@@ -124,12 +160,18 @@ namespace WinFormsApp1
 
                     ChessBoard.Board[x, y].x = x;
                     ChessBoard.Board[x, y].y = y;
-                    clickedButton.Text = ChessBoard.Board[x, y].pieceName;
+
+                    Bitmap image = SetImageToButton(ChessBoard.Board[x, y]);
+
+                    clickedButton.Image = image;
+
+                    //InitializeChessBoard(ChessBoard);
 
                     ChessBoard.validMoves.Clear();
 
                     // Switch the current player's turn
-                    turn = (turn + 1) % 2; // Toggle between 0 (white) and 1 (black)
+                    turn = (turn + 1) % 2;
+
                     selectedPiece = null;
                 }
             }
@@ -140,9 +182,9 @@ namespace WinFormsApp1
             }
 
         }
+        // Find the button at the specified position
         private Button GetButtonAtPosition(int x, int y)
         {
-            // Find the button at the specified position
             foreach (var button in Controls.OfType<Button>())
             {
                 var position = (ValueTuple<int, int>)button.Tag;
@@ -151,31 +193,25 @@ namespace WinFormsApp1
                     return button;
                 }
             }
-            return null; // Button not found
+            return null;
         }
+        // calculate the squares of every piece and compare with validMoves, if there are == moves, save it in the InvalidSquares
         private CMatrixBoard SaveInvalidSquares(CMatrixBoard B, CPiece P)
         {
-            // calculate the squares of every piece and compare with validMoves, if there are == moves, save it in the InvalidSquares
             B.InvalidSquaresKing.Clear();
 
             B.InvalidSquaresKing.AddRange(B.validMoves);
 
-            for (int i = 0; i < boardSize; i++)
+            foreach (var piece in B.Board)
             {
-                for (int j = 0; j < boardSize; j++)
+                if (piece != null && piece.pieceType != P.pieceType && piece.pieceName != P.pieceName)
                 {
                     B.validMoves.Clear();
-
-                    if (B.Board[i, j] != null && B.Board[i, j].pieceType != P.pieceType && B.Board[i, j].pieceName != P.pieceName)
-                    {
-                        B = AvaibleSquares(B, B.Board[i, j]);
-
-                        B.InvalidSquaresKing.RemoveAll(item => B.validMoves.Contains(item));
-                    }
-
+                    B = AvaibleSquares(B, piece);
+                    B.InvalidSquaresKing.RemoveAll(square => B.validMoves.Exists(move => move.x == square.x && move.y == square.y));
                 }
-                Debug.WriteLine(B.ToString());
             }
+            
             B.validMoves.Clear();
             B.validMoves.AddRange(B.InvalidSquaresKing);
             return B;

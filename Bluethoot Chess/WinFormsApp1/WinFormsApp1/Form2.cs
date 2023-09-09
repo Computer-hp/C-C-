@@ -13,16 +13,30 @@ namespace WinFormsApp1
     public partial class Form2 : Form
     {
         public string pieceName;
-        public Form2()
+        public Form2(int turn)
         {
             InitializeComponent();
+
+            string DIR;
+
+            if (turn == 0)
+                DIR = "White";
+            else
+                DIR = "Black";
+
+            foreach (var button in new Button[] { Q, R, B, N })
+            {
+                Bitmap resizedImage = Form1.SetImageToButton(new CPiece(0, 0, button.Name, DIR));
+
+                button.Image = resizedImage;
+            }
         }
 
         private void Piece_Promote(object sender, EventArgs e)
         {
             Button button = (Button)sender;
 
-            pieceName = button.Text;
+            pieceName = button.Name;
             this.Close();
         }
     }

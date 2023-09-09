@@ -28,58 +28,54 @@
         /// </summary>
         private void InitializeComponent()
         {
-            button1 = new Button();
-            button2 = new Button();
-            button3 = new Button();
-            button4 = new Button();
+            Q = new Button();
+            R = new Button();
+            B = new Button();
+            N = new Button();
             SuspendLayout();
             // 
-            // button1
+            // Q
             // 
-            button1.Anchor = AnchorStyles.None;
-            button1.Location = new Point(0, 1);
-            button1.Margin = new Padding(0);
-            button1.Name = "button1";
-            button1.Size = new Size(50, 50);
-            button1.TabIndex = 0;
-            button1.Text = "Q";
-            button1.UseVisualStyleBackColor = true;
-            button1.Click += Piece_Promote;
+            Q.Anchor = AnchorStyles.None;
+            Q.Location = new Point(0, 1);
+            Q.Margin = new Padding(0);
+            Q.Name = "Q";
+            Q.Size = new Size(50, 50);
+            Q.TabIndex = 0;
+            Q.UseVisualStyleBackColor = true;
+            Q.Click += Piece_Promote;
             // 
-            // button2
+            // R
             // 
-            button2.Anchor = AnchorStyles.None;
-            button2.Location = new Point(0, 51);
-            button2.Margin = new Padding(0);
-            button2.Name = "button2";
-            button2.Size = new Size(50, 50);
-            button2.TabIndex = 1;
-            button2.Text = "R";
-            button2.UseVisualStyleBackColor = true;
-            button2.Click += Piece_Promote;
+            R.Anchor = AnchorStyles.None;
+            R.Location = new Point(0, 51);
+            R.Margin = new Padding(0);
+            R.Name = "R";
+            R.Size = new Size(50, 50);
+            R.TabIndex = 1;
+            R.UseVisualStyleBackColor = true;
+            R.Click += Piece_Promote;
             // 
-            // button3
+            // B
             // 
-            button3.Anchor = AnchorStyles.None;
-            button3.Location = new Point(0, 104);
-            button3.Name = "button3";
-            button3.Size = new Size(50, 50);
-            button3.TabIndex = 2;
-            button3.Text = "B";
-            button3.UseVisualStyleBackColor = true;
-            button3.Click += Piece_Promote;
+            B.Anchor = AnchorStyles.None;
+            B.Location = new Point(0, 104);
+            B.Name = "B";
+            B.Size = new Size(50, 50);
+            B.TabIndex = 2;
+            B.UseVisualStyleBackColor = true;
+            B.Click += Piece_Promote;
             // 
-            // button4
+            // N
             // 
-            button4.Anchor = AnchorStyles.None;
-            button4.Location = new Point(0, 157);
-            button4.Margin = new Padding(0);
-            button4.Name = "button4";
-            button4.Size = new Size(50, 50);
-            button4.TabIndex = 3;
-            button4.Text = "N";
-            button4.UseVisualStyleBackColor = true;
-            button4.Click += Piece_Promote;
+            N.Anchor = AnchorStyles.None;
+            N.Location = new Point(0, 157);
+            N.Margin = new Padding(0);
+            N.Name = "N";
+            N.Size = new Size(50, 50);
+            N.TabIndex = 3;
+            N.UseVisualStyleBackColor = true;
+            N.Click += Piece_Promote;
             // 
             // Form2
             // 
@@ -87,10 +83,10 @@
             BackgroundImageLayout = ImageLayout.None;
             ClientSize = new Size(48, 218);
             ControlBox = false;
-            Controls.Add(button4);
-            Controls.Add(button3);
-            Controls.Add(button2);
-            Controls.Add(button1);
+            Controls.Add(N);
+            Controls.Add(B);
+            Controls.Add(R);
+            Controls.Add(Q);
             FormBorderStyle = FormBorderStyle.FixedToolWindow;
             MaximizeBox = false;
             MinimizeBox = false;
@@ -102,9 +98,9 @@
 
         #endregion
 
-        private Button button1;
-        private Button button2;
-        private Button button3;
-        private Button button4;
+        private Button Q;
+        private Button R;
+        private Button B;
+        private Button N;
     }
 }

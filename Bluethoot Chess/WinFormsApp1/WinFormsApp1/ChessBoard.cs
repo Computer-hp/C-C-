@@ -295,10 +295,8 @@ namespace WinFormsApp1
         {
             for (int x = 0; x < boardSize; x++)
             {
-                //CSquare S;
                 for (int y = 0; y < boardSize; y++)
                 {
-                    //S = new CSquare(x, y);
 
                     if (this.Board[x, y] != null && this.Board[x, y].pieceName != P.pieceName)
                         if (this.validMoves.Exists(item => item.x == x && item.y == y) == true)

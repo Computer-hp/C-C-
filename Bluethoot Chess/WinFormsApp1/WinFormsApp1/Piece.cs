@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace WinFormsApp1
 {
-    class CPiece
+    public class CPiece
     {
         public int x {  get; set; }
         public int y { get; set; }

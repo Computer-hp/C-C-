@@ -298,7 +298,7 @@ namespace WinFormsApp1
                 for (int y = 0; y < boardSize; y++)
                 {
 
-                    if (this.Board[x, y] != null && this.Board[x, y].pieceName != P.pieceName)
+                    if (this.Board[x, y] != null && this.Board[x, y].pieceType == P.pieceType)
                         if (this.validMoves.Exists(item => item.x == x && item.y == y) == true)
                             this.validMoves.RemoveAll(item => item.x == x && item.y == y);
                 }

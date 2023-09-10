@@ -17,7 +17,16 @@ namespace WinFormsApp1
         private int turn = 0; // 0 for white, 1 for black
         private string currentPlayer = "";
 
-        private string[] rowLetter = { "a", "b", "c", "d", "e", "f", "g", "h"};
+        private string[] rowLetter = { "a", "b", "c", "d", "e", "f", "g", "h" };
+
+        private bool[] firstKingMove = { false, false };
+
+        private bool[] aRookFirstMove = { false, false };
+        private bool[] hRookFirstMove = { false, false };
+
+        private bool[] O_O = { false, false };
+
+        private bool[] O_O_O = { false, false };
 
         CPiece selectedPiece = null;
 
@@ -97,7 +106,6 @@ namespace WinFormsApp1
                     int newHeight = (int)(maxImageSize / aspectRatio);
 
                     resizedImage = new Bitmap(originalImage, newWidth, newHeight);
-                    Debug.WriteLine(newHeight + ", " + newWidth);
                     return resizedImage;
                 }
             }
@@ -119,10 +127,18 @@ namespace WinFormsApp1
             int x = position.Item1;
             int y = position.Item2;
 
+
             if (turn == 0)
                 currentPlayer = "White";
             else
                 currentPlayer = "Black";
+
+
+            int Y;
+            if (currentPlayer == "White")
+                Y = 0;
+            else
+                Y = 7;
 
             if (ChessBoard.Board[x, y] != null && ChessBoard.Board[x, y].pieceType == currentPlayer)
             {
@@ -133,7 +149,27 @@ namespace WinFormsApp1
                 ChessBoard = AvaibleSquares(ChessBoard, selectedPiece);
 
                 if (selectedPiece.pieceName == "K")
+                {
                     ChessBoard = SaveInvalidSquares(ChessBoard, selectedPiece);
+
+                    if (ChessBoard.Board[6, Y] == null && ChessBoard.validMoves.Exists(item => item.x == 5 && item.y == Y) == true && !firstKingMove[turn] && !hRookFirstMove[turn])
+                    {
+                        ChessBoard.validMoves.Add(new CSquare(6, Y));
+                        O_O[turn] = true;
+                    }
+                    else
+                        O_O[turn] = false;
+
+
+                    if (ChessBoard.Board[2, Y] == null && ChessBoard.Board[3, Y] == null && ChessBoard.validMoves.Exists(item => item.x == 3 && item.y == Y) == true && !firstKingMove[turn] && !aRookFirstMove[turn])
+                    {
+                        ChessBoard.validMoves.Add(new CSquare(2, Y));
+                        O_O_O[turn] = true;
+                    }
+                    else
+                        O_O_O[turn] = false;
+
+                }
 
                 Debug.WriteLine(ChessBoard.ToString());
             }
@@ -153,9 +189,51 @@ namespace WinFormsApp1
                         promotion.ShowDialog();
 
                         ChessBoard.Board[x, y] = new CPiece(selectedPiece.x, selectedPiece.y, promotion.pieceName, selectedPiece.pieceType);
-                    } else
+                    } 
+                    else
                     {
                         ChessBoard.Board[x, y] = selectedPiece;
+
+                        if (selectedPiece.pieceName == "K" && !firstKingMove[turn])
+                        {
+                            firstKingMove[turn] = true;
+
+                            if (O_O[turn] && x == 6 && y == Y)
+                            {
+                                var tmp = ChessBoard.Board[7, Y];  // copy the rook
+                                ChessBoard.Board[7, Y] = null;
+                                ChessBoard.Board[5, Y] = tmp;
+
+                                Button RookSquare = GetButtonAtPosition(7, Y);
+                                RookSquare.Image = null;
+
+                                Bitmap RookImage = SetImageToButton(tmp);
+
+                                RookSquare = GetButtonAtPosition(5, Y);
+                                RookSquare.Image = RookImage;
+                            }
+                            else if (O_O_O[turn] && x == 2 && y == Y)
+                            {
+                                var tmp = ChessBoard.Board[7, Y];  // copy the rook
+                                ChessBoard.Board[0, Y] = null;
+                                ChessBoard.Board[3, Y] = tmp;
+
+                                Button RookSquare = GetButtonAtPosition(0, Y);
+                                RookSquare.Image = null;
+
+                                Bitmap RookImage = SetImageToButton(tmp);
+
+                                RookSquare = GetButtonAtPosition(3, Y);
+                                RookSquare.Image = RookImage;
+                            }
+                        }
+                        else if (selectedPiece.pieceName == "R")
+                        {
+                            if (selectedPiece.x == 0 && selectedPiece.y == Y)
+                                aRookFirstMove[turn] = true;
+                            else if (selectedPiece.x == 7 && selectedPiece.y == Y)
+                                hRookFirstMove[turn] = true;
+                        }
                     }
 
                     ChessBoard.Board[x, y].x = x;
@@ -164,8 +242,6 @@ namespace WinFormsApp1
                     Bitmap image = SetImageToButton(ChessBoard.Board[x, y]);
 
                     clickedButton.Image = image;
-
-                    //InitializeChessBoard(ChessBoard);
 
                     ChessBoard.validMoves.Clear();
 
@@ -195,7 +271,7 @@ namespace WinFormsApp1
             }
             return null;
         }
-        // calculate the squares of every piece and compare with validMoves, if there are == moves, save it in the InvalidSquares
+        // calculates the squares of every piece and compares with validMoves, if there are == moves, saves them in InvalidSquares
         private CMatrixBoard SaveInvalidSquares(CMatrixBoard B, CPiece P)
         {
             B.InvalidSquaresKing.Clear();

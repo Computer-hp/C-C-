@@ -81,8 +81,8 @@ namespace WinFormsApp1
             if ((rightX >= boardSize) || (upORdown >= boardSize || upORdown < 0))
                 return;
 
-            if (B.Board[rightX, upORdown] != null && B.Board[rightX, upORdown].pieceType != P.pieceType)
-                validMoves.Add(new CSquare(rightX, upORdown));
+            //if (B.Board[rightX, upORdown] != null && B.Board[rightX, upORdown].pieceType != P.pieceType)
+            validMoves.Add(new CSquare(rightX, upORdown));
         }
         // for white and black pawns
         private void checkLeft(int X, int Y, CPiece P, CMatrixBoard B)
@@ -92,8 +92,8 @@ namespace WinFormsApp1
             if (leftX < 0 || (upORdown >= boardSize || upORdown < 0))
                 return;
 
-            if (B.Board[leftX, upORdown] != null && B.Board[leftX, upORdown].pieceType != P.pieceType)
-                validMoves.Add(new CSquare(leftX, upORdown));
+            //if (B.Board[leftX, upORdown] != null && B.Board[leftX, upORdown].pieceType != P.pieceType)
+            validMoves.Add(new CSquare(leftX, upORdown));
         }
 
         public void Straight(CPiece P)

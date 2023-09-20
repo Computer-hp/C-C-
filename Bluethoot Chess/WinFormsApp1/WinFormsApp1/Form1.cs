@@ -182,6 +182,10 @@ namespace WinFormsApp1
             {
                 if ((ChessBoard.Board[x, y] == null || ChessBoard.Board[x, y].pieceType != currentPlayer) && ChessBoard.validMoves.Exists(item => item.x == x && item.y == y) == true)
                 {
+                    if (selectedPiece.pieceName == "P")
+                        if (selectedPiece.x != x && (ChessBoard.Board[x, y] == null || ChessBoard.Board[x, y].pieceName == "K"))
+                            return;
+
                     Button originalSquare = GetButtonAtPosition(selectedPiece.x, selectedPiece.y);
                     originalSquare.Image = null;
 
@@ -256,12 +260,6 @@ namespace WinFormsApp1
                     selectedPiece = null;
                 }
             }
-            else
-            {
-                selectedPiece = null;
-                ChessBoard.validMoves.Clear();
-            }
-
         }
         // Find the button at the specified position
         private Button GetButtonAtPosition(int x, int y)
@@ -289,6 +287,13 @@ namespace WinFormsApp1
                 {
                     B.validMoves.Clear();
                     B = AvaibleSquares(B, piece);
+
+                    if (piece.pieceName == "P")
+                        if (piece.pieceType == "White")
+                            B.validMoves.RemoveAll(square => square.x == piece.x && square.y == piece.y + 1);
+                        else
+                            B.validMoves.RemoveAll(square => square.x == piece.x && square.y == piece.y - 1);
+
                     B.InvalidSquaresKing.RemoveAll(square => B.validMoves.Exists(move => move.x == square.x && move.y == square.y));
                 }
             }
@@ -333,16 +338,3 @@ namespace WinFormsApp1
         }
     }
 }
-/*internal static class ProjectSourcePath
-{
-    private const string myRelativePath = nameof(ProjectSourcePath) + ".cs";
-    private static string? lazyValue;
-    public static string Value => lazyValue ??= calculatePath();
-
-    private static string calculatePath()
-    {
-        string pathName = GetSourceFilePathName();
-        Assert(pathName.EndsWith(myRelativePath, StringComparison.Ordinal));
-        return pathName.Substring(0, pathName.Length - myRelativePath.Length);
-    }
-}*/

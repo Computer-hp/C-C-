@@ -32,6 +32,8 @@ namespace WinFormsApp1
 
         private CMatrixBoard ChessBoard;
 
+        private static string projectPath = (System.Environment.CurrentDirectory).Replace("WinFormsApp1\\bin\\Debug\\net6.0-windows", "");
+
         public Form1()
         {
             ChessBoard = new CMatrixBoard();
@@ -39,6 +41,9 @@ namespace WinFormsApp1
             InitializeComponent();
             ChessBoard.InitializePieces(); //forse sopra riga 16
             InitializeChessBoard(ChessBoard);
+
+            Debug.WriteLine("Path: " + projectPath);
+
         }
         private void InitializeChessBoard(CMatrixBoard ChessBoard)
         {
@@ -97,7 +102,7 @@ namespace WinFormsApp1
             Bitmap resizedImage = null;
             try
             {
-                using (Bitmap originalImage = (Bitmap)Image.FromFile(@"C:\Users\Zlatko\Desktop\AnticGit\DanielA\Bluethoot Chess\WinFormsApp1\" + imagePath))
+                using (Bitmap originalImage = (Bitmap)Image.FromFile(projectPath + imagePath))
                 {
                     double maxImageSize = Math.Min(squareSize, squareSize); // Set this to your desired max size
                     double aspectRatio = (double)originalImage.Width / originalImage.Height;
@@ -328,3 +333,16 @@ namespace WinFormsApp1
         }
     }
 }
+/*internal static class ProjectSourcePath
+{
+    private const string myRelativePath = nameof(ProjectSourcePath) + ".cs";
+    private static string? lazyValue;
+    public static string Value => lazyValue ??= calculatePath();
+
+    private static string calculatePath()
+    {
+        string pathName = GetSourceFilePathName();
+        Assert(pathName.EndsWith(myRelativePath, StringComparison.Ordinal));
+        return pathName.Substring(0, pathName.Length - myRelativePath.Length);
+    }
+}*/

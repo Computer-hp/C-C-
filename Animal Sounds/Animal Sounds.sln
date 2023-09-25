@@ -1,0 +1,25 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.6.33723.286
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Animal Sounds", "Animal Sounds\Animal Sounds.csproj", "{F1DD81F5-4DDE-4B67-B83A-93D905B3FB9B}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{F1DD81F5-4DDE-4B67-B83A-93D905B3FB9B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{F1DD81F5-4DDE-4B67-B83A-93D905B3FB9B}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{F1DD81F5-4DDE-4B67-B83A-93D905B3FB9B}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{F1DD81F5-4DDE-4B67-B83A-93D905B3FB9B}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {73867C7F-A7A9-44BA-9E0E-45AEC325CA70}
+	EndGlobalSection
+EndGlobal

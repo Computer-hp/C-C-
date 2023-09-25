@@ -1,0 +1,15 @@
+C:\Users\AnticHp\Desktop\ConsoleAnimalSound\bin\Debug\net7.0\Desktop.exe
+C:\Users\AnticHp\Desktop\ConsoleAnimalSound\bin\Debug\net7.0\Desktop.deps.json
+C:\Users\AnticHp\Desktop\ConsoleAnimalSound\bin\Debug\net7.0\Desktop.runtimeconfig.json
+C:\Users\AnticHp\Desktop\ConsoleAnimalSound\bin\Debug\net7.0\Desktop.dll
+C:\Users\AnticHp\Desktop\ConsoleAnimalSound\bin\Debug\net7.0\Desktop.pdb
+C:\Users\AnticHp\Desktop\ConsoleAnimalSound\obj\Debug\net7.0\Desktop.csproj.AssemblyReference.cache
+C:\Users\AnticHp\Desktop\ConsoleAnimalSound\obj\Debug\net7.0\Desktop.GeneratedMSBuildEditorConfig.editorconfig
+C:\Users\AnticHp\Desktop\ConsoleAnimalSound\obj\Debug\net7.0\Desktop.AssemblyInfoInputs.cache
+C:\Users\AnticHp\Desktop\ConsoleAnimalSound\obj\Debug\net7.0\Desktop.AssemblyInfo.cs
+C:\Users\AnticHp\Desktop\ConsoleAnimalSound\obj\Debug\net7.0\Desktop.csproj.CoreCompileInputs.cache
+C:\Users\AnticHp\Desktop\ConsoleAnimalSound\obj\Debug\net7.0\Desktop.dll
+C:\Users\AnticHp\Desktop\ConsoleAnimalSound\obj\Debug\net7.0\refint\Desktop.dll
+C:\Users\AnticHp\Desktop\ConsoleAnimalSound\obj\Debug\net7.0\Desktop.pdb
+C:\Users\AnticHp\Desktop\ConsoleAnimalSound\obj\Debug\net7.0\Desktop.genruntimeconfig.cache
+C:\Users\AnticHp\Desktop\ConsoleAnimalSound\obj\Debug\net7.0\ref\Desktop.dll

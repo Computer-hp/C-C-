@@ -28,6 +28,8 @@ namespace WinFormsApp1
 
         private bool[] O_O_O = { false, false };
 
+        private bool check = false;
+
         CPiece selectedPiece = null;
 
         private CMatrixBoard ChessBoard;
@@ -42,7 +44,7 @@ namespace WinFormsApp1
             ChessBoard.InitializePieces(); //forse sopra riga 16
             InitializeChessBoard(ChessBoard);
 
-            Debug.WriteLine("Path: " + projectPath);
+            //Debug.WriteLine("Path: " + projectPath);
 
         }
         private void InitializeChessBoard(CMatrixBoard ChessBoard)
@@ -90,7 +92,6 @@ namespace WinFormsApp1
                     }
                 }
             }
-            Refresh();
         }
 
         public static Bitmap SetImageToButton(CPiece P)
@@ -248,6 +249,9 @@ namespace WinFormsApp1
                     ChessBoard.Board[x, y].x = x;
                     ChessBoard.Board[x, y].y = y;
 
+                    // check
+                    
+
                     Bitmap image = SetImageToButton(ChessBoard.Board[x, y]);
 
                     clickedButton.Image = image;
@@ -298,6 +302,33 @@ namespace WinFormsApp1
                 }
             }
             
+            B.validMoves.Clear();
+            B.validMoves.AddRange(B.InvalidSquaresKing);
+            return B;
+        }
+
+        private CMatrixBoard isCheck(CMatrixBoard B, CPiece P)
+        {
+            B.validMoves.Clear();
+            B.InvalidSquaresKing.AddRange(B.validMoves);
+
+            foreach (var piece in B.Board)
+            {
+                if (piece != null && piece.pieceType != P.pieceType && piece.pieceName != P.pieceName)
+                {
+                    B.validMoves.Clear();
+                    B = AvaibleSquares(B, piece);
+
+                    if (piece.pieceName == "P")
+                        if (piece.pieceType == "White")
+                            B.validMoves.RemoveAll(square => square.x == piece.x && square.y == piece.y + 1);
+                        else
+                            B.validMoves.RemoveAll(square => square.x == piece.x && square.y == piece.y - 1);
+
+                    B.InvalidSquaresKing.RemoveAll(square => B.validMoves.Exists(move => move.x == square.x && move.y == square.y));
+                }
+            }
+
             B.validMoves.Clear();
             B.validMoves.AddRange(B.InvalidSquaresKing);
             return B;

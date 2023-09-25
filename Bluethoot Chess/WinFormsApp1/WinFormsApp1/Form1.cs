@@ -7,6 +7,7 @@ using System.Collections.Generic;
 using System.Collections;
 using Microsoft.VisualBasic.ApplicationServices;
 using System.Configuration;
+using System.Net.NetworkInformation;
 
 namespace WinFormsApp1
 {
@@ -41,10 +42,8 @@ namespace WinFormsApp1
             ChessBoard = new CMatrixBoard();
 
             InitializeComponent();
-            ChessBoard.InitializePieces(); //forse sopra riga 16
+            ChessBoard.InitializePieces();
             InitializeChessBoard(ChessBoard);
-
-            //Debug.WriteLine("Path: " + projectPath);
 
         }
         private void InitializeChessBoard(CMatrixBoard ChessBoard)
@@ -148,6 +147,10 @@ namespace WinFormsApp1
 
             if (ChessBoard.Board[x, y] != null && ChessBoard.Board[x, y].pieceType == currentPlayer)
             {
+                if (check && ChessBoard.Board[x, y].pieceName != "K")
+                    return;
+
+
                 selectedPiece = ChessBoard.Board[x, y];
                 
                 ChessBoard.validMoves.Clear();
@@ -236,8 +239,7 @@ namespace WinFormsApp1
                                 RookSquare = GetButtonAtPosition(3, Y);
                                 RookSquare.Image = RookImage;
                             }
-                        }
-                        else if (selectedPiece.pieceName == "R")
+                        } else if (selectedPiece.pieceName == "R")
                         {
                             if (selectedPiece.x == 0 && selectedPiece.y == Y)
                                 aRookFirstMove[turn] = true;
@@ -245,18 +247,36 @@ namespace WinFormsApp1
                                 hRookFirstMove[turn] = true;
                         }
                     }
-
                     ChessBoard.Board[x, y].x = x;
                     ChessBoard.Board[x, y].y = y;
 
                     // check
-                    
+                    if (selectedPiece.pieceName != "K")
+                    {
+                        ChessBoard.validMoves.Clear();
+
+                        ChessBoard = AvaibleSquares(ChessBoard, ChessBoard.Board[x, y]);
+
+                        IsCheck(ChessBoard, ChessBoard.Board[x, y]);
+                    }
 
                     Bitmap image = SetImageToButton(ChessBoard.Board[x, y]);
 
                     clickedButton.Image = image;
 
                     ChessBoard.validMoves.Clear();
+
+                    if (check)
+                    {
+                        ChessBoard = AvaibleSquares(ChessBoard, FindKing(ChessBoard, currentPlayer));
+
+                        if (!ChessBoard.validMoves.Any())
+                        {
+                            Debug.WriteLine("Si");
+                            var popUp = new Form3();
+                            popUp.ShowDialog();
+                        }
+                    }
 
                     // Switch the current player's turn
                     turn = (turn + 1) % 2;
@@ -307,31 +327,34 @@ namespace WinFormsApp1
             return B;
         }
 
-        private CMatrixBoard isCheck(CMatrixBoard B, CPiece P)
+        private void IsCheck(CMatrixBoard B, CPiece P)
         {
-            B.validMoves.Clear();
-            B.InvalidSquaresKing.AddRange(B.validMoves);
+            CPiece king = FindKing(B, currentPlayer);
 
+            
+            foreach (var obj in B.validMoves)
+            {
+                Debug.WriteLine($"x: {obj.x}, y: {obj.y}");
+            }
+            Debug.WriteLine($"king x: {king.x}, y: {king.y}");
+                
+            if (B.validMoves.Exists(move => move.x == king.x && move.y == king.y) == true)
+            {
+                check = true;
+                Debug.WriteLine(check);
+            }
+        }
+
+        private CPiece FindKing(CMatrixBoard B, string currentPlayer)
+        {
             foreach (var piece in B.Board)
             {
-                if (piece != null && piece.pieceType != P.pieceType && piece.pieceName != P.pieceName)
+                if (piece != null && piece.pieceType != currentPlayer && piece.pieceName == "K")
                 {
-                    B.validMoves.Clear();
-                    B = AvaibleSquares(B, piece);
-
-                    if (piece.pieceName == "P")
-                        if (piece.pieceType == "White")
-                            B.validMoves.RemoveAll(square => square.x == piece.x && square.y == piece.y + 1);
-                        else
-                            B.validMoves.RemoveAll(square => square.x == piece.x && square.y == piece.y - 1);
-
-                    B.InvalidSquaresKing.RemoveAll(square => B.validMoves.Exists(move => move.x == square.x && move.y == square.y));
+                    return piece;
                 }
             }
-
-            B.validMoves.Clear();
-            B.validMoves.AddRange(B.InvalidSquaresKing);
-            return B;
+            return null;
         }
 
         private CMatrixBoard AvaibleSquares(CMatrixBoard ChessBoard, CPiece P)

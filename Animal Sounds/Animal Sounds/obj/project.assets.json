@@ -13,11 +13,11 @@
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "C:\\Users\\AnticHp\\Desktop\\Animal Sounds\\Animal Sounds\\Animal Sounds.csproj",
+      "projectUniqueName": "C:\\Users\\AnticHp\\Desktop\\AnticGit\\DanielA\\Animal Sounds\\Animal Sounds\\Animal Sounds.csproj",
       "projectName": "Animal Sounds",
-      "projectPath": "C:\\Users\\AnticHp\\Desktop\\Animal Sounds\\Animal Sounds\\Animal Sounds.csproj",
+      "projectPath": "C:\\Users\\AnticHp\\Desktop\\AnticGit\\DanielA\\Animal Sounds\\Animal Sounds\\Animal Sounds.csproj",
       "packagesPath": "C:\\Users\\AnticHp\\.nuget\\packages\\",
-      "outputPath": "C:\\Users\\AnticHp\\Desktop\\Animal Sounds\\Animal Sounds\\obj\\",
+      "outputPath": "C:\\Users\\AnticHp\\Desktop\\AnticGit\\DanielA\\Animal Sounds\\Animal Sounds\\obj\\",
       "projectStyle": "PackageReference",
       "configFilePaths": [
         "C:\\Users\\AnticHp\\AppData\\Roaming\\NuGet\\NuGet.Config",

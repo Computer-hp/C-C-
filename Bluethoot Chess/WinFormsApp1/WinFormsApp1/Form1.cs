@@ -35,7 +35,8 @@ namespace WinFormsApp1
 
         private CMatrixBoard ChessBoard;
 
-        private static string projectPath = (System.Environment.CurrentDirectory).Replace("WinFormsApp1\\bin\\Debug\\net6.0-windows", "");
+        public static string projectPath = (System.Environment.CurrentDirectory).Replace("WinFormsApp1\\bin\\Debug\\net6.0-windows", "");
+
 
         public Form1()
         {
@@ -145,15 +146,24 @@ namespace WinFormsApp1
             else
                 Y = 7;
 
+            ChessBoard.validMoves.Clear();
+
             if (ChessBoard.Board[x, y] != null && ChessBoard.Board[x, y].pieceType == currentPlayer)
             {
                 if (check && ChessBoard.Board[x, y].pieceName != "K")
-                    return;
+                {
+                    ChessBoard = AvaibleSquares(ChessBoard, ChessBoard.Board[x, y]);
+                    ChessBoard = SaveInvalidSquares(ChessBoard, ChessBoard.Board[x, y]);
+                    
+                    if (!ChessBoard.validMoves.Any())
+                        return;
+
+
+
+                }
 
 
                 selectedPiece = ChessBoard.Board[x, y];
-                
-                ChessBoard.validMoves.Clear();
 
                 ChessBoard = AvaibleSquares(ChessBoard, selectedPiece);
 
@@ -264,19 +274,45 @@ namespace WinFormsApp1
 
                     clickedButton.Image = image;
 
-                    ChessBoard.validMoves.Clear();
+                    
 
+
+                    // TODO check if there are moves that can stop the check, if not it's checkmate
                     if (check)
                     {
+                        ChessBoard.copyMoves = ChessBoard.validMoves;
+
+                        foreach (var piece in ChessBoard.Board)
+                        {
+                            if (piece != null && piece.pieceType != selectedPiece.pieceType && piece.pieceName != "K")
+                            {
+                                ChessBoard.validMoves.Clear();
+                                ChessBoard = AvaibleSquares(ChessBoard, piece);
+
+                                /*
+                                check if every piece of the oponent has the posibility to stop the check
+                                with moving the king or a piece.
+                                create a dictionary to save the name of the piece and the moves,
+                                so when the oponent clicks the piece the program has to check
+                                if that piece is the one in the dictionary and the move is equal
+                                to the possible one.
+                                 */
+
+                                StopCheck(ChessBoard);
+
+                            }
+                        }
+
                         ChessBoard = AvaibleSquares(ChessBoard, FindKing(ChessBoard, currentPlayer));
 
                         if (!ChessBoard.validMoves.Any())
                         {
-                            Debug.WriteLine("Si");
                             var popUp = new Form3();
                             popUp.ShowDialog();
                         }
                     }
+
+                    ChessBoard.validMoves.Clear();
 
                     // Switch the current player's turn
                     turn = (turn + 1) % 2;
@@ -343,6 +379,11 @@ namespace WinFormsApp1
                 check = true;
                 Debug.WriteLine(check);
             }
+        }
+
+        private void StopCheck(CMatrixBoard ChessBoard)
+        {
+            
         }
 
         private CPiece FindKing(CMatrixBoard B, string currentPlayer)

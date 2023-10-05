@@ -20,7 +20,11 @@ namespace WinFormsApp1
 
         public List<CSquare> validMoves = new List<CSquare>();
 
+        public List<CSquare> copyMoves = new List<CSquare>();
+
         public List<CSquare> InvalidSquaresKing = new List<CSquare>();
+
+        Dictionary<string, CSquare> stopCheckWithPiece = new Dictionary<string, CSquare>();
 
         public CMatrixBoard()
         {

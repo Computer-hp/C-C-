@@ -28,119 +28,177 @@
         /// </summary>
         private void InitializeComponent()
         {
-            button1 = new Button();
-            button2 = new Button();
-            button3 = new Button();
-            button4 = new Button();
-            button5 = new Button();
-            button6 = new Button();
-            button7 = new Button();
-            button8 = new Button();
-            button9 = new Button();
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(Form1));
+            cat = new Button();
+            dog = new Button();
+            rooster = new Button();
+            chimpanzee = new Button();
+            horse = new Button();
+            sheep = new Button();
+            cow = new Button();
+            rattlesnake = new Button();
+            wolf = new Button();
+            tableLayoutPanel1 = new TableLayoutPanel();
+            tableLayoutPanel1.SuspendLayout();
             SuspendLayout();
             // 
-            // button1
+            // cat
             // 
-            button1.Location = new Point(219, 54);
-            button1.Name = "button1";
-            button1.Size = new Size(75, 75);
-            button1.TabIndex = 0;
-            button1.UseVisualStyleBackColor = true;
+            cat.BackgroundImage = Properties.Resources.cat;
+            cat.BackgroundImageLayout = ImageLayout.Zoom;
+            cat.Dock = DockStyle.Fill;
+            cat.Location = new Point(3, 3);
+            cat.Name = "cat";
+            cat.Size = new Size(260, 143);
+            cat.TabIndex = 0;
+            cat.UseVisualStyleBackColor = true;
+            cat.Click += cat_Click;
             // 
-            // button2
+            // dog
             // 
-            button2.Location = new Point(219, 135);
-            button2.Name = "button2";
-            button2.Size = new Size(75, 75);
-            button2.TabIndex = 1;
-            button2.UseVisualStyleBackColor = true;
+            dog.BackgroundImage = Properties.Resources.dog;
+            dog.BackgroundImageLayout = ImageLayout.Zoom;
+            dog.Dock = DockStyle.Fill;
+            dog.Location = new Point(3, 152);
+            dog.Name = "dog";
+            dog.Size = new Size(260, 143);
+            dog.TabIndex = 1;
+            dog.UseVisualStyleBackColor = true;
+            dog.Click += dog_Click;
             // 
-            // button3
+            // rooster
             // 
-            button3.Location = new Point(219, 216);
-            button3.Name = "button3";
-            button3.Size = new Size(75, 75);
-            button3.TabIndex = 2;
-            button3.UseVisualStyleBackColor = true;
+            rooster.BackgroundImage = (Image)resources.GetObject("rooster.BackgroundImage");
+            rooster.BackgroundImageLayout = ImageLayout.Zoom;
+            rooster.Dock = DockStyle.Fill;
+            rooster.Location = new Point(3, 301);
+            rooster.Name = "rooster";
+            rooster.Size = new Size(260, 146);
+            rooster.TabIndex = 2;
+            rooster.UseVisualStyleBackColor = true;
+            rooster.Click += rooster_Click;
             // 
-            // button4
+            // chimpanzee
             // 
-            button4.Location = new Point(300, 54);
-            button4.Name = "button4";
-            button4.Size = new Size(75, 75);
-            button4.TabIndex = 3;
-            button4.UseVisualStyleBackColor = true;
+            chimpanzee.BackgroundImage = (Image)resources.GetObject("chimpanzee.BackgroundImage");
+            chimpanzee.BackgroundImageLayout = ImageLayout.Zoom;
+            chimpanzee.Dock = DockStyle.Fill;
+            chimpanzee.Location = new Point(269, 3);
+            chimpanzee.Name = "chimpanzee";
+            chimpanzee.Size = new Size(260, 143);
+            chimpanzee.TabIndex = 3;
+            chimpanzee.UseVisualStyleBackColor = true;
+            chimpanzee.Click += chimpanzee_Click;
             // 
-            // button5
+            // horse
             // 
-            button5.Location = new Point(300, 135);
-            button5.Name = "button5";
-            button5.Size = new Size(75, 75);
-            button5.TabIndex = 4;
-            button5.UseVisualStyleBackColor = true;
+            horse.BackgroundImage = (Image)resources.GetObject("horse.BackgroundImage");
+            horse.BackgroundImageLayout = ImageLayout.Zoom;
+            horse.Dock = DockStyle.Fill;
+            horse.Location = new Point(269, 152);
+            horse.Name = "horse";
+            horse.Size = new Size(260, 143);
+            horse.TabIndex = 4;
+            horse.UseVisualStyleBackColor = true;
+            horse.Click += horse_Click;
             // 
-            // button6
+            // sheep
             // 
-            button6.Location = new Point(300, 216);
-            button6.Name = "button6";
-            button6.Size = new Size(75, 75);
-            button6.TabIndex = 5;
-            button6.UseVisualStyleBackColor = true;
+            sheep.BackgroundImage = (Image)resources.GetObject("sheep.BackgroundImage");
+            sheep.BackgroundImageLayout = ImageLayout.Zoom;
+            sheep.Dock = DockStyle.Fill;
+            sheep.Location = new Point(269, 301);
+            sheep.Name = "sheep";
+            sheep.Size = new Size(260, 146);
+            sheep.TabIndex = 5;
+            sheep.UseVisualStyleBackColor = true;
+            sheep.Click += sheep_Click;
             // 
-            // button7
+            // cow
             // 
-            button7.Location = new Point(381, 54);
-            button7.Name = "button7";
-            button7.Size = new Size(75, 75);
-            button7.TabIndex = 6;
-            button7.UseVisualStyleBackColor = true;
+            cow.BackgroundImage = (Image)resources.GetObject("cow.BackgroundImage");
+            cow.BackgroundImageLayout = ImageLayout.Zoom;
+            cow.Dock = DockStyle.Fill;
+            cow.Location = new Point(535, 3);
+            cow.Name = "cow";
+            cow.Size = new Size(262, 143);
+            cow.TabIndex = 6;
+            cow.UseVisualStyleBackColor = true;
+            cow.Click += cow_Click;
             // 
-            // button8
+            // rattlesnake
             // 
-            button8.Location = new Point(381, 135);
-            button8.Name = "button8";
-            button8.Size = new Size(75, 75);
-            button8.TabIndex = 7;
-            button8.UseVisualStyleBackColor = true;
+            rattlesnake.BackgroundImage = (Image)resources.GetObject("rattlesnake.BackgroundImage");
+            rattlesnake.BackgroundImageLayout = ImageLayout.Zoom;
+            rattlesnake.Dock = DockStyle.Fill;
+            rattlesnake.Location = new Point(535, 152);
+            rattlesnake.Name = "rattlesnake";
+            rattlesnake.Size = new Size(262, 143);
+            rattlesnake.TabIndex = 7;
+            rattlesnake.UseVisualStyleBackColor = true;
+            rattlesnake.Click += rattlesnake_Click;
             // 
-            // button9
+            // wolf
             // 
-            button9.Location = new Point(381, 216);
-            button9.Name = "button9";
-            button9.Size = new Size(75, 75);
-            button9.TabIndex = 8;
-            button9.UseVisualStyleBackColor = true;
+            wolf.BackgroundImage = (Image)resources.GetObject("wolf.BackgroundImage");
+            wolf.BackgroundImageLayout = ImageLayout.Zoom;
+            wolf.Dock = DockStyle.Fill;
+            wolf.Location = new Point(535, 301);
+            wolf.Name = "wolf";
+            wolf.Size = new Size(262, 146);
+            wolf.TabIndex = 8;
+            wolf.UseVisualStyleBackColor = true;
+            wolf.Click += wolf_Click;
+            // 
+            // tableLayoutPanel1
+            // 
+            tableLayoutPanel1.ColumnCount = 3;
+            tableLayoutPanel1.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 33.3333321F));
+            tableLayoutPanel1.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 33.3333321F));
+            tableLayoutPanel1.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 33.3333321F));
+            tableLayoutPanel1.Controls.Add(wolf, 2, 2);
+            tableLayoutPanel1.Controls.Add(dog, 0, 1);
+            tableLayoutPanel1.Controls.Add(rattlesnake, 2, 1);
+            tableLayoutPanel1.Controls.Add(rooster, 0, 2);
+            tableLayoutPanel1.Controls.Add(sheep, 1, 2);
+            tableLayoutPanel1.Controls.Add(chimpanzee, 1, 0);
+            tableLayoutPanel1.Controls.Add(horse, 1, 1);
+            tableLayoutPanel1.Controls.Add(cow, 2, 0);
+            tableLayoutPanel1.Controls.Add(cat, 0, 0);
+            tableLayoutPanel1.Dock = DockStyle.Fill;
+            tableLayoutPanel1.Location = new Point(0, 0);
+            tableLayoutPanel1.Name = "tableLayoutPanel1";
+            tableLayoutPanel1.RowCount = 3;
+            tableLayoutPanel1.RowStyles.Add(new RowStyle(SizeType.Percent, 33.3333321F));
+            tableLayoutPanel1.RowStyles.Add(new RowStyle(SizeType.Percent, 33.3333321F));
+            tableLayoutPanel1.RowStyles.Add(new RowStyle(SizeType.Percent, 33.3333321F));
+            tableLayoutPanel1.Size = new Size(800, 450);
+            tableLayoutPanel1.TabIndex = 9;
             // 
             // Form1
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
             AutoScaleMode = AutoScaleMode.Font;
             ClientSize = new Size(800, 450);
-            Controls.Add(button9);
-            Controls.Add(button8);
-            Controls.Add(button7);
-            Controls.Add(button6);
-            Controls.Add(button5);
-            Controls.Add(button4);
-            Controls.Add(button3);
-            Controls.Add(button2);
-            Controls.Add(button1);
+            Controls.Add(tableLayoutPanel1);
             Name = "Form1";
             Text = "Form1";
             Load += Form1_Load;
+            tableLayoutPanel1.ResumeLayout(false);
             ResumeLayout(false);
         }
 
         #endregion
 
-        private Button button1;
-        private Button button2;
-        private Button button3;
-        private Button button4;
-        private Button button5;
-        private Button button6;
-        private Button button7;
-        private Button button8;
-        private Button button9;
+        private Button cat;
+        private Button dog;
+        private Button rooster;
+        private Button chimpanzee;
+        private Button horse;
+        private Button sheep;
+        private Button cow;
+        private Button rattlesnake;
+        private Button wolf;
+        private TableLayoutPanel tableLayoutPanel1;
     }
 }

@@ -16,3 +16,21 @@ C:\Users\AnticHp\Desktop\Animal Sounds\Animal Sounds\obj\Debug\net6.0-windows\re
 C:\Users\AnticHp\Desktop\Animal Sounds\Animal Sounds\obj\Debug\net6.0-windows\Animal Sounds.pdb
 C:\Users\AnticHp\Desktop\Animal Sounds\Animal Sounds\obj\Debug\net6.0-windows\Animal Sounds.genruntimeconfig.cache
 C:\Users\AnticHp\Desktop\Animal Sounds\Animal Sounds\obj\Debug\net6.0-windows\ref\Animal Sounds.dll
+C:\Users\AnticHp\Desktop\AnticGit\DanielA\Animal Sounds\Animal Sounds\bin\Debug\net6.0-windows\Animal Sounds.exe
+C:\Users\AnticHp\Desktop\AnticGit\DanielA\Animal Sounds\Animal Sounds\bin\Debug\net6.0-windows\Animal Sounds.deps.json
+C:\Users\AnticHp\Desktop\AnticGit\DanielA\Animal Sounds\Animal Sounds\bin\Debug\net6.0-windows\Animal Sounds.runtimeconfig.json
+C:\Users\AnticHp\Desktop\AnticGit\DanielA\Animal Sounds\Animal Sounds\bin\Debug\net6.0-windows\Animal Sounds.dll
+C:\Users\AnticHp\Desktop\AnticGit\DanielA\Animal Sounds\Animal Sounds\bin\Debug\net6.0-windows\Animal Sounds.pdb
+C:\Users\AnticHp\Desktop\AnticGit\DanielA\Animal Sounds\Animal Sounds\obj\Debug\net6.0-windows\Animal Sounds.csproj.AssemblyReference.cache
+C:\Users\AnticHp\Desktop\AnticGit\DanielA\Animal Sounds\Animal Sounds\obj\Debug\net6.0-windows\Animal_Sounds.Form1.resources
+C:\Users\AnticHp\Desktop\AnticGit\DanielA\Animal Sounds\Animal Sounds\obj\Debug\net6.0-windows\Animal_Sounds.Properties.Resources.resources
+C:\Users\AnticHp\Desktop\AnticGit\DanielA\Animal Sounds\Animal Sounds\obj\Debug\net6.0-windows\Animal Sounds.csproj.GenerateResource.cache
+C:\Users\AnticHp\Desktop\AnticGit\DanielA\Animal Sounds\Animal Sounds\obj\Debug\net6.0-windows\Animal Sounds.GeneratedMSBuildEditorConfig.editorconfig
+C:\Users\AnticHp\Desktop\AnticGit\DanielA\Animal Sounds\Animal Sounds\obj\Debug\net6.0-windows\Animal Sounds.AssemblyInfoInputs.cache
+C:\Users\AnticHp\Desktop\AnticGit\DanielA\Animal Sounds\Animal Sounds\obj\Debug\net6.0-windows\Animal Sounds.AssemblyInfo.cs
+C:\Users\AnticHp\Desktop\AnticGit\DanielA\Animal Sounds\Animal Sounds\obj\Debug\net6.0-windows\Animal Sounds.csproj.CoreCompileInputs.cache
+C:\Users\AnticHp\Desktop\AnticGit\DanielA\Animal Sounds\Animal Sounds\obj\Debug\net6.0-windows\Animal Sounds.dll
+C:\Users\AnticHp\Desktop\AnticGit\DanielA\Animal Sounds\Animal Sounds\obj\Debug\net6.0-windows\refint\Animal Sounds.dll
+C:\Users\AnticHp\Desktop\AnticGit\DanielA\Animal Sounds\Animal Sounds\obj\Debug\net6.0-windows\Animal Sounds.pdb
+C:\Users\AnticHp\Desktop\AnticGit\DanielA\Animal Sounds\Animal Sounds\obj\Debug\net6.0-windows\Animal Sounds.genruntimeconfig.cache
+C:\Users\AnticHp\Desktop\AnticGit\DanielA\Animal Sounds\Animal Sounds\obj\Debug\net6.0-windows\ref\Animal Sounds.dll

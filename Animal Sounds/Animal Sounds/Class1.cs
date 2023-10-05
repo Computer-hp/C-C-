@@ -6,84 +6,94 @@ using System.Media;
 using System.Text;
 using System.Threading.Tasks;
 
+
 namespace Animal_Sounds
 {
     abstract class CAnimal
     {
-        public abstract void MakeSound();
+        public abstract void MakeSound(string soundPath, string animalName);
     }
 
 
     class Cat : CAnimal
     {
-        public override void MakeSound()
+        public override void MakeSound(string soundPath, string animalName)
         {
-            SoundPlayer simpleSound = new SoundPlayer(Animal_Sounds.Form1.projectPath);
+            SoundPlayer simpleSound = new SoundPlayer();
+            simpleSound.SoundLocation = soundPath + "audios\\" + animalName.ToLower() + ".wav";
             simpleSound.Play();
         }
     }
     class Chimpanzee : CAnimal
     {
-        public override void MakeSound()
+        public override void MakeSound(string soundPath, string animalName)
         {
-            SoundPlayer simpleSound = new SoundPlayer();
+            SoundPlayer simpleSound = new SoundPlayer(soundPath + animalName);
+            simpleSound.SoundLocation = soundPath + "audios\\" + animalName.ToLower() + ".wav";
             simpleSound.Play();
         }
     }
     class Cow : CAnimal
     {
-        public override void MakeSound()
+        public override void MakeSound(string soundPath, string animalName)
         {
-            SoundPlayer simpleSound = new SoundPlayer(@"c:\Windows\Media\chimes.wav");
+            SoundPlayer simpleSound = new SoundPlayer(soundPath + animalName);
+            simpleSound.SoundLocation = soundPath + "audios\\" + animalName.ToLower() + ".wav";
             simpleSound.Play();
         }
     }
     class Dog : CAnimal
     {
-        public override void MakeSound()
+        public override void MakeSound(string soundPath, string animalName)
         {
-            SoundPlayer simpleSound = new SoundPlayer(@"c:\Windows\Media\chimes.wav");
+            SoundPlayer simpleSound = new SoundPlayer(soundPath + animalName);
+            simpleSound.SoundLocation = soundPath + "audios\\" + animalName.ToLower() + ".wav";
             simpleSound.Play();
         }
     }
 
     class Horse : CAnimal
     {
-        public override void MakeSound()
+        public override void MakeSound(string soundPath, string animalName)
         {
-            SoundPlayer simpleSound = new SoundPlayer(@"c:\Windows\Media\chimes.wav");
+            SoundPlayer simpleSound = new SoundPlayer(soundPath + animalName);
+            simpleSound.SoundLocation = soundPath + "audios\\" + animalName.ToLower() + ".wav";
             simpleSound.Play();
         }
     }
     class Rattlesnake : CAnimal
     {
-        public override void MakeSound()
+        public override void MakeSound(string soundPath, string animalName)
         {
-            SoundPlayer simpleSound = new SoundPlayer(@"c:\Windows\Media\chimes.wav");
+            SoundPlayer simpleSound = new SoundPlayer(soundPath + animalName);
+            simpleSound.SoundLocation = soundPath + "audios\\" + animalName.ToLower() + ".wav";
             simpleSound.Play();
         }
     }
     class Rooster : CAnimal
     {
-        public override void MakeSound()
+        public override void MakeSound(string soundPath, string animalName)
         {
-            SoundPlayer simpleSound = new SoundPlayer(@"c:\Windows\Media\chimes.wav");
+            SoundPlayer simpleSound = new SoundPlayer(soundPath + animalName);
+            simpleSound.SoundLocation = soundPath + "audios\\" + animalName.ToLower() + ".wav";
             simpleSound.Play();
         }
     }
     class Sheep : CAnimal
     {
-        public override void MakeSound()
+        public override void MakeSound(string soundPath, string animalName)
         {
-            SoundPlayer simpleSound = new SoundPlayer(@"c:\Windows\Media\chimes.wav");
+            SoundPlayer simpleSound = new SoundPlayer(soundPath + animalName);
+            simpleSound.SoundLocation = soundPath + "audios\\" + animalName.ToLower() + ".wav";
             simpleSound.Play();
         }
     }
     class Wolf : CAnimal
     {
-        public override void MakeSound()
+        public override void MakeSound(string soundPath, string animalName)
         {
-            SoundPlayer simpleSound = new SoundPlayer(@"c:\Windows\Media\chimes.wav");
+            SoundPlayer simpleSound = new SoundPlayer(soundPath + animalName);
+            simpleSound.SoundLocation = soundPath + "audios\\" + animalName.ToLower() + ".wav";
             simpleSound.Play();
         }
     }

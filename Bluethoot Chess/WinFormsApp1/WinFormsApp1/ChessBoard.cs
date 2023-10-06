@@ -24,7 +24,9 @@ namespace WinFormsApp1
 
         public List<CSquare> InvalidSquaresKing = new List<CSquare>();
 
-        public Dictionary<CPiece, CSquare> stopCheckWithPiece = new Dictionary<CPiece, CSquare>();
+        //public Dictionary<CPiece, List<CSquare>> stopCheckWithPiece = new Dictionary<CPiece, List<CSquare>>();
+        public Dictionary<Tuple<int, int>, List<CSquare>> stopCheckWithPiece = new Dictionary<Tuple<int, int>, List<CSquare>>();
+
 
         public CMatrixBoard()
         {

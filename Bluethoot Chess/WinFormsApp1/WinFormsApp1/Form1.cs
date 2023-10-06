@@ -147,13 +147,23 @@ namespace WinFormsApp1
                 if (selectedPiece == null)
                     return;
 
+
+                if (check && selectedPiece.pieceName != "K")
+                {
+                    Tuple<int, int> key = Tuple.Create(selectedPiece.x, selectedPiece.y);
+                    ChessBoard.copyMoves.Clear();
+                    ChessBoard.copyMoves = ChessBoard.stopCheckWithPiece[key];
+
+                    if (!ChessBoard.copyMoves.Exists(square => ChessBoard.validMoves.Exists(checkSquare => checkSquare.x == square.x && checkSquare.y == square.y)))
+                        return;
+                }
+
                 if (selectedPiece.pieceName == "P")
                 {
-                    // problema, quando mangio il pezzo posso controllare il pedone con bianco e nero
                     if (!DiagonalMovementPawn(ChessBoard, selectedPiece, x, y))
                         return;
 
-                    ChessBoard = PawnPromotion(ChessBoard, selectedPiece, x, y);
+                    ChessBoard = PawnPromotion(ChessBoard, selectedPiece, x, y); // non cambia l'immagine
                 }
                 
                 // cancel the image at the previous position of the piece
@@ -228,14 +238,12 @@ namespace WinFormsApp1
                 ChessBoard.Board[x, y].y = y;
 
                 // check
-                /*if (selectedPiece.pieceName != "K")
+                if (selectedPiece.pieceName != "K")
                 {
-                    ChessBoard.validMoves.Clear();
-
                     ChessBoard = AvaibleSquares(ChessBoard, ChessBoard.Board[x, y]);
 
                     IsCheck(ChessBoard, ChessBoard.Board[x, y]);
-                }*/
+                }
 
                 Bitmap image = SetImageToButton(ChessBoard.Board[x, y]);
 
@@ -251,7 +259,6 @@ namespace WinFormsApp1
                     {
                         if (piece != null && piece.pieceType != selectedPiece.pieceType && piece.pieceName != "K")
                         {
-                            ChessBoard.validMoves.Clear();
                             ChessBoard = AvaibleSquares(ChessBoard, piece);
 
                             /*
@@ -263,7 +270,7 @@ namespace WinFormsApp1
                             to the possible one.
                                 */
 
-                            StopCheck(ChessBoard, piece);
+                            ChessBoard = StopCheck(ChessBoard, piece);
 
                         }
                     }
@@ -286,10 +293,6 @@ namespace WinFormsApp1
                 return;
             
             }
-// ***********************************************************************************************************
-
-            /*if (selectedPiece == null)
-                ChessBoard.validMoves.Clear();*/
 
             ChessBoard = AvaibleSquares(ChessBoard, ChessBoard.Board[x, y]);
             selectedPiece = ChessBoard.Board[x, y];
@@ -310,6 +313,9 @@ namespace WinFormsApp1
             }
 
             //ChessBoard = AvaibleSquares(ChessBoard, selectedPiece);
+
+            Debug.WriteLine(selectedPiece.pieceName);
+            Debug.WriteLine(ChessBoard.ToString());
 
             if (selectedPiece.pieceName != "K")
                 return;
@@ -337,9 +343,6 @@ namespace WinFormsApp1
             }
             else
                 O_O_O[turn] = false;
-
-            Debug.WriteLine(selectedPiece.pieceName);
-            Debug.WriteLine(ChessBoard.ToString());
 
             // DELETE make castle true
             /*if (selectedPiece.pieceName == "K")
@@ -599,13 +602,21 @@ namespace WinFormsApp1
             }
         }
 
-        private void StopCheck(CMatrixBoard ChessBoard, CPiece Piece)
+        private CMatrixBoard StopCheck(CMatrixBoard ChessBoard, CPiece Piece)
         {
+            List<CSquare> saveMoves = new List<CSquare>();
+            Tuple<int, int> key = Tuple.Create(Piece.x, Piece.y);
+
             foreach (var square in ChessBoard.validMoves)
             {
                 if (ChessBoard.copyMoves.Exists(move => move.x == square.x && move.y == square.y))
-                    ChessBoard.stopCheckWithPiece[Piece] = square;
+                {
+                    saveMoves.Add(square);
+                }
             }
+            ChessBoard.stopCheckWithPiece[key] = saveMoves;
+
+            return ChessBoard;
         }
 
         private CMatrixBoard FirstKingMove(CMatrixBoard ChessBoard, int x, int y, int Y)
@@ -693,6 +704,8 @@ namespace WinFormsApp1
                     promotion.ShowDialog();
 
                     ChessBoard.Board[x, y] = new CPiece(selectedPiece.x, selectedPiece.y, promotion.pieceName, selectedPiece.pieceType);
+                Debug.WriteLine(promotion.pieceName);
+                    
             }
             return ChessBoard;
         }

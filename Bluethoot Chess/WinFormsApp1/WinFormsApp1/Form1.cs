@@ -134,22 +134,240 @@ namespace WinFormsApp1
             int y = position.Item2;
 
 
-            if (turn == 0)
-                currentPlayer = "White";
-            else
-                currentPlayer = "Black";
+            currentPlayer = (turn == 0) ? "White" : "Black";
+
+            int Y = (currentPlayer == "White") ? 0 : 7;
 
 
-            int Y;
-            if (currentPlayer == "White")
-                Y = 0;
-            else
-                Y = 7;
-
-            ChessBoard.validMoves.Clear();
-
-            if (ChessBoard.Board[x, y] != null && ChessBoard.Board[x, y].pieceType == currentPlayer)
+            if (ChessBoard.Board[x, y] == null || ChessBoard.Board[x, y].pieceType != currentPlayer)
             {
+                if (!ChessBoard.validMoves.Exists(item => item.x == x && item.y == y))
+                    return;
+
+                if (selectedPiece == null)
+                    return;
+
+                if (selectedPiece.pieceName == "P")
+                {
+                    // problema, quando mangio il pezzo posso controllare il pedone con bianco e nero
+                    if (!DiagonalMovementPawn(ChessBoard, selectedPiece, x, y))
+                        return;
+
+                    ChessBoard = PawnPromotion(ChessBoard, selectedPiece, x, y);
+                }
+                
+                // cancel the image at the previous position of the piece
+                Button originalSquare = GetButtonAtPosition(selectedPiece.x, selectedPiece.y);
+                originalSquare.Image = null;
+
+                ChessBoard.Board[selectedPiece.x, selectedPiece.y] = null;
+
+                // pawn promotions
+                /*if (selectedPiece.pieceName == "P" && (selectedPiece.y + 1 == 7 && selectedPiece.pieceType == "White" || selectedPiece.y - 1 == 0 && selectedPiece.pieceType == "Black"))
+                {
+                    var promotion = new Form2(turn);
+                    promotion.ShowDialog();
+
+                    ChessBoard.Board[x, y] = new CPiece(selectedPiece.x, selectedPiece.y, promotion.pieceName, selectedPiece.pieceType);
+                }*/
+                
+                ChessBoard.Board[x, y] = selectedPiece;
+
+                if (selectedPiece.pieceName == "K" && !firstKingMove[turn])
+                    ChessBoard = FirstKingMove(ChessBoard, x, y, Y);
+                
+                if (selectedPiece.pieceName == "R")
+                    FirstRookMove(ChessBoard, selectedPiece, x, y, Y);
+
+                /*else
+                {
+                    ChessBoard.Board[x, y] = selectedPiece;
+
+                    if (selectedPiece.pieceName == "K" && !firstKingMove[turn])
+                    {
+                        firstKingMove[turn] = true;
+
+                        if (O_O[turn] && x == 6 && y == Y)
+                        {
+                            var tmp = ChessBoard.Board[7, Y];  // copy the rook
+                            ChessBoard.Board[7, Y] = null;
+                            ChessBoard.Board[5, Y] = tmp;
+
+                            Button RookSquare = GetButtonAtPosition(7, Y);
+                            RookSquare.Image = null;
+
+                            Bitmap RookImage = SetImageToButton(tmp);
+
+                            RookSquare = GetButtonAtPosition(5, Y);
+                            RookSquare.Image = RookImage;
+                        }
+                        else if (O_O_O[turn] && x == 2 && y == Y)
+                        {
+                            var tmp = ChessBoard.Board[7, Y];  // copy the rook
+                            ChessBoard.Board[0, Y] = null;
+                            ChessBoard.Board[3, Y] = tmp;
+
+                            Button RookSquare = GetButtonAtPosition(0, Y);
+                            RookSquare.Image = null;
+
+                            Bitmap RookImage = SetImageToButton(tmp);
+
+                            RookSquare = GetButtonAtPosition(3, Y);
+                            RookSquare.Image = RookImage;
+                        }
+                    }
+                    else if (selectedPiece.pieceName == "R")
+                    {
+                        if (selectedPiece.x == 0 && selectedPiece.y == Y)
+                            aRookFirstMove[turn] = true;
+                        else if (selectedPiece.x == 7 && selectedPiece.y == Y)
+                            hRookFirstMove[turn] = true;
+                    }
+                }*/
+                ChessBoard.Board[x, y].x = x;
+                ChessBoard.Board[x, y].y = y;
+
+                // check
+                /*if (selectedPiece.pieceName != "K")
+                {
+                    ChessBoard.validMoves.Clear();
+
+                    ChessBoard = AvaibleSquares(ChessBoard, ChessBoard.Board[x, y]);
+
+                    IsCheck(ChessBoard, ChessBoard.Board[x, y]);
+                }*/
+
+                Bitmap image = SetImageToButton(ChessBoard.Board[x, y]);
+
+                clickedButton.Image = image;
+
+
+                // TODO check if there are moves that can stop the check, if not it's checkmate
+                if (check)
+                {
+                    ChessBoard.copyMoves = ChessBoard.validMoves;
+
+                    foreach (var piece in ChessBoard.Board)
+                    {
+                        if (piece != null && piece.pieceType != selectedPiece.pieceType && piece.pieceName != "K")
+                        {
+                            ChessBoard.validMoves.Clear();
+                            ChessBoard = AvaibleSquares(ChessBoard, piece);
+
+                            /*
+                            check if every piece of the oponent has the posibility to stop the check
+                            with moving the king or a piece.
+                            create a dictionary to save the name of the piece and the moves,
+                            so when the oponent clicks the piece the program has to check
+                            if that piece is the one in the dictionary and the move is equal
+                            to the possible one.
+                                */
+
+                            StopCheck(ChessBoard, piece);
+
+                        }
+                    }
+
+                    ChessBoard = AvaibleSquares(ChessBoard, FindKing(ChessBoard, currentPlayer));
+
+                    if (!ChessBoard.validMoves.Any() && !ChessBoard.stopCheckWithPiece.Any())
+                    {
+                        var popUp = new Form3();
+                        popUp.ShowDialog();
+                    }
+                }
+                ChessBoard.validMoves.Clear();
+
+                // Switch the current player's turn
+                turn = (turn + 1) % 2;
+
+                selectedPiece = null;
+
+                return;
+            
+            }
+// ***********************************************************************************************************
+
+            /*if (selectedPiece == null)
+                ChessBoard.validMoves.Clear();*/
+
+            ChessBoard = AvaibleSquares(ChessBoard, ChessBoard.Board[x, y]);
+            selectedPiece = ChessBoard.Board[x, y];
+
+
+            // sistemare --> quando c'è scacco bisogna controllare se il pezzo che voglio muovere è quello che
+            // posso muovere
+            if (check && ChessBoard.Board[x, y].pieceName != "K")
+            {
+                ChessBoard = AvaibleSquares(ChessBoard, ChessBoard.Board[x, y]);
+                ChessBoard = SaveInvalidSquares(ChessBoard, ChessBoard.Board[x, y]);
+
+                if (!ChessBoard.validMoves.Any())
+                    return;
+
+
+
+            }
+
+            //ChessBoard = AvaibleSquares(ChessBoard, selectedPiece);
+
+            if (selectedPiece.pieceName != "K")
+                return;
+
+            ChessBoard = SaveInvalidSquares(ChessBoard, selectedPiece);
+
+
+            // Check if  O-O  or  O-O-O  is possible.
+            if (ChessBoard.Board[6, Y] == null && ChessBoard.validMoves.Exists(item => item.x == 5 && item.y == Y)
+                && !firstKingMove[turn] && !hRookFirstMove[turn])  {
+                
+                    ChessBoard.validMoves.Add(new CSquare(6, Y));
+                    O_O[turn] = true;
+            }
+            else
+                O_O[turn] = false;
+
+
+            if (ChessBoard.Board[2, Y] == null && ChessBoard.Board[3, Y] == null 
+                && ChessBoard.validMoves.Exists(item => item.x == 3 && item.y == Y)
+                && !firstKingMove[turn] && !aRookFirstMove[turn]) {
+                
+                    ChessBoard.validMoves.Add(new CSquare(2, Y));
+                    O_O_O[turn] = true;
+            }
+            else
+                O_O_O[turn] = false;
+
+            Debug.WriteLine(selectedPiece.pieceName);
+            Debug.WriteLine(ChessBoard.ToString());
+
+            // DELETE make castle true
+            /*if (selectedPiece.pieceName == "K")
+            {
+                ChessBoard = SaveInvalidSquares(ChessBoard, selectedPiece);
+
+                if (ChessBoard.Board[6, Y] == null && ChessBoard.validMoves.Exists(item => item.x == 5 && item.y == Y) == true && !firstKingMove[turn] && !hRookFirstMove[turn])
+                {
+                    ChessBoard.validMoves.Add(new CSquare(6, Y));
+                    O_O[turn] = true;
+                }
+                else
+                    O_O[turn] = false;
+
+
+                if (ChessBoard.Board[2, Y] == null && ChessBoard.Board[3, Y] == null && ChessBoard.validMoves.Exists(item => item.x == 3 && item.y == Y) == true && !firstKingMove[turn] && !aRookFirstMove[turn])
+                {
+                    ChessBoard.validMoves.Add(new CSquare(2, Y));
+                    O_O_O[turn] = true;
+                }
+                else
+                    O_O_O[turn] = false;
+
+            }*/
+            // DELETE
+            /*if (ChessBoard.Board[x, y] != null && ChessBoard.Board[x, y].pieceType == currentPlayer)
+            {
+                ChessBoard.validMoves.Clear();
                 if (check && ChessBoard.Board[x, y].pieceName != "K")
                 {
                     ChessBoard = AvaibleSquares(ChessBoard, ChessBoard.Board[x, y]);
@@ -190,11 +408,12 @@ namespace WinFormsApp1
 
                 }
 
+                Debug.WriteLine(selectedPiece.pieceName);
                 Debug.WriteLine(ChessBoard.ToString());
             }
             else if (selectedPiece != null)
             {
-                if ((ChessBoard.Board[x, y] == null || ChessBoard.Board[x, y].pieceType != currentPlayer) && ChessBoard.validMoves.Exists(item => item.x == x && item.y == y) == true)
+                if ((ChessBoard.Board[x, y] == null || ChessBoard.Board[x, y].pieceType != currentPlayer) && ChessBoard.validMoves.Exists(item => item.x == x && item.y == y))
                 {
                     if (selectedPiece.pieceName == "P")
                         if (selectedPiece.x != x && (ChessBoard.Board[x, y] == null || ChessBoard.Board[x, y].pieceName == "K"))
@@ -289,29 +508,28 @@ namespace WinFormsApp1
                                 ChessBoard.validMoves.Clear();
                                 ChessBoard = AvaibleSquares(ChessBoard, piece);
 
-                                /*
-                                check if every piece of the oponent has the posibility to stop the check
-                                with moving the king or a piece.
-                                create a dictionary to save the name of the piece and the moves,
-                                so when the oponent clicks the piece the program has to check
-                                if that piece is the one in the dictionary and the move is equal
-                                to the possible one.
-                                 */
+                                
+                                //check if every piece of the oponent has the posibility to stop the check
+                                //with moving the king or a piece.
+                                //create a dictionary to save the name of the piece and the moves,
+                                //so when the oponent clicks the piece the program has to check
+                                //if that piece is the one in the dictionary and the move is equal
+                                //to the possible one.
+                                
 
-                                StopCheck(ChessBoard);
+                                StopCheck(ChessBoard, piece);
 
                             }
                         }
 
                         ChessBoard = AvaibleSquares(ChessBoard, FindKing(ChessBoard, currentPlayer));
 
-                        if (!ChessBoard.validMoves.Any())
+                        if (!ChessBoard.validMoves.Any() && !ChessBoard.stopCheckWithPiece.Any())
                         {
                             var popUp = new Form3();
                             popUp.ShowDialog();
                         }
                     }
-
                     ChessBoard.validMoves.Clear();
 
                     // Switch the current player's turn
@@ -319,7 +537,7 @@ namespace WinFormsApp1
 
                     selectedPiece = null;
                 }
-            }
+            }*/
         }
         // Find the button at the specified position
         private Button GetButtonAtPosition(int x, int y)
@@ -381,9 +599,68 @@ namespace WinFormsApp1
             }
         }
 
-        private void StopCheck(CMatrixBoard ChessBoard)
+        private void StopCheck(CMatrixBoard ChessBoard, CPiece Piece)
         {
+            foreach (var square in ChessBoard.validMoves)
+            {
+                if (ChessBoard.copyMoves.Exists(move => move.x == square.x && move.y == square.y))
+                    ChessBoard.stopCheckWithPiece[Piece] = square;
+            }
+        }
+
+        private CMatrixBoard FirstKingMove(CMatrixBoard ChessBoard, int x, int y, int Y)
+        {
+            firstKingMove[turn] = true;
+
+            if (O_O[turn] && x == 6 && y == Y)
+                ChessBoard = ShortCastle(ChessBoard, x, y, Y);
             
+            if (O_O_O[turn] && x == 2 && y == Y)
+                ChessBoard = LongCastle(ChessBoard, x, y, Y);
+
+            return ChessBoard;
+        }
+
+        private CMatrixBoard ShortCastle(CMatrixBoard ChessBoard, int x, int y, int Y)
+        {
+            var tmp = ChessBoard.Board[7, Y];  // copy the rook
+            ChessBoard.Board[7, Y] = null;
+            ChessBoard.Board[5, Y] = tmp;
+
+            Button RookSquare = GetButtonAtPosition(7, Y);
+            RookSquare.Image = null;
+
+            Bitmap RookImage = SetImageToButton(tmp);
+
+            RookSquare = GetButtonAtPosition(5, Y);
+            RookSquare.Image = RookImage;
+
+            return ChessBoard;
+        }
+
+        private CMatrixBoard LongCastle(CMatrixBoard ChessBoard, int x, int y, int Y)
+        {
+            var tmp = ChessBoard.Board[7, Y];  // copy the rook
+            ChessBoard.Board[0, Y] = null;
+            ChessBoard.Board[3, Y] = tmp;
+
+            Button RookSquare = GetButtonAtPosition(0, Y);
+            RookSquare.Image = null;
+
+            Bitmap RookImage = SetImageToButton(tmp);
+
+            RookSquare = GetButtonAtPosition(3, Y);
+            RookSquare.Image = RookImage;
+
+            return ChessBoard;
+        }
+
+        private void FirstRookMove(CMatrixBoard ChessBoard, CPiece selectedPiece, int x, int y, int Y)
+        {
+            if (selectedPiece.x == 0 && selectedPiece.y == Y)
+                aRookFirstMove[turn] = true;
+            else if (selectedPiece.x == 7 && selectedPiece.y == Y)
+                hRookFirstMove[turn] = true;
         }
 
         private CPiece FindKing(CMatrixBoard B, string currentPlayer)
@@ -398,8 +675,32 @@ namespace WinFormsApp1
             return null;
         }
 
+        private bool DiagonalMovementPawn(CMatrixBoard ChessBoard, CPiece selectedPiece, int x, int y)
+        {
+            if (selectedPiece.x != x && (ChessBoard.Board[x, y] == null ||
+               ChessBoard.Board[x, y].pieceName == "K"))
+                return false;
+    
+            return true;
+        }
+
+        private CMatrixBoard PawnPromotion(CMatrixBoard ChessBoard, CPiece selectedPiece, int x, int y)
+        {
+            if (selectedPiece.y + 1 == 7 && selectedPiece.pieceType == "White" || 
+                selectedPiece.y - 1 == 0 && selectedPiece.pieceType == "Black") {
+
+                    var promotion = new Form2(turn);
+                    promotion.ShowDialog();
+
+                    ChessBoard.Board[x, y] = new CPiece(selectedPiece.x, selectedPiece.y, promotion.pieceName, selectedPiece.pieceType);
+            }
+            return ChessBoard;
+        }
+
+
         private CMatrixBoard AvaibleSquares(CMatrixBoard ChessBoard, CPiece P)
         {
+            ChessBoard.validMoves.Clear(); // non so se sia giusto
 
             switch (P.pieceName)
             {

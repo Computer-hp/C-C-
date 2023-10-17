@@ -47,6 +47,12 @@ namespace WinFormsApp1
             InitializeChessBoard(ChessBoard);
 
         }
+
+        private void Form1_Load(object sender, EventArgs e)
+        {
+
+        }
+
         private void InitializeChessBoard(CMatrixBoard ChessBoard)
         {
 
@@ -105,7 +111,7 @@ namespace WinFormsApp1
             {
                 using (Bitmap originalImage = (Bitmap)Image.FromFile(projectPath + imagePath))
                 {
-                    double maxImageSize = Math.Min(squareSize, squareSize); // Set this to your desired max size
+                    double maxImageSize = Math.Min(squareSize, squareSize);
                     double aspectRatio = (double)originalImage.Width / originalImage.Height;
 
                     int newWidth = (int)maxImageSize;
@@ -120,11 +126,6 @@ namespace WinFormsApp1
                 Debug.WriteLine($"Error loading the image: {ex.Message}");
                 return resizedImage;
             }
-        }
-
-        private void Form1_Load(object sender, EventArgs e)
-        {
-
         }
         private void Button_Click(object sender, EventArgs e)
         {
@@ -147,6 +148,9 @@ namespace WinFormsApp1
                 if (selectedPiece == null)
                     return;
 
+                int previous_piece_x = selectedPiece.x, previous_piece_y = selectedPiece.y;
+
+
 
                 if (check && selectedPiece.pieceName != "K")
                 {
@@ -163,29 +167,20 @@ namespace WinFormsApp1
                     if (!DiagonalMovementPawn(ChessBoard, selectedPiece, x, y))
                         return;
 
-                    ChessBoard = PawnPromotion(ChessBoard, selectedPiece, x, y); // non cambia l'immagine
+                    PawnPromotion(ChessBoard, selectedPiece, x, y); 
                 }
-                
+
                 // cancel the image at the previous position of the piece
-                Button originalSquare = GetButtonAtPosition(selectedPiece.x, selectedPiece.y);
+                Button originalSquare = GetButtonAtPosition(previous_piece_x, previous_piece_y);
                 originalSquare.Image = null;
 
-                ChessBoard.Board[selectedPiece.x, selectedPiece.y] = null;
+                ChessBoard.Board[previous_piece_x, previous_piece_y] = null;
 
-                // pawn promotions
-                /*if (selectedPiece.pieceName == "P" && (selectedPiece.y + 1 == 7 && selectedPiece.pieceType == "White" || selectedPiece.y - 1 == 0 && selectedPiece.pieceType == "Black"))
-                {
-                    var promotion = new Form2(turn);
-                    promotion.ShowDialog();
-
-                    ChessBoard.Board[x, y] = new CPiece(selectedPiece.x, selectedPiece.y, promotion.pieceName, selectedPiece.pieceType);
-                }*/
-                
-                ChessBoard.Board[x, y] = selectedPiece;
+                ChessBoard.Board[x, y] = selectedPiece; 
 
                 if (selectedPiece.pieceName == "K" && !firstKingMove[turn])
                     ChessBoard = FirstKingMove(ChessBoard, x, y, Y);
-                
+
                 if (selectedPiece.pieceName == "R")
                     FirstRookMove(ChessBoard, selectedPiece, x, y, Y);
 
@@ -237,7 +232,7 @@ namespace WinFormsApp1
                 ChessBoard.Board[x, y].x = x;
                 ChessBoard.Board[x, y].y = y;
 
-                // check
+                // check, evidence the square of the King if it's CHECK
                 if (selectedPiece.pieceName != "K")
                 {
                     ChessBoard = AvaibleSquares(ChessBoard, ChessBoard.Board[x, y]);
@@ -259,7 +254,14 @@ namespace WinFormsApp1
                     {
                         if (piece != null && piece.pieceType != selectedPiece.pieceType && piece.pieceName != "K")
                         {
-                            ChessBoard = AvaibleSquares(ChessBoard, piece);
+                            //ChessBoard = AvaibleSquares(ChessBoard, piece);
+
+                            /*
+                            method that takes x, y of the KING, if it's ROOK, QUEEN or BISHOP
+                            check if squares in between can be ocupied.
+                            
+                            if it's KNIGH then only check if opponent can capture.
+                             */
 
                             /*
                             check if every piece of the oponent has the posibility to stop the check
@@ -291,14 +293,14 @@ namespace WinFormsApp1
                 selectedPiece = null;
 
                 return;
-            
+
             }
 
             ChessBoard = AvaibleSquares(ChessBoard, ChessBoard.Board[x, y]);
             selectedPiece = ChessBoard.Board[x, y];
 
 
-            // sistemare --> quando c'è scacco bisogna controllare se il pezzo che voglio muovere è quello che
+            // sistemare --> quando c'ï¿½ scacco bisogna controllare se il pezzo che voglio muovere ï¿½ quello che
             // posso muovere
             if (check && ChessBoard.Board[x, y].pieceName != "K")
             {
@@ -325,21 +327,23 @@ namespace WinFormsApp1
 
             // Check if  O-O  or  O-O-O  is possible.
             if (ChessBoard.Board[6, Y] == null && ChessBoard.validMoves.Exists(item => item.x == 5 && item.y == Y)
-                && !firstKingMove[turn] && !hRookFirstMove[turn])  {
-                
-                    ChessBoard.validMoves.Add(new CSquare(6, Y));
-                    O_O[turn] = true;
+                && !firstKingMove[turn] && !hRookFirstMove[turn])
+            {
+
+                ChessBoard.validMoves.Add(new CSquare(6, Y));
+                O_O[turn] = true;
             }
             else
                 O_O[turn] = false;
 
 
-            if (ChessBoard.Board[2, Y] == null && ChessBoard.Board[3, Y] == null 
+            if (ChessBoard.Board[2, Y] == null && ChessBoard.Board[3, Y] == null
                 && ChessBoard.validMoves.Exists(item => item.x == 3 && item.y == Y)
-                && !firstKingMove[turn] && !aRookFirstMove[turn]) {
-                
-                    ChessBoard.validMoves.Add(new CSquare(2, Y));
-                    O_O_O[turn] = true;
+                && !firstKingMove[turn] && !aRookFirstMove[turn])
+            {
+
+                ChessBoard.validMoves.Add(new CSquare(2, Y));
+                O_O_O[turn] = true;
             }
             else
                 O_O_O[turn] = false;
@@ -578,7 +582,7 @@ namespace WinFormsApp1
                     B.InvalidSquaresKing.RemoveAll(square => B.validMoves.Exists(move => move.x == square.x && move.y == square.y));
                 }
             }
-            
+
             B.validMoves.Clear();
             B.validMoves.AddRange(B.InvalidSquaresKing);
             return B;
@@ -588,13 +592,13 @@ namespace WinFormsApp1
         {
             CPiece king = FindKing(B, currentPlayer);
 
-            
+
             foreach (var obj in B.validMoves)
             {
                 Debug.WriteLine($"x: {obj.x}, y: {obj.y}");
             }
             Debug.WriteLine($"king x: {king.x}, y: {king.y}");
-                
+
             if (B.validMoves.Exists(move => move.x == king.x && move.y == king.y) == true)
             {
                 check = true;
@@ -605,6 +609,7 @@ namespace WinFormsApp1
         private CMatrixBoard StopCheck(CMatrixBoard ChessBoard, CPiece Piece)
         {
             List<CSquare> saveMoves = new List<CSquare>();
+
             Tuple<int, int> key = Tuple.Create(Piece.x, Piece.y);
 
             foreach (var square in ChessBoard.validMoves)
@@ -625,7 +630,7 @@ namespace WinFormsApp1
 
             if (O_O[turn] && x == 6 && y == Y)
                 ChessBoard = ShortCastle(ChessBoard, x, y, Y);
-            
+
             if (O_O_O[turn] && x == 2 && y == Y)
                 ChessBoard = LongCastle(ChessBoard, x, y, Y);
 
@@ -691,23 +696,26 @@ namespace WinFormsApp1
             if (selectedPiece.x != x && (ChessBoard.Board[x, y] == null ||
                ChessBoard.Board[x, y].pieceName == "K"))
                 return false;
-    
+
             return true;
         }
 
-        private CMatrixBoard PawnPromotion(CMatrixBoard ChessBoard, CPiece selectedPiece, int x, int y)
+        private void PawnPromotion(CMatrixBoard ChessBoard, CPiece selectedPiece, int x, int y)
         {
-            if (selectedPiece.y + 1 == 7 && selectedPiece.pieceType == "White" || 
-                selectedPiece.y - 1 == 0 && selectedPiece.pieceType == "Black") {
+            if (selectedPiece.y + 1 == 7 && selectedPiece.pieceType == "White" ||
+                selectedPiece.y - 1 == 0 && selectedPiece.pieceType == "Black")
+            {
 
-                    var promotion = new Form2(turn);
-                    promotion.ShowDialog();
+                var promotion = new Form2(turn);
+                promotion.ShowDialog();
 
-                    ChessBoard.Board[x, y] = new CPiece(selectedPiece.x, selectedPiece.y, promotion.pieceName, selectedPiece.pieceType);
-                Debug.WriteLine(promotion.pieceName);
-                    
+                //ChessBoard.Board[x, y] = new CPiece(x, y, promotion.pieceName, selectedPiece.pieceType);
+
+                this.selectedPiece = new CPiece(x, y, promotion.pieceName, selectedPiece.pieceType);
+
+                Debug.WriteLine("Promotion: " + promotion.pieceName);
+
             }
-            return ChessBoard;
         }
 
 

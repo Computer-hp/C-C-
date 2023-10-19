@@ -1,2 +1,12 @@
-Case #1: 19 12
-Case #2: 99 68
+
+Somma: 9
+
+Somma: 13
+Case #1: 13 13
+
+Somma: 38
+
+Somma: 37
+
+Somma: 43
+Case #2: 43 47

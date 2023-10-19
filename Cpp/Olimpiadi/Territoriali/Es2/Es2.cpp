@@ -45,7 +45,7 @@ void solve(int t) {
 
     vector<int> W(N);
 
-    int K1 = 0, K2 = 0, provisory_K1 = 0, provisory_K2 = -1;
+    int K1 = 0, K2 = 0, provisory_K2 = -1;
 
     // metto i numeri in ciascuna cella dell array
     for (int i = 0; i < N; i++) {
@@ -56,28 +56,26 @@ void solve(int t) {
     
     int aCapo = 0;
 
-    int sum = 0, provisory_sum = 0;
+    int provisory_sum = 0;
 
     int j = 0;
 
     while (j < N){
 
-        // somma riga
-        
-        /*
-        3 5 -1 4 2 5
-
-        quindi j sarà 5
-        */
+       int sum = 0, counter = -1;
 
         for (int i = j; W[i] != -1 && i < N; i++)
         {
-            sum += W[i] + 1;
+            sum += W[i];
             j++;
+            counter++;
         }
+        sum += counter;
+
+        cout << "\nSomma: " << sum << "\n";
 
         if (j < N - 1)
-            j += 2; // to skip the -1 cell
+            j += 1; // to skip the -1 cell
 
         if (provisory_K2 != -1)
         {

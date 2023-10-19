@@ -72,8 +72,6 @@ void solve(int t) {
         }
         sum += counter;
 
-        cout << "\nSomma: " << sum << "\n";
-
         if (j < N - 1)
             j += 1; // to skip the -1 cell
 

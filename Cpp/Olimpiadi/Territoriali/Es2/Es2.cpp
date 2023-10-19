@@ -11,6 +11,10 @@ K = numero caratteri per andare a capo
 
 Trovare Kmin e Kmax
 
+almeno un a capo !!!
+
+almeno due righe
+
 
 
 prima trovo la somma della prima riga prima di -1
@@ -26,70 +30,67 @@ comparo la somma con la provisory_sum
 
 */
 
+int getK2(vector<int> &W, int j, int N, int provisory_sum, int aCapo)
+{
+    if (j < N - 1)
+        if (aCapo <= W[j])
+            return provisory_sum + W[j];
+
+    return provisory_sum + aCapo;
+}
+
 void solve(int t) {
     int N;
     cin >> N;
 
     vector<int> W(N);
 
-    bool firstLastWord = false;
-
-    int provisory_aCapo = 0, aCapo = 0;
+    int K1 = 0, K2 = 0, provisory_K1 = 0, provisory_K2 = -1;
 
     // metto i numeri in ciascuna cella dell array
     for (int i = 0; i < N; i++) {
         cin >> W[i];
-    
-        /*if (W[i] == -1 && i + 1 < N && firstLastWord && W[i + 1] != 0)
-        {
-            aCapo = W[i + 1];
-            firstLastWord = false;
-        }*/
     }
 
     // aggiungi codice...
     
+    int aCapo = 0;
 
-    int K1, K2, provisory_K1 = 0;
     int sum = 0, provisory_sum = 0;
 
     int j = 0;
 
-    int provisory_K2 = 0;
-
     while (j < N){
 
         // somma riga
-        for (int i = j; W[i] != -1; i++)
+        
+        /*
+        3 5 -1 4 2 5
+
+        quindi j sarà 5
+        */
+
+        for (int i = j; W[i] != -1 && i < N; i++)
         {
             sum += W[i] + 1;
             j++;
         }
-/*
-if provisory_sum <= sum :
-    if primaParolaACapo <= seconda :
-        allora K2 = provisory_sum + seconda
 
-    elif primaParolaACapo > seconda :
-        provisory_sum + primaParolaACapo
+        if (j < N - 1)
+            j += 2; // to skip the -1 cell
 
-
-else :
-    if primaParolaACapo < seconda :
-        allora K2 = provisory_sum + seconda
-
-    elif primaParolaACapo > seconda :
-        provisory_sum + primaParolaACapo
-*/
-        j += 2; // to skip the -1 cell
-
-        if (provisory_K2 != NULL)
+        if (provisory_K2 != -1)
         {
-            //if (provisory_sum <= sum)
-            K2 = getK2(W, j, provisory_sum, aCapo);
+            K2 = getK2(W, j, N, provisory_sum, aCapo);
+
+
+            if (sum < provisory_sum && K1 < provisory_sum)
+                K1 = provisory_sum;
+            else if (provisory_sum < sum && K1 < sum)
+                K1 = sum;
         }
         else
-            provisory_K2 == K2;
+            provisory_K2 = K2;
 
         provisory_sum = sum;
 
@@ -98,14 +99,6 @@ else :
 
 
     cout << "Case #" << t << ": " << K1 << " " << K2 << "\n";
-}
-
-int getK2(vector<int> W, int j, int provisory_sum, int aCapo)
-{
-    if (aCapo <= W[j])
-        return provisory_sum + W[j];
-    else
-        return provisory_sum + aCapo;
 }
 
 int main() {

@@ -23,9 +23,11 @@ class Dino:
         self.vel = 10
         self.mass = 0.85
         self.isjumping = False
+        self.inAir = False
 
     def jump(self):
         if self.isjumping:
+
             # calculate force (F). F = 1 / 2 * mass * velocity ^ 2.
             F = (1 / 2) * self.mass * (self.vel ** 2)
 
@@ -144,7 +146,9 @@ while run:
             if key_press[pygame.K_RETURN] or key_press[pygame.K_SPACE]:
                 DINO.isjumping = True
 
-        DINO.jump()
+        if DINO.isjumping == True:
+            DINO.jump()
+
         if delay_timer > 0:
             delay_timer -= 1  # Decrease the delay timer
         else:

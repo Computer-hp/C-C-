@@ -4,9 +4,11 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.Diagnostics.Metrics;
 using System.Linq;
+using System.Reflection;
 using System.Security.Cryptography.Xml;
 using System.Text;
 using System.Threading.Tasks;
+using System.Xml.Linq;
 
 namespace WinFormsApp1
 {
@@ -27,8 +29,12 @@ namespace WinFormsApp1
         //public Dictionary<CPiece, List<CSquare>> stopCheckWithPiece = new Dictionary<CPiece, List<CSquare>>();
         public Dictionary<Tuple<int, int>, List<CSquare>> stopCheckWithPiece = new Dictionary<Tuple<int, int>, List<CSquare>>();
 
+        private MethodInfo method = null;
 
-        private bool right, left, up, down;
+
+        public bool right, left, up, down;
+
+        public bool rightUp, leftUp, rightDown, leftDown;
 
         public CMatrixBoard()
         {
@@ -102,18 +108,13 @@ namespace WinFormsApp1
             validMoves.Add(new CSquare(leftX, upORdown));
         }
 
-        public void Straight(CPiece P)
+        public void Straight(CPiece P, string direction)
         {
+            int x = P.x, y = P.y;
 
-            right = true;
-            left = true;
-            up = true;
-            down = true;
-
-
-            int x = P.x;
-            int y = P.y;
             int counter = 2;
+
+            right = true; left = true; up = true; down = true;
 
             for (int i = 0; i < 8; i++)
             {
@@ -125,23 +126,25 @@ namespace WinFormsApp1
                 // opposite side
                 int differenceY = y - counter;
 
-                // up
-                Up(this, P, y);
-
-                // down
-                Down(this, P, differenceY);
-
-                // right
-                Right(this, P, x);
-
-                // left
-                Left(this, P, differenceX);
+                if (direction != "")
+                {
+                    method = typeof(CMatrixBoard).GetMethod(direction);
+                    object[] parameters = new object[] { this, P, differenceX };
+                    method.Invoke(this, parameters);
+                }
+                else
+                {
+                    Up(this, P, y);
+                    Down(this, P, differenceY);
+                    Right(this, P, x);
+                    Left(this, P, differenceX);
+                }
 
                 counter += 2;
             }
         }
 
-        private void Up(CMatrixBoard B, CPiece P, int y)
+        public void Up(CMatrixBoard B, CPiece P, int y)
         {
             if (y < boardSize && up)
             {
@@ -149,7 +152,7 @@ namespace WinFormsApp1
                     validMoves.Add(new CSquare(P.x, y));
                     return;
                 }
-                if (/*B.Board[P.x, y] != null && */B.Board[P.x, y].pieceType != P.pieceType)
+                if (B.Board[P.x, y].pieceType != P.pieceType)
                 {
                     validMoves.Add(new CSquare(P.x, y));
                 }
@@ -157,7 +160,7 @@ namespace WinFormsApp1
                 return;
             }
         }
-        private void Down(CMatrixBoard B, CPiece P, int differenceY)
+        public void Down(CMatrixBoard B, CPiece P, int differenceY)
         {
             if (differenceY >= 0 && down)
             {
@@ -166,7 +169,7 @@ namespace WinFormsApp1
                     validMoves.Add(new CSquare(P.x, differenceY));
                     return;
                 }
-                if (/*B.Board[P.x, differenceY] != null &&*/ B.Board[P.x, differenceY].pieceType != P.pieceType)
+                if (B.Board[P.x, differenceY].pieceType != P.pieceType)
                 {
                     validMoves.Add(new CSquare(P.x, differenceY));
                 }
@@ -175,7 +178,7 @@ namespace WinFormsApp1
             }
 
         }
-        private void Left(CMatrixBoard B, CPiece P, int differenceX)
+        public void Left(CMatrixBoard B, CPiece P, int differenceX)
         {
             if (differenceX >= 0 && left)
             {
@@ -184,7 +187,7 @@ namespace WinFormsApp1
                     validMoves.Add(new CSquare(differenceX, P.y));
                     return;
                 }
-                if (/*B.Board[differenceX, P.y] != null &&*/ B.Board[differenceX, P.y].pieceType != P.pieceType)
+                if (B.Board[differenceX, P.y].pieceType != P.pieceType)
                 {
                     validMoves.Add(new CSquare(differenceX, P.y));
                 }
@@ -192,7 +195,7 @@ namespace WinFormsApp1
                 return;
             }
         }
-        private void Right(CMatrixBoard B, CPiece P, int x)
+        public void Right(CMatrixBoard B, CPiece P, int x)
         {
             if (x < boardSize && right)
             {
@@ -201,7 +204,7 @@ namespace WinFormsApp1
                     validMoves.Add(new CSquare(x, P.y));
                     return;
                 }
-                else if (/*B.Board[x, P.y] != null &&*/ B.Board[x, P.y].pieceType != P.pieceType)
+                if (B.Board[x, P.y].pieceType != P.pieceType)
                 {
                     validMoves.Add(new CSquare(x, P.y));
                 }
@@ -210,26 +213,108 @@ namespace WinFormsApp1
             }
         }
 
-
-        private void findStraight(CMatrixBoard B, CPiece P, int times)
-        {
-            
-        }
-
-        public void Diagonal(CPiece P)
+        public void Diagonal(CPiece P, string direction)
         {
             findDiagonal(this, P, 8);
 
-        }
-        private void findDiagonal(CMatrixBoard B, CPiece P, int times)
-        {
-            bool rightUp = true, rightDown = true, leftUp = true, leftDown = true;
+            int x = P.x, y = P.y;
 
-            int x = P.x;
-            int y = P.y;
             int counter = 2;
 
-            for (int i = 0; i < times; i++)
+            rightUp = true; leftUp = true; rightDown = true; leftDown = true;
+
+            for (int i = 0; i < 8; i++)
+            {
+                x++;
+                // opposite side
+                int differenceX = x - counter;
+
+                y++;
+                // opposite side
+                int differenceY = y - counter;
+
+                if (direction != "")
+                {
+                    method = typeof(CMatrixBoard).GetMethod(direction);
+                    object[] parameters = new object[] { this, P, differenceX };
+                    method.Invoke(this, parameters);
+                }
+                else
+                {
+                    if (x < boardSize)
+                    {
+                        RightUp(this, P, y);
+                        RightDown(this, P, differenceY);
+                    }
+                    if (differenceX >= 0)
+                    {
+                        LeftUp(this, P, x);
+                        LeftDown(this, P, differenceX);
+                    }
+                }
+
+                counter += 2;
+            }
+
+        }
+        public void RightUp()
+        {
+            if (y < boardSize && rightUp)
+                if (B.Board[x, y] == null)
+                    validMoves.Add(new CSquare(x, y));
+                else if (B.Board[x, y] != null && B.Board[x, y].pieceType != P.pieceType)
+                {
+                    validMoves.Add(new CSquare(x, y));
+                    rightUp = false;
+                }
+                else
+                    rightUp = false;
+        }
+        public void RightDown()
+        {
+            if (differenceY >= 0 && rightDown)
+                if (B.Board[x, differenceY] == null)
+                    validMoves.Add(new CSquare(x, differenceY));
+                else if (B.Board[x, differenceY] != null && B.Board[x, differenceY].pieceType != P.pieceType)
+                {
+                    validMoves.Add(new CSquare(x, differenceY));
+                    rightDown = false;
+                }
+                else
+                    rightDown = false;
+        }
+        public void LeftUp()
+        {
+            if (y < boardSize && leftUp)
+                if (B.Board[differenceX, y] == null)
+                    validMoves.Add(new CSquare(differenceX, y));
+                else if (B.Board[differenceX, y] != null && B.Board[differenceX, y].pieceType != P.pieceType)
+                {
+                    validMoves.Add(new CSquare(differenceX, y));
+                    leftUp = false;
+                }
+                else
+                    leftUp = false;
+        }
+        public void LeftDown()
+        {
+            if (differenceY >= 0 && leftDown)
+                if (differenceY < boardSize && leftDown)
+                    if (B.Board[differenceX, differenceY] == null)
+                        validMoves.Add(new CSquare(differenceX, differenceY));
+                    else if (B.Board[differenceX, differenceY] != null && B.Board[differenceX, differenceY].pieceType != P.pieceType)
+                    {
+                        validMoves.Add(new CSquare(differenceX, differenceY));
+                        leftDown = false;
+                    }
+                    else
+                        leftDown = false;
+        }
+
+        private void findDiagonal(CMatrixBoard B, CPiece P, int times)
+        {
+
+            /*for (int i = 0; i < times; i++)
             {
                 x++;
                 y++;
@@ -238,58 +323,21 @@ namespace WinFormsApp1
                 // right
                 if (x < boardSize)
                 {
-                    if (y < boardSize && rightUp)
-                        if (B.Board[x, y] == null)
-                            validMoves.Add(new CSquare(x, y));
-                        else if (B.Board[x, y] != null && B.Board[x, y].pieceType != P.pieceType)
-                        {
-                            validMoves.Add(new CSquare(x, y));
-                            rightUp = false;
-                        }
-                        else
-                            rightUp = false;
+                    
 
 
-                    if (differenceY >= 0 && rightDown)
-                        if (B.Board[x, differenceY] == null)
-                            validMoves.Add(new CSquare(x, differenceY));
-                        else if (B.Board[x, differenceY] != null && B.Board[x, differenceY].pieceType != P.pieceType)
-                        {
-                            validMoves.Add(new CSquare(x, differenceY));
-                            rightDown = false;
-                        }
-                        else
-                            rightDown = false;
+                    
                 }
                 // left
                 if (differenceX >= 0)
                 {
-                    if (y < boardSize && leftUp)
-                        if (B.Board[differenceX, y] == null)
-                            validMoves.Add(new CSquare(differenceX, y));
-                        else if (B.Board[differenceX, y] != null && B.Board[differenceX, y].pieceType != P.pieceType)
-                        {
-                            validMoves.Add(new CSquare(differenceX, y));
-                            leftUp = false;
-                        }
-                        else
-                            leftUp = false;
+                    
 
 
-                    if (differenceY >= 0 && leftDown)
-                        if (differenceY < boardSize && leftDown)
-                            if (B.Board[differenceX, differenceY] == null)
-                                validMoves.Add(new CSquare(differenceX, differenceY));
-                            else if (B.Board[differenceX, differenceY] != null && B.Board[differenceX, differenceY].pieceType != P.pieceType)
-                            {
-                                validMoves.Add(new CSquare(differenceX, differenceY));
-                                leftDown = false;
-                            }
-                            else
-                                leftDown = false;
+                    
                 }
                 counter += 2;
-            }
+            }*/
         }
 
         public void Jump(CPiece P)
@@ -346,7 +394,7 @@ namespace WinFormsApp1
 
         public void King(CPiece P)
         {
-            findStraight(this, P, 1);
+            Straight(P, "");
             findDiagonal(this, P, 1);
 
         }

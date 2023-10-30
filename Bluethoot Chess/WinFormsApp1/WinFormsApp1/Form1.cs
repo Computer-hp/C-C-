@@ -31,7 +31,9 @@ namespace WinFormsApp1
 
         private bool check = false;
 
-        CPiece selectedPiece = null;
+        private CPiece selectedPiece = null;
+
+        private string direction = "";
 
         private CMatrixBoard ChessBoard;
 
@@ -185,51 +187,7 @@ namespace WinFormsApp1
                 if (selectedPiece.pieceName == "R")
                     FirstRookMove(ChessBoard, selectedPiece, x, y, Y);
 
-                /*else
-                {
-                    ChessBoard.Board[x, y] = selectedPiece;
-
-                    if (selectedPiece.pieceName == "K" && !firstKingMove[turn])
-                    {
-                        firstKingMove[turn] = true;
-
-                        if (O_O[turn] && x == 6 && y == Y)
-                        {
-                            var tmp = ChessBoard.Board[7, Y];  // copy the rook
-                            ChessBoard.Board[7, Y] = null;
-                            ChessBoard.Board[5, Y] = tmp;
-
-                            Button RookSquare = GetButtonAtPosition(7, Y);
-                            RookSquare.Image = null;
-
-                            Bitmap RookImage = SetImageToButton(tmp);
-
-                            RookSquare = GetButtonAtPosition(5, Y);
-                            RookSquare.Image = RookImage;
-                        }
-                        else if (O_O_O[turn] && x == 2 && y == Y)
-                        {
-                            var tmp = ChessBoard.Board[7, Y];  // copy the rook
-                            ChessBoard.Board[0, Y] = null;
-                            ChessBoard.Board[3, Y] = tmp;
-
-                            Button RookSquare = GetButtonAtPosition(0, Y);
-                            RookSquare.Image = null;
-
-                            Bitmap RookImage = SetImageToButton(tmp);
-
-                            RookSquare = GetButtonAtPosition(3, Y);
-                            RookSquare.Image = RookImage;
-                        }
-                    }
-                    else if (selectedPiece.pieceName == "R")
-                    {
-                        if (selectedPiece.x == 0 && selectedPiece.y == Y)
-                            aRookFirstMove[turn] = true;
-                        else if (selectedPiece.x == 7 && selectedPiece.y == Y)
-                            hRookFirstMove[turn] = true;
-                    }
-                }*/
+                
                 ChessBoard.Board[x, y].x = x;
                 ChessBoard.Board[x, y].y = y;
 
@@ -239,12 +197,18 @@ namespace WinFormsApp1
 
                     CPiece king = FindKing(ChessBoard, currentPlayer);
 
+                    direction = "";
 
                     if (selectedPiece.pieceName == "R" || selectedPiece.pieceName == "Q")
+                    {
                         CheckStraight(king);
-
+                        ChessBoard.Straight(selectedPiece, direction);
+                    }
                     else if (selectedPiece.pieceName == "B" || selectedPiece.pieceName == "Q")
+                    {
                         CheckDiagonaly(king);
+                        ChessBoard.Diagonal(selectedPiece, direction);
+                    }
 
                     // because the piece that gives check can also be captured to stop check, neccessary for Knight and Pawn
                     ChessBoard.validMoves.Add(new CSquare(selectedPiece.x, selectedPiece.y));
@@ -369,31 +333,31 @@ namespace WinFormsApp1
         private void CheckStraight(CPiece king)
         {
             if (selectedPiece.x > king.x && selectedPiece.y == king.y)
-                ChessBoard.Straight(selectedPiece, "Left");
+                direction = "Left";
 
             if (selectedPiece.x < king.x && selectedPiece.y == king.y)
-                ChessBoard.Straight(selectedPiece, "Right");
+                direction = "Right";
 
             if (selectedPiece.y > king.y && selectedPiece.x == king.x)
-                ChessBoard.Straight(selectedPiece, "Down");
+                direction = "Down";
 
             if (selectedPiece.y < king.y && selectedPiece.x == king.x)
-                ChessBoard.Straight(selectedPiece, "Up");
+                direction = "Up";
         }
 
         private void CheckDiagonaly(CPiece king)
         {
-            if (selectedPiece.x > king.x && selectedPiece.y == king.y)
-                ChessBoard.Straight(selectedPiece, "Left");
+            if (selectedPiece.x > king.x && selectedPiece.y > king.y)
+                direction = "LeftDown";
 
-            if (selectedPiece.x < king.x && selectedPiece.y == king.y)
-                ChessBoard.Straight(selectedPiece, "Right");
+            if (selectedPiece.x < king.x && selectedPiece.y > king.y)
+                direction = "RightUp";
 
-            if (selectedPiece.y > king.y && selectedPiece.x == king.x)
-                ChessBoard.Straight(selectedPiece, "Down");
+            if (selectedPiece.y > king.y && selectedPiece.x < king.x)
+                direction = "RightDown";
 
-            if (selectedPiece.y < king.y && selectedPiece.x == king.x)
-                ChessBoard.Straight(selectedPiece, "Up");
+            if (selectedPiece.y < king.y && selectedPiece.x > king.x)
+                direction = "LeftUp";
         }
 
         // Find the button at the specified position

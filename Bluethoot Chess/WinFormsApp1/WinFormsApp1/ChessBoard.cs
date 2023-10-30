@@ -243,13 +243,13 @@ namespace WinFormsApp1
                 {
                     if (x < boardSize)
                     {
-                        RightUp(this, P, y);
-                        RightDown(this, P, differenceY);
+                        RightUp(this, P, x, y);
+                        RightDown(this, P, x, differenceY);
                     }
                     if (differenceX >= 0)
                     {
-                        LeftUp(this, P, x);
-                        LeftDown(this, P, differenceX);
+                        LeftUp(this, P, y, differenceX);
+                        LeftDown(this, P, differenceX, differenceY);
                     }
                 }
 
@@ -257,7 +257,7 @@ namespace WinFormsApp1
             }
 
         }
-        public void RightUp()
+        public void RightUp(CMatrixBoard B, CPiece P, int x, int y)
         {
             if (y < boardSize && rightUp)
                 if (B.Board[x, y] == null)
@@ -270,7 +270,7 @@ namespace WinFormsApp1
                 else
                     rightUp = false;
         }
-        public void RightDown()
+        public void RightDown(CMatrixBoard B, CPiece P, int x, int differenceY)
         {
             if (differenceY >= 0 && rightDown)
                 if (B.Board[x, differenceY] == null)
@@ -283,7 +283,7 @@ namespace WinFormsApp1
                 else
                     rightDown = false;
         }
-        public void LeftUp()
+        public void LeftUp(CMatrixBoard B, CPiece P, int y, int differenceX)
         {
             if (y < boardSize && leftUp)
                 if (B.Board[differenceX, y] == null)
@@ -296,7 +296,7 @@ namespace WinFormsApp1
                 else
                     leftUp = false;
         }
-        public void LeftDown()
+        public void LeftDown(CMatrixBoard B, CPiece P, int differenceX, int differenceY)
         {
             if (differenceY >= 0 && leftDown)
                 if (differenceY < boardSize && leftDown)

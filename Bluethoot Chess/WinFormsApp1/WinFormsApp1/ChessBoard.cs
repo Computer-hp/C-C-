@@ -24,7 +24,7 @@ namespace WinFormsApp1
 
         public List<CSquare> copyMoves = new List<CSquare>();
 
-        public List<CSquare> InvalidSquaresKing = new List<CSquare>();
+        public List<CSquare> invalidSquaresKing = new List<CSquare>();
 
         //public Dictionary<CPiece, List<CSquare>> stopCheckWithPiece = new Dictionary<CPiece, List<CSquare>>();
         public Dictionary<Tuple<int, int>, List<CSquare>> stopCheckWithPiece = new Dictionary<Tuple<int, int>, List<CSquare>>();

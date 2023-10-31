@@ -202,12 +202,12 @@ namespace WinFormsApp1
                     if (selectedPiece.pieceName == "R" || selectedPiece.pieceName == "Q")
                     {
                         CheckStraight(king);
-                        ChessBoard.Straight(selectedPiece, direction);
+                        ChessBoard.Straight(selectedPiece, 8, direction);
                     }
                     else if (selectedPiece.pieceName == "B" || selectedPiece.pieceName == "Q")
                     {
                         CheckDiagonaly(king);
-                        ChessBoard.Diagonal(selectedPiece, direction);
+                        ChessBoard.Diagonal(selectedPiece, 8, direction);
                     }
 
                     // because the piece that gives check can also be captured to stop check, neccessary for Knight and Pawn
@@ -376,9 +376,9 @@ namespace WinFormsApp1
         // Calculates the squares of every piece and compares with validMoves, if there are == moves, saves them in InvalidSquares
         private CMatrixBoard SaveInvalidSquares(CMatrixBoard B, CPiece P)
         {
-            B.InvalidSquaresKing.Clear();
+            B.invalidSquaresKing.Clear();
 
-            B.InvalidSquaresKing.AddRange(B.validMoves);
+            B.invalidSquaresKing.AddRange(B.validMoves);
 
             foreach (var piece in B.Board)
             {
@@ -393,12 +393,12 @@ namespace WinFormsApp1
                         else
                             B.validMoves.RemoveAll(square => square.x == piece.x && square.y == piece.y - 1);
 
-                    B.InvalidSquaresKing.RemoveAll(square => B.validMoves.Exists(move => move.x == square.x && move.y == square.y));
+                    B.invalidSquaresKing.RemoveAll(square => B.validMoves.Exists(move => move.x == square.x && move.y == square.y));
                 }
             }
 
             B.validMoves.Clear();
-            B.validMoves.AddRange(B.InvalidSquaresKing);
+            B.validMoves.AddRange(B.invalidSquaresKing);
             return B;
         }
 
@@ -529,7 +529,6 @@ namespace WinFormsApp1
 
             }
         }
-
 
         private CMatrixBoard AvaibleSquares(CMatrixBoard ChessBoard, CPiece P)
         {

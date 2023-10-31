@@ -104,7 +104,7 @@ namespace WinFormsApp1
         // TODO set background image instead of image, and set zoom
         public static Bitmap SetImageToButton(CPiece P)
         {
-            string DIR = P.pieceType;
+            string DIR = "images\\" + P.pieceType;
 
             string imagePath = DIR + "\\" + P.pieceName + ".png";
 
@@ -129,6 +129,8 @@ namespace WinFormsApp1
                 return resizedImage;
             }
         }
+
+
         private void Button_Click(object sender, EventArgs e)
         {
             Button clickedButton = (Button)sender;
@@ -191,31 +193,45 @@ namespace WinFormsApp1
                 ChessBoard.Board[x, y].x = x;
                 ChessBoard.Board[x, y].y = y;
 
+                CPiece king = FindKing(ChessBoard, currentPlayer);
+
                 // finds only the moves of the piece that gives check which are used in StopCheck
                 if (selectedPiece.pieceName != "K")
                 {
 
-                    CPiece king = FindKing(ChessBoard, currentPlayer);
-
                     direction = "";
 
-                    if (selectedPiece.pieceName == "R" || selectedPiece.pieceName == "Q")
+                    if (selectedPiece.pieceName == "R")
                     {
-                        CheckStraight(king);
+                        FindStraightDirection(king);
                         ChessBoard.Straight(selectedPiece, 8, direction);
                     }
-                    else if (selectedPiece.pieceName == "B" || selectedPiece.pieceName == "Q")
+                    if (selectedPiece.pieceName == "B")
                     {
-                        CheckDiagonaly(king);
+                        FindDiagonalyDirection(king);
                         ChessBoard.Diagonal(selectedPiece, 8, direction);
+                    }
+                    if (selectedPiece.pieceName == "Q")
+                    {
+                        FindStraightDirection(king);
+                        ChessBoard.Straight(selectedPiece, 8, direction);
+                        IsCheck(ChessBoard, ChessBoard.Board[x, y]);
+                        
+                        if (!check)
+                        {
+                            ChessBoard.validMoves.Clear();
+                            FindDiagonalyDirection(king);
+                            ChessBoard.Diagonal(selectedPiece, 8, direction);
+                        }
                     }
 
                     // because the piece that gives check can also be captured to stop check, neccessary for Knight and Pawn
                     ChessBoard.validMoves.Add(new CSquare(selectedPiece.x, selectedPiece.y));
 
-
-                    // checks only if the king is in the square where the piece that just moved can go
                     IsCheck(ChessBoard, ChessBoard.Board[x, y]);
+
+                    Debug.WriteLine("One direction: " + ChessBoard.ToString());
+
                 }
 
                 Bitmap image = SetImageToButton(ChessBoard.Board[x, y]);
@@ -249,16 +265,18 @@ namespace WinFormsApp1
                             to the possible one.
                                 */
 
+                            ChessBoard = AvaibleSquares(ChessBoard, piece);
                             ChessBoard = StopCheck(ChessBoard, piece);
 
                         }
                     }
                     // check valid moves for King
-                    ChessBoard = AvaibleSquares(ChessBoard, FindKing(ChessBoard, currentPlayer));
+                    ChessBoard = AvaibleSquares(ChessBoard, king);
+                    ChessBoard = SaveInvalidSquares(ChessBoard, king);
 
 
                     // Check mate
-                    if (!ChessBoard.validMoves.Any() && !ChessBoard.stopCheckWithPiece.Any())
+                    if (!ChessBoard.validMoves.Any() && !ChessBoard.stopCheckWithPiece.Any(kv => kv.Value != null && kv.Value.Count > 0))
                     {
                         var popUp = new Form3();
                         popUp.ShowDialog();
@@ -330,7 +348,7 @@ namespace WinFormsApp1
                 O_O_O[turn] = false;
         }
 
-        private void CheckStraight(CPiece king)
+        private void FindStraightDirection(CPiece king)
         {
             if (selectedPiece.x > king.x && selectedPiece.y == king.y)
                 direction = "Left";
@@ -345,7 +363,7 @@ namespace WinFormsApp1
                 direction = "Up";
         }
 
-        private void CheckDiagonaly(CPiece king)
+        private void FindDiagonalyDirection(CPiece king)
         {
             if (selectedPiece.x > king.x && selectedPiece.y > king.y)
                 direction = "LeftDown";
@@ -422,7 +440,7 @@ namespace WinFormsApp1
 
         private CMatrixBoard StopCheck(CMatrixBoard ChessBoard, CPiece Piece)
         {
-            List<CSquare> saveMoves = new List<CSquare>();
+            List<CSquare> tmpMoves = new List<CSquare>();
 
             Tuple<int, int> key = Tuple.Create(Piece.x, Piece.y);
 
@@ -430,10 +448,10 @@ namespace WinFormsApp1
             {
                 if (ChessBoard.copyMoves.Exists(move => move.x == square.x && move.y == square.y))
                 {
-                    saveMoves.Add(square);
+                    tmpMoves.Add(square);
                 }
             }
-            ChessBoard.stopCheckWithPiece[key] = saveMoves;
+            ChessBoard.stopCheckWithPiece[key] = tmpMoves;
 
             return ChessBoard;
         }

@@ -26,7 +26,6 @@ namespace WinFormsApp1
 
         public List<CSquare> invalidSquaresKing = new List<CSquare>();
 
-        //public Dictionary<CPiece, List<CSquare>> stopCheckWithPiece = new Dictionary<CPiece, List<CSquare>>();
         public Dictionary<Tuple<int, int>, List<CSquare>> stopCheckWithPiece = new Dictionary<Tuple<int, int>, List<CSquare>>();
 
         private MethodInfo method = null;
@@ -88,6 +87,8 @@ namespace WinFormsApp1
                     validMoves.Add(new CSquare(P.x, P.y - 2));
             }
         }
+
+
         // for white and black pawns
         private void checkRigth(int X, int Y, CPiece P, CMatrixBoard B)
         {
@@ -98,6 +99,8 @@ namespace WinFormsApp1
 
             validMoves.Add(new CSquare(rightX, upORdown));
         }
+
+
         // for white and black pawns
         private void checkLeft(int X, int Y, CPiece P, CMatrixBoard B)
         {
@@ -119,13 +122,10 @@ namespace WinFormsApp1
 
             for (int i = 0; i < times; i++)
             {
-                x++;
-                // opposite side
-                differenceX = x - counter;
+                x++; y++;
 
-                y++;
-                // opposite side
-                differenceY = y - counter;
+                // opposite side           // opposite side
+                differenceX = x - counter; differenceY = y - counter;
 
                 if (direction != "")
                 {
@@ -157,8 +157,8 @@ namespace WinFormsApp1
                 {
                     validMoves.Add(new CSquare(P.x, y));
                 }
+                
                 up = false;
-                return;
             }
         }
         public void Down(CMatrixBoard B, CPiece P, int counter)
@@ -174,8 +174,8 @@ namespace WinFormsApp1
                 {
                     validMoves.Add(new CSquare(P.x, differenceY));
                 }
+
                 down = false;
-                return;
             }
 
         }
@@ -192,8 +192,8 @@ namespace WinFormsApp1
                 {
                     validMoves.Add(new CSquare(differenceX, P.y));
                 }
+                
                 left = false;
-                return;
             }
         }
         public void Right(CMatrixBoard B, CPiece P, int counter)
@@ -209,8 +209,8 @@ namespace WinFormsApp1
                 {
                     validMoves.Add(new CSquare(x, P.y));
                 }
+                
                 right = false;
-                return;
             }
         }
 
@@ -254,55 +254,72 @@ namespace WinFormsApp1
         public void RightUp(CMatrixBoard B, CPiece P, int counter)
         {
             if (y < boardSize && rightUp)
+            {
                 if (B.Board[x, y] == null)
-                    validMoves.Add(new CSquare(x, y));
-                else if (B.Board[x, y] != null && B.Board[x, y].pieceType != P.pieceType)
                 {
                     validMoves.Add(new CSquare(x, y));
-                    rightUp = false;
+                    return;
                 }
-                else
-                    rightUp = false;
+
+                if (B.Board[x, y] != null && B.Board[x, y].pieceType != P.pieceType)
+                {
+                    validMoves.Add(new CSquare(x, y));
+                }
+
+                rightUp = false;
+            }
         }
         public void RightDown(CMatrixBoard B, CPiece P, int counter)
         {
             if (differenceY >= 0 && rightDown)
+            {
                 if (B.Board[x, differenceY] == null)
-                    validMoves.Add(new CSquare(x, differenceY));
-                else if (B.Board[x, differenceY] != null && B.Board[x, differenceY].pieceType != P.pieceType)
                 {
                     validMoves.Add(new CSquare(x, differenceY));
-                    rightDown = false;
+                    return;
                 }
-                else
-                    rightDown = false;
+                if (B.Board[x, differenceY] != null && B.Board[x, differenceY].pieceType != P.pieceType)
+                {
+                    validMoves.Add(new CSquare(x, differenceY));
+                }
+
+                rightDown = false;
+            }
         }
         public void LeftUp(CMatrixBoard B, CPiece P, int counter)
         {
             if (y < boardSize && leftUp)
+            {
                 if (B.Board[differenceX, y] == null)
-                    validMoves.Add(new CSquare(differenceX, y));
-                else if (B.Board[differenceX, y] != null && B.Board[differenceX, y].pieceType != P.pieceType)
                 {
                     validMoves.Add(new CSquare(differenceX, y));
-                    leftUp = false;
+                    return;
                 }
-                else
-                    leftUp = false;
+                if (B.Board[differenceX, y] != null && B.Board[differenceX, y].pieceType != P.pieceType)
+                {
+                    validMoves.Add(new CSquare(differenceX, y));
+                }
+
+                leftUp = false;
+            }
         }
         public void LeftDown(CMatrixBoard B, CPiece P, int counter)
         {
-            if (differenceY >= 0 && leftDown)
-                if (differenceY < boardSize && leftDown)
-                    if (B.Board[differenceX, differenceY] == null)
-                        validMoves.Add(new CSquare(differenceX, differenceY));
-                    else if (B.Board[differenceX, differenceY] != null && B.Board[differenceX, differenceY].pieceType != P.pieceType)
-                    {
-                        validMoves.Add(new CSquare(differenceX, differenceY));
-                        leftDown = false;
-                    }
-                    else
-                        leftDown = false;
+            if (differenceY >= 0 && differenceY < boardSize && leftDown)
+            {
+                if (B.Board[differenceX, differenceY] == null)
+                {
+                    validMoves.Add(new CSquare(differenceX, differenceY));
+                    return;
+                }
+
+                if (B.Board[differenceX, differenceY] != null && B.Board[differenceX, differenceY].pieceType != P.pieceType)
+                {
+                    validMoves.Add(new CSquare(differenceX, differenceY));
+                }
+                    
+                leftDown = false;
+            }
         }
 
         public void Jump(CPiece P)

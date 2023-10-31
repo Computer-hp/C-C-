@@ -2,8 +2,8 @@
 #include <stdlib.h>
 #include <sys/types.h>
 #include <unistd.h>
-#include <sys/wait.h>
 #include <time.h>
+#include <sys/wait.h>
 
 // Numero Per Riga
 #define NPR 30

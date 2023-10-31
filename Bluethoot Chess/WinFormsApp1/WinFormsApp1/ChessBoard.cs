@@ -31,6 +31,7 @@ namespace WinFormsApp1
 
         private MethodInfo method = null;
 
+        public int x, y, differenceX, differenceY;
 
         public bool right, left, up, down;
 
@@ -108,43 +109,43 @@ namespace WinFormsApp1
             validMoves.Add(new CSquare(leftX, upORdown));
         }
 
-        public void Straight(CPiece P, string direction)
+        public void Straight(CPiece P, int times, string direction)
         {
-            int x = P.x, y = P.y;
+            x = P.x; y = P.y;
 
             int counter = 2;
 
             right = true; left = true; up = true; down = true;
 
-            for (int i = 0; i < 8; i++)
+            for (int i = 0; i < times; i++)
             {
                 x++;
                 // opposite side
-                int differenceX = x - counter;
+                differenceX = x - counter;
 
                 y++;
                 // opposite side
-                int differenceY = y - counter;
+                differenceY = y - counter;
 
                 if (direction != "")
                 {
                     method = typeof(CMatrixBoard).GetMethod(direction);
-                    object[] parameters = new object[] { this, P, differenceX };
+                    object[] parameters = new object[] { this, P, counter };
                     method.Invoke(this, parameters);
                 }
                 else
                 {
-                    Up(this, P, y);
-                    Down(this, P, differenceY);
-                    Right(this, P, x);
-                    Left(this, P, differenceX);
+                    Up(this, P, counter);
+                    Down(this, P, counter);
+                    Right(this, P, counter);
+                    Left(this, P, counter);
                 }
 
                 counter += 2;
             }
         }
 
-        public void Up(CMatrixBoard B, CPiece P, int y)
+        public void Up(CMatrixBoard B, CPiece P, int counter)
         {
             if (y < boardSize && up)
             {
@@ -160,7 +161,7 @@ namespace WinFormsApp1
                 return;
             }
         }
-        public void Down(CMatrixBoard B, CPiece P, int differenceY)
+        public void Down(CMatrixBoard B, CPiece P, int counter)
         {
             if (differenceY >= 0 && down)
             {
@@ -178,7 +179,7 @@ namespace WinFormsApp1
             }
 
         }
-        public void Left(CMatrixBoard B, CPiece P, int differenceX)
+        public void Left(CMatrixBoard B, CPiece P, int counter)
         {
             if (differenceX >= 0 && left)
             {
@@ -195,7 +196,7 @@ namespace WinFormsApp1
                 return;
             }
         }
-        public void Right(CMatrixBoard B, CPiece P, int x)
+        public void Right(CMatrixBoard B, CPiece P, int counter)
         {
             if (x < boardSize && right)
             {
@@ -213,51 +214,44 @@ namespace WinFormsApp1
             }
         }
 
-        public void Diagonal(CPiece P, string direction)
+        public void Diagonal(CPiece P, int times, string direction)
         {
-            findDiagonal(this, P, 8);
-
-            int x = P.x, y = P.y;
+            x = P.x; y = P.y;
 
             int counter = 2;
 
             rightUp = true; leftUp = true; rightDown = true; leftDown = true;
 
-            for (int i = 0; i < 8; i++)
+            for (int i = 0; i < times; i++)
             {
-                x++;
-                // opposite side
-                int differenceX = x - counter;
-
-                y++;
-                // opposite side
-                int differenceY = y - counter;
+                x++; y++;
+                // opposite side           opposite side
+                differenceX = x - counter; differenceY = y - counter;
 
                 if (direction != "")
                 {
                     method = typeof(CMatrixBoard).GetMethod(direction);
-                    object[] parameters = new object[] { this, P, differenceX };
+                    object[] parameters = new object[] { this, P, counter};
                     method.Invoke(this, parameters);
                 }
                 else
                 {
                     if (x < boardSize)
                     {
-                        RightUp(this, P, x, y);
-                        RightDown(this, P, x, differenceY);
+                        RightUp(this, P, counter);
+                        RightDown(this, P, counter);
                     }
                     if (differenceX >= 0)
                     {
-                        LeftUp(this, P, y, differenceX);
-                        LeftDown(this, P, differenceX, differenceY);
+                        LeftUp(this, P, counter);
+                        LeftDown(this, P, counter);
                     }
                 }
-
                 counter += 2;
             }
 
         }
-        public void RightUp(CMatrixBoard B, CPiece P, int x, int y)
+        public void RightUp(CMatrixBoard B, CPiece P, int counter)
         {
             if (y < boardSize && rightUp)
                 if (B.Board[x, y] == null)
@@ -270,7 +264,7 @@ namespace WinFormsApp1
                 else
                     rightUp = false;
         }
-        public void RightDown(CMatrixBoard B, CPiece P, int x, int differenceY)
+        public void RightDown(CMatrixBoard B, CPiece P, int counter)
         {
             if (differenceY >= 0 && rightDown)
                 if (B.Board[x, differenceY] == null)
@@ -283,7 +277,7 @@ namespace WinFormsApp1
                 else
                     rightDown = false;
         }
-        public void LeftUp(CMatrixBoard B, CPiece P, int y, int differenceX)
+        public void LeftUp(CMatrixBoard B, CPiece P, int counter)
         {
             if (y < boardSize && leftUp)
                 if (B.Board[differenceX, y] == null)
@@ -296,7 +290,7 @@ namespace WinFormsApp1
                 else
                     leftUp = false;
         }
-        public void LeftDown(CMatrixBoard B, CPiece P, int differenceX, int differenceY)
+        public void LeftDown(CMatrixBoard B, CPiece P, int counter)
         {
             if (differenceY >= 0 && leftDown)
                 if (differenceY < boardSize && leftDown)
@@ -311,40 +305,9 @@ namespace WinFormsApp1
                         leftDown = false;
         }
 
-        private void findDiagonal(CMatrixBoard B, CPiece P, int times)
-        {
-
-            /*for (int i = 0; i < times; i++)
-            {
-                x++;
-                y++;
-                // opposite side
-                int differenceX = x - counter, differenceY = y - counter;
-                // right
-                if (x < boardSize)
-                {
-                    
-
-
-                    
-                }
-                // left
-                if (differenceX >= 0)
-                {
-                    
-
-
-                    
-                }
-                counter += 2;
-            }*/
-        }
-
         public void Jump(CPiece P)
         {
-            
-            int x = P.x;
-            int y = P.y;
+            x = P.x; y = P.y;
 
             int counterX = 2;
             int counterY = 4;
@@ -353,28 +316,39 @@ namespace WinFormsApp1
             {
                 int provisoryX = x + 1;
                 int provisoryY = y + 2;
-                int differenceX = provisoryX - counterX, differenceY = provisoryY - counterY;
 
-                if (provisoryX < boardSize)
-                {
-                    if (provisoryY < boardSize)
-                        validMoves.Add(new CSquare(provisoryX, provisoryY));
-                    if (differenceY >= 0)
-                        validMoves.Add(new CSquare(provisoryX, differenceY));
-                }
-                if (differenceX >= 0)
-                {
-                    if (provisoryY < boardSize)
-                        validMoves.Add(new CSquare(differenceX, provisoryY));
-                    if (differenceY >= 0)
-                        validMoves.Add(new CSquare(differenceX, differenceY));
+                differenceX = provisoryX - counterX; 
+                differenceY = provisoryY - counterY;
 
-                }
+                JumpRight(provisoryX, provisoryY);
+                JumpLeft(provisoryY);
+
 
                 x++;
                 y--;
                 counterY -= 2;
                 counterX += 2;
+            }
+        }
+        public void JumpRight(int provisoryX, int provisoryY)
+        {
+            if (provisoryX < boardSize)
+            {
+                if (provisoryY < boardSize)
+                    validMoves.Add(new CSquare(provisoryX, provisoryY));
+                if (differenceY >= 0)
+                    validMoves.Add(new CSquare(provisoryX, differenceY));
+            }
+        }
+        public void JumpLeft(int provisoryY)
+        {
+            if (differenceX >= 0)
+            {
+                if (provisoryY < boardSize)
+                    validMoves.Add(new CSquare(differenceX, provisoryY));
+                if (differenceY >= 0)
+                    validMoves.Add(new CSquare(differenceX, differenceY));
+
             }
         }
         public void checkJump(CPiece P)
@@ -389,14 +363,6 @@ namespace WinFormsApp1
                             this.validMoves.RemoveAll(item => item.x == x && item.y == y);
                 }
             }
-
-        }
-
-        public void King(CPiece P)
-        {
-            Straight(P, "");
-            findDiagonal(this, P, 1);
-
         }
 
         public override string ToString()

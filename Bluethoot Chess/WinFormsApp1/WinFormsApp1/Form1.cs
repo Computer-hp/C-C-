@@ -542,7 +542,7 @@ namespace WinFormsApp1
                     break;
 
                 case "R":
-                    ChessBoard.Straight(P, "");
+                    ChessBoard.Straight(P, 8, "");
                     break;
 
                 case "N":
@@ -551,16 +551,17 @@ namespace WinFormsApp1
                     break;
 
                 case "B":
-                    ChessBoard.Diagonal(P);
+                    ChessBoard.Diagonal(P, 8, "");
                     break;
 
                 case "Q":
-                    ChessBoard.Straight(P, "");
-                    ChessBoard.Diagonal(P);
+                    ChessBoard.Straight(P, 8, "");
+                    ChessBoard.Diagonal(P, 8, "");
                     break;
 
                 case "K":
-                    ChessBoard.King(P);
+                    ChessBoard.Straight(P, 1, "");
+                    ChessBoard.Diagonal(P, 1, "");
                     break;
             }
             return ChessBoard;

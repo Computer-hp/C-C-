@@ -256,15 +256,6 @@ namespace WinFormsApp1
                             if it's KNIGH then only check if opponent can capture.
                              */
 
-                            /*
-                            check if every piece of the oponent has the posibility to stop the check
-                            with moving the king or a piece.
-                            create a dictionary to save the name of the piece and the moves,
-                            so when the oponent clicks the piece the program has to check
-                            if that piece is the one in the dictionary and the move is equal
-                            to the possible one.
-                                */
-
                             ChessBoard = AvaibleSquares(ChessBoard, piece);
                             ChessBoard = StopCheck(ChessBoard, piece);
 
@@ -312,8 +303,6 @@ namespace WinFormsApp1
 
 
             }
-
-            //ChessBoard = AvaibleSquares(ChessBoard, selectedPiece);
 
             Debug.WriteLine(selectedPiece.pieceName);
             Debug.WriteLine(ChessBoard.ToString());
@@ -402,7 +391,6 @@ namespace WinFormsApp1
             {
                 if (piece != null && piece.pieceType != P.pieceType && piece.pieceName != P.pieceName)
                 {
-                    B.validMoves.Clear();
                     B = AvaibleSquares(B, piece);
 
                     if (piece.pieceName == "P")

@@ -30,7 +30,7 @@ namespace WinFormsApp1
 
         private MethodInfo method = null;
 
-        public int x, y, differenceX, differenceY;
+        private int x, y, differenceX, differenceY;
 
         public bool right, left, up, down;
 
@@ -71,10 +71,10 @@ namespace WinFormsApp1
 
                 checkLeft(-1, 1, P, this);
 
-                if (P.y == 1)
+                if (P.y == 1 && this.Board[P.x, P.y + 2] == null)
                     validMoves.Add(new CSquare(P.x, P.y + 2));
             }
-            else if (P.pieceType == "Black" && P.y >= 0)
+            if (P.pieceType == "Black" && P.y >= 0)
             {
                 if (this.Board[P.x, P.y - 1] == null)
                     validMoves.Add(new CSquare(P.x, P.y - 1));
@@ -83,7 +83,7 @@ namespace WinFormsApp1
 
                 checkLeft(-1, -1, P, this);
 
-                if (P.y == 6)
+                if (P.y == 6 && this.Board[P.x, P.y - 2] == null)
                     validMoves.Add(new CSquare(P.x, P.y - 2));
             }
         }
@@ -94,7 +94,7 @@ namespace WinFormsApp1
         {
             int rightX = P.x + X, upORdown = P.y + Y;
 
-            if ((rightX >= boardSize) || (upORdown >= boardSize || upORdown < 0))
+            if (rightX >= boardSize || (upORdown >= boardSize || upORdown < 0) || B.Board[rightX, upORdown] == null)
                 return;
 
             validMoves.Add(new CSquare(rightX, upORdown));
@@ -106,7 +106,7 @@ namespace WinFormsApp1
         {
             int leftX = P.x + X, upORdown = P.y + Y;
 
-            if (leftX < 0 || (upORdown >= boardSize || upORdown < 0))
+            if (leftX < 0 || (upORdown >= boardSize || upORdown < 0) || B.Board[leftX, upORdown] == null)
                 return;
 
             validMoves.Add(new CSquare(leftX, upORdown));

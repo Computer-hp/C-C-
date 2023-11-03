@@ -8,6 +8,7 @@ using System.Collections;
 using Microsoft.VisualBasic.ApplicationServices;
 using System.Configuration;
 using System.Net.NetworkInformation;
+using Microsoft.VisualBasic.Devices;
 
 namespace WinFormsApp1
 {
@@ -74,8 +75,9 @@ namespace WinFormsApp1
                         Location = new Point(centerX + col * squareSize, centerY + row * squareSize),
                         BackColor = (row + col) % 2 == 0 ? Color.Ivory : Color.Brown,
                         FlatStyle = FlatStyle.Flat,
-                        FlatAppearance = { BorderSize = 0 }
-                    };
+                        FlatAppearance = { BorderSize = 0 },
+                        BackgroundImageLayout = ImageLayout.Zoom
+                };
 
                     Controls.Add(square);
                     square.Tag = (x, y);
@@ -83,7 +85,7 @@ namespace WinFormsApp1
                     if (ChessBoard.Board[x, y] != null)
                     {
                         Bitmap resizedImage = SetImageToButton(ChessBoard.Board[x, y]);
-                        square.Image = resizedImage;
+                        square.BackgroundImage = resizedImage;
                     }
 
                     // click event handler
@@ -108,26 +110,8 @@ namespace WinFormsApp1
 
             string imagePath = DIR + "\\" + P.pieceName + ".png";
 
-            Bitmap resizedImage = null;
-            try
-            {
-                using (Bitmap originalImage = (Bitmap)Image.FromFile(projectPath + imagePath))
-                {
-                    double maxImageSize = Math.Min(squareSize, squareSize);
-                    double aspectRatio = (double)originalImage.Width / originalImage.Height;
-
-                    int newWidth = (int)maxImageSize;
-                    int newHeight = (int)(maxImageSize / aspectRatio);
-
-                    resizedImage = new Bitmap(originalImage, newWidth, newHeight);
-                    return resizedImage;
-                }
-            }
-            catch (Exception ex)
-            {
-                Debug.WriteLine($"Error loading the image: {ex.Message}");
-                return resizedImage;
-            }
+            Bitmap originalImage = (Bitmap)Image.FromFile(projectPath + imagePath);
+            return originalImage;
         }
 
 
@@ -154,13 +138,16 @@ namespace WinFormsApp1
 
                 int previous_piece_x = selectedPiece.x, previous_piece_y = selectedPiece.y;
 
-
                 // check handle
-                if (check && selectedPiece.pieceName != "K")
+                if (check)
                 {
                     Tuple<int, int> key = Tuple.Create(selectedPiece.x, selectedPiece.y);
                     ChessBoard.copyMoves.Clear();
-                    ChessBoard.copyMoves = ChessBoard.stopCheckWithPiece[key];
+
+                    if (selectedPiece.pieceName != "K" && ChessBoard.stopCheckWithPiece.ContainsKey(key))
+                        ChessBoard.copyMoves.AddRange(ChessBoard.stopCheckWithPiece[key]);
+                    else
+                        ChessBoard.copyMoves.AddRange(ChessBoard.validMoves);
 
                     if (!ChessBoard.copyMoves.Exists(square => ChessBoard.validMoves.Exists(checkSquare => checkSquare.x == square.x && checkSquare.y == square.y)))
                         return;
@@ -176,7 +163,7 @@ namespace WinFormsApp1
 
                 // cancel the image at the previous position of the piece
                 Button originalSquare = GetButtonAtPosition(previous_piece_x, previous_piece_y);
-                originalSquare.Image = null;
+                originalSquare.BackgroundImage = null;
 
                 ChessBoard.Board[previous_piece_x, previous_piece_y] = null;
 
@@ -195,7 +182,7 @@ namespace WinFormsApp1
 
                 CPiece king = FindKing(ChessBoard, currentPlayer);
 
-                // finds only the moves of the piece that gives check which are used in StopCheck
+                // finds only the moves of the piece that gives check which are after used in StopCheck
                 if (selectedPiece.pieceName != "K")
                 {
 
@@ -236,13 +223,14 @@ namespace WinFormsApp1
 
                 Bitmap image = SetImageToButton(ChessBoard.Board[x, y]);
 
-                clickedButton.Image = image;
+                clickedButton.BackgroundImage = image;
 
 
                 // TODO check if there are moves that can stop the check, if not it's checkmate
                 if (check)
                 {
-                    ChessBoard.copyMoves = ChessBoard.validMoves;
+                    ChessBoard.copyMoves.Clear();
+                    ChessBoard.copyMoves.AddRange(ChessBoard.validMoves);
 
                     foreach (var piece in ChessBoard.Board)
                     {
@@ -265,7 +253,6 @@ namespace WinFormsApp1
                     ChessBoard = AvaibleSquares(ChessBoard, king);
                     ChessBoard = SaveInvalidSquares(ChessBoard, king);
 
-
                     // Check mate
                     if (!ChessBoard.validMoves.Any() && !ChessBoard.stopCheckWithPiece.Any(kv => kv.Value != null && kv.Value.Count > 0))
                     {
@@ -287,25 +274,8 @@ namespace WinFormsApp1
             ChessBoard = AvaibleSquares(ChessBoard, ChessBoard.Board[x, y]);
             selectedPiece = ChessBoard.Board[x, y];
 
-
-            // sistemare --> quando c'e' scacco bisogna controllare se il pezzo che
-            // voglio muovere sia quello che posso muovere
-            if (check && ChessBoard.Board[x, y].pieceName != "K")
-            {
-                ChessBoard = AvaibleSquares(ChessBoard, ChessBoard.Board[x, y]);
-
-
-                ChessBoard = SaveInvalidSquares(ChessBoard, ChessBoard.Board[x, y]);
-
-                if (!ChessBoard.validMoves.Any())
-                    return;
-
-
-
-            }
-
             Debug.WriteLine(selectedPiece.pieceName);
-            Debug.WriteLine(ChessBoard.ToString());
+            Debug.WriteLine(ChessBoard.ToString() + "\n");
 
             if (selectedPiece.pieceName != "K")
                 return;
@@ -412,17 +382,9 @@ namespace WinFormsApp1
         {
             CPiece king = FindKing(B, currentPlayer);
 
-
-            foreach (var obj in B.validMoves)
-            {
-                Debug.WriteLine($"x: {obj.x}, y: {obj.y}");
-            }
-            Debug.WriteLine($"king x: {king.x}, y: {king.y}");
-
             if (B.validMoves.Exists(move => move.x == king.x && move.y == king.y) == true)
             {
                 check = true;
-                Debug.WriteLine(check);
             }
         }
 
@@ -430,7 +392,7 @@ namespace WinFormsApp1
         {
             List<CSquare> tmpMoves = new List<CSquare>();
 
-            Tuple<int, int> key = Tuple.Create(Piece.x, Piece.y);
+            Tuple<int, int> key;
 
             foreach (var square in ChessBoard.validMoves)
             {
@@ -439,7 +401,20 @@ namespace WinFormsApp1
                     tmpMoves.Add(square);
                 }
             }
-            ChessBoard.stopCheckWithPiece[key] = tmpMoves;
+            Debug.WriteLine("tmpMoves of " +  Piece.pieceName + " =" );
+
+            foreach (var moves in tmpMoves)
+            {
+                Debug.WriteLine(moves.x + ", " + moves.y);
+            }
+            Debug.WriteLine("\n");
+
+            if (tmpMoves.Any())
+            {
+                Debug.WriteLine("Entered");
+                key = Tuple.Create(Piece.x, Piece.y);
+                ChessBoard.stopCheckWithPiece[key] = tmpMoves;
+            }
 
             return ChessBoard;
         }
@@ -464,12 +439,12 @@ namespace WinFormsApp1
             ChessBoard.Board[5, Y] = tmp;
 
             Button RookSquare = GetButtonAtPosition(7, Y);
-            RookSquare.Image = null;
+            RookSquare.BackgroundImage = null;
 
             Bitmap RookImage = SetImageToButton(tmp);
 
             RookSquare = GetButtonAtPosition(5, Y);
-            RookSquare.Image = RookImage;
+            RookSquare.BackgroundImage = RookImage;
 
             return ChessBoard;
         }
@@ -481,12 +456,12 @@ namespace WinFormsApp1
             ChessBoard.Board[3, Y] = tmp;
 
             Button RookSquare = GetButtonAtPosition(0, Y);
-            RookSquare.Image = null;
+            RookSquare.BackgroundImage = null;
 
             Bitmap RookImage = SetImageToButton(tmp);
 
             RookSquare = GetButtonAtPosition(3, Y);
-            RookSquare.Image = RookImage;
+            RookSquare.BackgroundImage = RookImage;
 
             return ChessBoard;
         }

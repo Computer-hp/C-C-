@@ -9,6 +9,7 @@ using Microsoft.VisualBasic.ApplicationServices;
 using System.Configuration;
 using System.Net.NetworkInformation;
 using Microsoft.VisualBasic.Devices;
+using System.Runtime.CompilerServices;
 
 namespace WinFormsApp1
 {
@@ -122,7 +123,6 @@ namespace WinFormsApp1
             int x = position.Item1;
             int y = position.Item2;
 
-
             currentPlayer = (turn == 0) ? "White" : "Black";
 
             int Y = (currentPlayer == "White") ? 0 : 7;
@@ -174,8 +174,7 @@ namespace WinFormsApp1
                     ChessBoard = FirstKingMove(ChessBoard, x, y, Y);
 
                 if (selectedPiece.pieceName == "R")
-                    FirstRookMove(ChessBoard, selectedPiece, x, y, Y);
-
+                    FirstRookMove(selectedPiece, x, y, Y);
                 
                 ChessBoard.Board[x, y].x = x;
                 ChessBoard.Board[x, y].y = y;
@@ -185,7 +184,6 @@ namespace WinFormsApp1
                 // finds only the moves of the piece that gives check which are after used in StopCheck
                 if (selectedPiece.pieceName != "K")
                 {
-
                     direction = "";
 
                     if (selectedPiece.pieceName == "R")
@@ -236,17 +234,8 @@ namespace WinFormsApp1
                     {
                         if (piece != null && piece.pieceType != selectedPiece.pieceType && piece.pieceName != "K")
                         {
-
-                            /*
-                            method that takes x, y of the KING, if it's ROOK, QUEEN or BISHOP
-                            check if squares in between can be ocupied.
-                            
-                            if it's KNIGH then only check if opponent can capture.
-                             */
-
                             ChessBoard = AvaibleSquares(ChessBoard, piece);
                             ChessBoard = StopCheck(ChessBoard, piece);
-
                         }
                     }
                     // check valid moves for King
@@ -284,27 +273,27 @@ namespace WinFormsApp1
 
 
             // Check if  O-O  or  O-O-O  is possible.
-            if (ChessBoard.Board[6, Y] == null && ChessBoard.validMoves.Exists(item => item.x == 5 && item.y == Y)
-                && !firstKingMove[turn] && !hRookFirstMove[turn])
+            if (!O_O[turn])
+                CheckCastle(6, Y, 5, ref O_O[turn], hRookFirstMove[turn]);
+            
+            if (!O_O_O[turn])
+                CheckCastle(2, Y, 3, ref O_O_O[turn], aRookFirstMove[turn]);
+        }
+
+        private void CheckCastle(int kingMoveX, int Y, int compareX, ref bool castle, bool firstRookMove)
+        {
+            Debug.WriteLine("In");
+            if (compareX == 3 && ChessBoard.Board[2, Y] != null)
+                return;
+
+            if (!firstKingMove[turn] && !firstRookMove &&
+                ChessBoard.Board[kingMoveX, Y] == null && ChessBoard.validMoves.Exists(item => item.x == compareX && item.y == Y))
             {
-
-                ChessBoard.validMoves.Add(new CSquare(6, Y));
-                O_O[turn] = true;
+                ChessBoard.validMoves.Add(new CSquare(kingMoveX, Y));
+                castle = true;
+                return;
             }
-            else
-                O_O[turn] = false;
-
-
-            if (ChessBoard.Board[2, Y] == null && ChessBoard.Board[3, Y] == null
-                && ChessBoard.validMoves.Exists(item => item.x == 3 && item.y == Y)
-                && !firstKingMove[turn] && !aRookFirstMove[turn])
-            {
-
-                ChessBoard.validMoves.Add(new CSquare(2, Y));
-                O_O_O[turn] = true;
-            }
-            else
-                O_O_O[turn] = false;
+            castle = false;
         }
 
         private void FindStraightDirection(CPiece king)
@@ -401,76 +390,59 @@ namespace WinFormsApp1
                     tmpMoves.Add(square);
                 }
             }
-            Debug.WriteLine("tmpMoves of " +  Piece.pieceName + " =" );
-
-            foreach (var moves in tmpMoves)
-            {
-                Debug.WriteLine(moves.x + ", " + moves.y);
-            }
-            Debug.WriteLine("\n");
 
             if (tmpMoves.Any())
             {
-                Debug.WriteLine("Entered");
                 key = Tuple.Create(Piece.x, Piece.y);
                 ChessBoard.stopCheckWithPiece[key] = tmpMoves;
             }
 
             return ChessBoard;
         }
-
+        
+        // x and y are the position of the button clicked
         private CMatrixBoard FirstKingMove(CMatrixBoard ChessBoard, int x, int y, int Y)
         {
             firstKingMove[turn] = true;
 
             if (O_O[turn] && x == 6 && y == Y)
-                ChessBoard = ShortCastle(ChessBoard, x, y, Y);
+                ChessBoard = ShortAndLongCastle(ChessBoard, 7, Y);
 
             if (O_O_O[turn] && x == 2 && y == Y)
-                ChessBoard = LongCastle(ChessBoard, x, y, Y);
+                ChessBoard = ShortAndLongCastle(ChessBoard, 0, Y);
 
             return ChessBoard;
         }
-        // TODO merge Short and Long Castle
-        private CMatrixBoard ShortCastle(CMatrixBoard ChessBoard, int x, int y, int Y)
+        
+        private CMatrixBoard ShortAndLongCastle(CMatrixBoard ChessBoard, int rookX, int Y)
         {
-            var tmp = ChessBoard.Board[7, Y];  // copy the rook
-            ChessBoard.Board[7, Y] = null;
-            ChessBoard.Board[5, Y] = tmp;
+            var tmp = ChessBoard.Board[rookX, Y];  // copy the rook
 
-            Button RookSquare = GetButtonAtPosition(7, Y);
+            FirstRookMove(tmp, rookX, Y, Y);  // the rook has done its first move
+
+            ChessBoard.Board[rookX, Y] = null;
+
+            Button RookSquare = GetButtonAtPosition(rookX, Y);
             RookSquare.BackgroundImage = null;
+
+            //transpose the rook
+            rookX = (rookX == 0) ? 3 : 5;
+
+            ChessBoard.Board[rookX, Y] = tmp;
 
             Bitmap RookImage = SetImageToButton(tmp);
 
-            RookSquare = GetButtonAtPosition(5, Y);
-            RookSquare.BackgroundImage = RookImage;
-
-            return ChessBoard;
-        }
-        // TODO merge Short and Long Castle
-        private CMatrixBoard LongCastle(CMatrixBoard ChessBoard, int x, int y, int Y)
-        {
-            var tmp = ChessBoard.Board[7, Y];  // copy the rook
-            ChessBoard.Board[0, Y] = null;
-            ChessBoard.Board[3, Y] = tmp;
-
-            Button RookSquare = GetButtonAtPosition(0, Y);
-            RookSquare.BackgroundImage = null;
-
-            Bitmap RookImage = SetImageToButton(tmp);
-
-            RookSquare = GetButtonAtPosition(3, Y);
+            RookSquare = GetButtonAtPosition(rookX, Y);
             RookSquare.BackgroundImage = RookImage;
 
             return ChessBoard;
         }
 
-        private void FirstRookMove(CMatrixBoard ChessBoard, CPiece selectedPiece, int x, int y, int Y)
+        private void FirstRookMove(CPiece selectedPiece, int x, int y, int Y)
         {
             if (selectedPiece.x == 0 && selectedPiece.y == Y)
                 aRookFirstMove[turn] = true;
-            else if (selectedPiece.x == 7 && selectedPiece.y == Y)
+            if (selectedPiece.x == 7 && selectedPiece.y == Y)
                 hRookFirstMove[turn] = true;
         }
 

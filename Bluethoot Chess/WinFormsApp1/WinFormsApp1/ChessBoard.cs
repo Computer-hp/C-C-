@@ -60,8 +60,6 @@ namespace WinFormsApp1
 
         public void Pawns(CPiece P)
         {
-            //Debug.WriteLine(P.pieceType + " " + P.pieceName);
-
             if (P.pieceType == "White" && P.y < boardSize) 
             {
                 if (this.Board[P.x, P.y + 1] == null)
@@ -253,7 +251,7 @@ namespace WinFormsApp1
         }
         public void RightUp(CMatrixBoard B, CPiece P, int counter)
         {
-            if (y < boardSize && rightUp)
+            if (x < boardSize && y < boardSize && rightUp)
             {
                 if (B.Board[x, y] == null)
                 {
@@ -271,7 +269,7 @@ namespace WinFormsApp1
         }
         public void RightDown(CMatrixBoard B, CPiece P, int counter)
         {
-            if (differenceY >= 0 && rightDown)
+            if (x < boardSize && differenceY >= 0 && rightDown)
             {
                 if (B.Board[x, differenceY] == null)
                 {
@@ -288,7 +286,7 @@ namespace WinFormsApp1
         }
         public void LeftUp(CMatrixBoard B, CPiece P, int counter)
         {
-            if (y < boardSize && leftUp)
+            if (differenceX >= 0 && y < boardSize && leftUp)
             {
                 if (B.Board[differenceX, y] == null)
                 {
@@ -305,7 +303,7 @@ namespace WinFormsApp1
         }
         public void LeftDown(CMatrixBoard B, CPiece P, int counter)
         {
-            if (differenceY >= 0 && differenceY < boardSize && leftDown)
+            if (differenceX >= 0 && differenceY >= 0 && differenceY < boardSize && leftDown)
             {
                 if (B.Board[differenceX, differenceY] == null)
                 {

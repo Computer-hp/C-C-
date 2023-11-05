@@ -61,7 +61,6 @@ int main() {
 
     printf("\n\n Numero degli scambi: %d", scambi);
 
-
     return 0;
 }
 

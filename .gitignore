@@ -398,6 +398,7 @@ FodyWeavers.xsd
 *.sln.iml
 
 #C .exe files
-Scuola/C/*.exe
-Scuola/Cpp/*.exe
-Scuola/CProjects/*.exe
+#Scuola/C/*.exe
+#Scuola/Cpp/*.exe
+#Scuola/CProjects/*.exe
+*.exe

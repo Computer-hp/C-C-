@@ -1,7 +1,7 @@
 CLION project:
 C Executable versione C11
 
-Thread:
+Processi:
 
 pid = process ID
 
@@ -93,6 +93,7 @@ int main()
 }
 
 /-/--------------------------------
+Threads:
 
 #include "stdio.h"
 #include "sys/wait.h"
@@ -105,10 +106,12 @@ struct argomenti
 };
 
 
-/*void *stampa(struct argomenti a)
+/*
+void *stampa(struct argomenti a)
 {
     printf("%i %s\n", a.numero, a.stringa);
-}*/
+}
+*/
 
 // oppure, modo migliore:
 

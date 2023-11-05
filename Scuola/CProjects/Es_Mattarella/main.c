@@ -15,7 +15,7 @@ int main()
 
     int v[MAXASCII];
 
-    int p[2];
+    int fd[2];
 
     int pid, status;
 
@@ -27,7 +27,7 @@ int main()
         return -1;
     }
 
-    if (pipe(p) < 0)
+    if (pipe(fd) < 0)
     {
         printf("\nERRORE di creazione pipe");
         return -1;
@@ -42,12 +42,12 @@ int main()
     } 
     if (pid > 0)
     {
-        close(p[0]);
+        close(fd[0]);
 
         do {
             char parola[0] = "\0";
             fscanf(fp, "%s", parola);
-            write(p[1], parola, strlen(parola));
+            write(fd[1], parola, strlen(parola));
 
             numerParole++;
             printf("parole n. %i : %s\n", ++numerParole, parola);
@@ -55,14 +55,14 @@ int main()
         } while (!feof(fp));
 
         fclose(fp);
-        close(p[1]);
+        close(fd[1]);
         wait(&status);
 
         
         // sono nel processo padre
         /*
         lettura del 
-        a) chiusura della pipe p[0];
+        a) chiusura della pipe fd[0];
         b) ciclo sul file per la lettura parola x parola
         c) scrittura nelle pipe di ogni parola letta
         d) conteggio delle parole scritte nelle pipe (2065) +- 1
@@ -71,7 +71,7 @@ int main()
     } else { // pid == 0
         // sono nel processo figlio
         /*
-        a) chiusura della pipe p[0];
+        a) chiusura della pipe fd[0];
         b) ciclo di lettura della pipe (read(...))
         c) conteggio delle lettere per ogni parola letta dalla pipe --> uso del vettore v[255]
         d) stampa dei conteggi A....Z, a......z

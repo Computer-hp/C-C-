@@ -57,7 +57,7 @@ int main()
 
         for (int i = 0; i < LENGTH; i++)
         {
-            printf("\n%i", v[i]);
+            printf("%i\n", v[i]);
         }
 
         close(fd[0]);

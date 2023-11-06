@@ -13,8 +13,7 @@ int main()
     }
         
     if (id == 0)
-    {
-        
+    {   
         printf("\nCiao sono il figlio, l'id = %d mentre il getpid() = %d\n", id, getpid());
     } else
     {

@@ -24,12 +24,9 @@ namespace WinFormsApp1
 
         private bool[] firstKingMove = { false, false };
 
-        private bool[] aRookFirstMove = { false, false };
-        private bool[] hRookFirstMove = { false, false };
+        private bool[] aRookFirstMove = { false, false }, hRookFirstMove = { false, false };
 
-        private bool[] O_O = { false, false };
-
-        private bool[] O_O_O = { false, false };
+        private bool[] O_O = { false, false }, O_O_O = { false, false };
 
         private bool check = false;
 

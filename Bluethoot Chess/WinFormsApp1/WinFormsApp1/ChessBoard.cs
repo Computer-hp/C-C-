@@ -92,7 +92,7 @@ namespace WinFormsApp1
         {
             int rightX = P.x + X, upORdown = P.y + Y;
 
-            if (rightX >= boardSize || (upORdown >= boardSize || upORdown < 0) || B.Board[rightX, upORdown] == null)
+            if (rightX >= boardSize || (upORdown >= boardSize || upORdown < 0))//|| B.Board[rightX, upORdown] == null)
                 return;
 
             validMoves.Add(new CSquare(rightX, upORdown));
@@ -104,7 +104,7 @@ namespace WinFormsApp1
         {
             int leftX = P.x + X, upORdown = P.y + Y;
 
-            if (leftX < 0 || (upORdown >= boardSize || upORdown < 0) || B.Board[leftX, upORdown] == null)
+            if (leftX < 0 || (upORdown >= boardSize || upORdown < 0)) //|| B.Board[leftX, upORdown] == null)
                 return;
 
             validMoves.Add(new CSquare(leftX, upORdown));

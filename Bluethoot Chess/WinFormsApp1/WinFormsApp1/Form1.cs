@@ -152,9 +152,6 @@ namespace WinFormsApp1
 
                 if (selectedPiece.pieceName == "P")
                 {
-                    if (!DiagonalMovementPawn(ChessBoard, selectedPiece, x, y))
-                        return;
-
                     PawnPromotion(ChessBoard, selectedPiece, x, y); 
                 }
 
@@ -232,6 +229,10 @@ namespace WinFormsApp1
                         if (piece != null && piece.pieceType != selectedPiece.pieceType && piece.pieceName != "K")
                         {
                             ChessBoard = AvaibleSquares(ChessBoard, piece);
+
+                            if (piece.pieceName == "P")
+
+
                             ChessBoard = StopCheck(ChessBoard, piece);
                         }
                     }
@@ -260,8 +261,16 @@ namespace WinFormsApp1
             ChessBoard = AvaibleSquares(ChessBoard, ChessBoard.Board[x, y]);
             selectedPiece = ChessBoard.Board[x, y];
 
+            if (ChessBoard.Board[x, y].pieceName == "P")
+                if (ChessBoard.Board[x, y].pieceType == "White")
+                    DiagonalMovementPawn(ChessBoard, selectedPiece, x, y + 1);
+                else
+                    DiagonalMovementPawn(ChessBoard, selectedPiece, x, y - 1);
+
+
             Debug.WriteLine(selectedPiece.pieceName);
             Debug.WriteLine(ChessBoard.ToString() + "\n");
+
 
             if (selectedPiece.pieceName != "K")
                 return;
@@ -279,7 +288,6 @@ namespace WinFormsApp1
 
         private void CheckCastle(int kingMoveX, int Y, int compareX, ref bool castle, bool firstRookMove)
         {
-            Debug.WriteLine("In");
             if (compareX == 3 && ChessBoard.Board[2, Y] != null)
                 return;
 
@@ -448,20 +456,23 @@ namespace WinFormsApp1
             foreach (var piece in B.Board)
             {
                 if (piece != null && piece.pieceType != currentPlayer && piece.pieceName == "K")
-                {
                     return piece;
-                }
             }
             return null;
         }
 
-        private bool DiagonalMovementPawn(CMatrixBoard ChessBoard, CPiece selectedPiece, int x, int y)
+        private void DiagonalMovementPawn(CMatrixBoard ChessBoard, CPiece piece, int x, int y)
         {
-            if (selectedPiece.x != x && (ChessBoard.Board[x, y] == null ||
-               ChessBoard.Board[x, y].pieceName == "K"))
-                return false;
+            int oppositeX = x - 1;
+            x++;
 
-            return true;
+            if (x < 8 && (ChessBoard.Board[x, y] == null || 
+                ChessBoard.Board[x, y].pieceName == "K"))
+                ChessBoard.validMoves.RemoveAll(square => square.x == x && square.y == y);
+
+            if (oppositeX > 0 && (ChessBoard.Board[oppositeX, y] == null || ChessBoard.Board[oppositeX, y].pieceName == "K"))
+                ChessBoard.validMoves.RemoveAll(square => square.x == oppositeX && square.y == y);
+
         }
 
         private void PawnPromotion(CMatrixBoard ChessBoard, CPiece selectedPiece, int x, int y)

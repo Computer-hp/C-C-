@@ -1,20 +1,20 @@
 {
   "format": 1,
   "restore": {
-    "C:\\Users\\Zlatko\\Desktop\\AnticGit\\DanielA\\Bluethoot Chess\\WinFormsApp1\\WinFormsApp1\\WinFormsApp1.csproj": {}
+    "C:\\Users\\AnticHp\\Desktop\\AnticGit\\DanielA\\Bluethoot Chess\\WinFormsApp1\\WinFormsApp1\\WinFormsApp1.csproj": {}
   },
   "projects": {
-    "C:\\Users\\Zlatko\\Desktop\\AnticGit\\DanielA\\Bluethoot Chess\\WinFormsApp1\\WinFormsApp1\\WinFormsApp1.csproj": {
+    "C:\\Users\\AnticHp\\Desktop\\AnticGit\\DanielA\\Bluethoot Chess\\WinFormsApp1\\WinFormsApp1\\WinFormsApp1.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "C:\\Users\\Zlatko\\Desktop\\AnticGit\\DanielA\\Bluethoot Chess\\WinFormsApp1\\WinFormsApp1\\WinFormsApp1.csproj",
+        "projectUniqueName": "C:\\Users\\AnticHp\\Desktop\\AnticGit\\DanielA\\Bluethoot Chess\\WinFormsApp1\\WinFormsApp1\\WinFormsApp1.csproj",
         "projectName": "WinFormsApp1",
-        "projectPath": "C:\\Users\\Zlatko\\Desktop\\AnticGit\\DanielA\\Bluethoot Chess\\WinFormsApp1\\WinFormsApp1\\WinFormsApp1.csproj",
-        "packagesPath": "C:\\Users\\Zlatko\\.nuget\\packages\\",
-        "outputPath": "C:\\Users\\Zlatko\\Desktop\\AnticGit\\DanielA\\Bluethoot Chess\\WinFormsApp1\\WinFormsApp1\\obj\\",
+        "projectPath": "C:\\Users\\AnticHp\\Desktop\\AnticGit\\DanielA\\Bluethoot Chess\\WinFormsApp1\\WinFormsApp1\\WinFormsApp1.csproj",
+        "packagesPath": "C:\\Users\\AnticHp\\.nuget\\packages\\",
+        "outputPath": "C:\\Users\\AnticHp\\Desktop\\AnticGit\\DanielA\\Bluethoot Chess\\WinFormsApp1\\WinFormsApp1\\obj\\",
         "projectStyle": "PackageReference",
         "configFilePaths": [
-          "C:\\Users\\Zlatko\\AppData\\Roaming\\NuGet\\NuGet.Config",
+          "C:\\Users\\AnticHp\\AppData\\Roaming\\NuGet\\NuGet.Config",
           "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
         ],
         "originalTargetFrameworks": [
@@ -58,7 +58,7 @@
               "privateAssets": "none"
             }
           },
-          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\7.0.403\\RuntimeIdentifierGraph.json"
+          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\7.0.302\\RuntimeIdentifierGraph.json"
         }
       }
     }

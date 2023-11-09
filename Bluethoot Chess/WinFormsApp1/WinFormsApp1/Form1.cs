@@ -230,8 +230,11 @@ namespace WinFormsApp1
                         {
                             ChessBoard = AvaibleSquares(ChessBoard, piece);
 
-                            if (piece.pieceName == "P")
-
+                            if (piece.pieceName == "P" && piece.pieceType == "White")
+                                    DiagonalMovementPawn(ChessBoard, piece, x, y + 1);
+                            
+                            if (piece.pieceName == "P" && piece.pieceType == "Black")
+                                    DiagonalMovementPawn(ChessBoard, piece, x, y - 1);
 
                             ChessBoard = StopCheck(ChessBoard, piece);
                         }

@@ -221,6 +221,8 @@ namespace WinFormsApp1
                 // TODO check if there are moves that can stop the check, if not it's checkmate
                 if (check)
                 {
+                    Debug.WriteLine("CHECK");
+
                     ChessBoard.copyMoves.Clear();
                     ChessBoard.copyMoves.AddRange(ChessBoard.validMoves);
 
@@ -231,10 +233,10 @@ namespace WinFormsApp1
                             ChessBoard = AvaibleSquares(ChessBoard, piece);
 
                             if (piece.pieceName == "P" && piece.pieceType == "White")
-                                    DiagonalMovementPawn(ChessBoard, piece, x, y + 1);
+                                DiagonalMovementPawn(ChessBoard, piece, x, y + 1);
                             
                             if (piece.pieceName == "P" && piece.pieceType == "Black")
-                                    DiagonalMovementPawn(ChessBoard, piece, x, y - 1);
+                                DiagonalMovementPawn(ChessBoard, piece, x, y - 1);
 
                             ChessBoard = StopCheck(ChessBoard, piece);
                         }

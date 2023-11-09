@@ -48,11 +48,9 @@ namespace WinFormsApp1
 
             for (int x = 0; x < 8; x++)
             {
-                // white pawns & pieces
                 this.Board[x, 1] = new CPiece(x, 1, "P", "White");
                 this.Board[x, 0] = new CPiece(x, 0, pieces[x], "White");
 
-                // black pawns & pieces
                 this.Board[x, 6] = new CPiece(x, 6, "P", "Black");
                 this.Board[x, 7] = new CPiece(x, 7, pieces[x], "Black");
             }
@@ -85,7 +83,6 @@ namespace WinFormsApp1
                     validMoves.Add(new CSquare(P.x, P.y - 2));
             }
         }
-
 
         // for white and black pawns
         private void checkRigth(int X, int Y, CPiece P, CMatrixBoard B)

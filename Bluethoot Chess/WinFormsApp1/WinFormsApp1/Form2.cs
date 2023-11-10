@@ -13,23 +13,56 @@ namespace WinFormsApp1
     public partial class Form2 : Form
     {
         public string pieceName;
+
+        private int buttonWidth = Form1.squareSize, buttonHeight = Form1.squareSize;
+
+        private List<string> promotionPiecesName = new List<string> { "Q", "R", "B", "N" };
+
+
         public Form2(int turn)
         {
             InitializeComponent();
 
+            this.BackColor = Color.Black;
+
             string DIR;
 
-            if (turn == 0)
-                DIR = "White";
-            else
-                DIR = "Black";
+            DIR = (turn == 0) ? "White" : "Black";
 
-            foreach (var button in new Button[] { Q, R, B, N })
+            int counter = 0;
+
+            foreach (var buttonName in promotionPiecesName)
             {
-                Bitmap resizedImage = Form1.SetImageToButton(new CPiece(0, 0, button.Name, DIR));
 
-                button.Image = resizedImage;
+                InitializePromotionForm(DIR, buttonName, counter);
+                counter += buttonHeight;
             }
+        }
+
+        private void InitializePromotionForm(string DIR, string buttonName, int counter)
+        {
+            int formWidth = this.ClientSize.Width;
+            int formHeight = this.ClientSize.Height;
+
+            Bitmap resizedImage = Form1.SetImageToButton(new CPiece(0, 0, buttonName, DIR));
+
+            Button button = new Button
+            {
+                Width = buttonWidth,
+                Height = buttonHeight,
+                Left = (formWidth - buttonWidth) / 2,
+                Top = counter,
+                Name = buttonName,
+                BackColor = Color.Ivory,
+                FlatStyle = FlatStyle.Flat,
+                FlatAppearance = { BorderSize = 1 },
+                BackgroundImage = resizedImage,
+                BackgroundImageLayout = ImageLayout.Zoom,
+            };
+
+            button.Click += Piece_Promote;
+
+            this.Controls.Add(button);
         }
 
         private void Piece_Promote(object sender, EventArgs e)

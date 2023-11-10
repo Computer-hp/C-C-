@@ -209,7 +209,7 @@ namespace WinFormsApp1
 
                     IsCheck(ChessBoard, ChessBoard.Board[x, y]);
 
-                    Debug.WriteLine("One direction: " + ChessBoard.ToString());
+                    Debug.WriteLine("Single direction: " + ChessBoard.ToString());
 
                 }
 
@@ -218,7 +218,6 @@ namespace WinFormsApp1
                 clickedButton.BackgroundImage = image;
 
 
-                // TODO check if there are moves that can stop the check, if not it's checkmate
                 if (check)
                 {
                     Debug.WriteLine("CHECK");
@@ -233,10 +232,10 @@ namespace WinFormsApp1
                             ChessBoard = AvaibleSquares(ChessBoard, piece);
 
                             if (piece.pieceName == "P" && piece.pieceType == "White")
-                                DiagonalMovementPawn(ChessBoard, piece, x, y + 1);
+                                DiagonalMovementPawn(ChessBoard, piece, piece.x, piece.y + 1);
                             
                             if (piece.pieceName == "P" && piece.pieceType == "Black")
-                                DiagonalMovementPawn(ChessBoard, piece, x, y - 1);
+                                DiagonalMovementPawn(ChessBoard, piece, piece.x, piece.y - 1);
 
                             ChessBoard = StopCheck(ChessBoard, piece);
                         }
@@ -254,8 +253,10 @@ namespace WinFormsApp1
                 }
                 ChessBoard.validMoves.Clear();
 
+                
                 // Switch the current player's turn
                 turn = (turn + 1) % 2;
+
 
                 selectedPiece = null;
 
@@ -342,6 +343,7 @@ namespace WinFormsApp1
             foreach (var button in Controls.OfType<Button>())
             {
                 var position = (ValueTuple<int, int>)button.Tag;
+
                 if (position.Item1 == x && position.Item2 == y)
                 {
                     return button;
@@ -410,7 +412,6 @@ namespace WinFormsApp1
             return ChessBoard;
         }
         
-        // x and y are the position of the button clicked
         private CMatrixBoard FirstKingMove(CMatrixBoard ChessBoard, int x, int y, int Y)
         {
             firstKingMove[turn] = true;
@@ -452,6 +453,7 @@ namespace WinFormsApp1
         {
             if (selectedPiece.x == 0 && selectedPiece.y == Y)
                 aRookFirstMove[turn] = true;
+
             if (selectedPiece.x == 7 && selectedPiece.y == Y)
                 hRookFirstMove[turn] = true;
         }

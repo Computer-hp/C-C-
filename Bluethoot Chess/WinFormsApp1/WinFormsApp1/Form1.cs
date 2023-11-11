@@ -11,6 +11,7 @@ using System.Net.NetworkInformation;
 using Microsoft.VisualBasic.Devices;
 using System.Runtime.CompilerServices;
 using System.Reflection;
+using System.Windows.Forms;
 
 namespace WinFormsApp1
 {
@@ -208,7 +209,9 @@ namespace WinFormsApp1
                         DefineMethod("Straight", king, x, y);
 
                     // because the piece that gives check can also be captured to stop check, neccessary for Knight and Pawn
-                    ChessBoard.validMoves.Add(new CSquare(selectedPiece.x, selectedPiece.y));
+                    ChessBoard.validMoves.Add(new CSquare(x, y));
+
+                    Debug.WriteLine(x + " " + y);
 
                     IsCheck(ChessBoard, ChessBoard.Board[x, y]);
 
@@ -277,6 +280,18 @@ namespace WinFormsApp1
             Debug.WriteLine(selectedPiece.pieceName);
             Debug.WriteLine(ChessBoard.ToString() + "\n");
 
+            foreach (var entry in ChessBoard.stopCheckWithPiece)
+            {
+                Tuple<int, int> key = entry.Key;
+
+                Debug.Write($"Key: ({key.Item1}, {key.Item2}), Values: ");
+
+                foreach (var square in entry.Value)
+                {
+                    Debug.Write($"[{square.x}, {square.y}] ");
+                }
+                Debug.WriteLine("\n");
+            }
 
             if (selectedPiece.pieceName != "K")
                 return;
@@ -294,6 +309,8 @@ namespace WinFormsApp1
 
         private void DefineMethod(string moveTo, CPiece king, int x, int y)
         {
+            direction = "";
+
             ChessBoard.validMoves.Clear();
 
             if (moveTo == "Straight")
@@ -301,11 +318,14 @@ namespace WinFormsApp1
             else
                 FindDiagonalyDirection(king);
 
-            method = typeof(CMatrixBoard).GetMethod(moveTo);
-            object[] parameters = new object[] { ChessBoard.Board[x, y], 8, direction};
-            method.Invoke(ChessBoard, parameters);
+            if (direction != "")
+            {
+                method = typeof(CMatrixBoard).GetMethod(moveTo);
+                object[] parameters = new object[] { ChessBoard.Board[x, y], 8, direction };
+                method.Invoke(ChessBoard, parameters);
 
-            IsCheck(ChessBoard, ChessBoard.Board[selectedPiece.x, selectedPiece.y]);
+                IsCheck(ChessBoard, ChessBoard.Board[selectedPiece.x, selectedPiece.y]);
+            }
 
             if (selectedPiece.pieceName == "Q" && !check && moveTo != "Diagonal")
                 DefineMethod("Diagonal", king, x, y);

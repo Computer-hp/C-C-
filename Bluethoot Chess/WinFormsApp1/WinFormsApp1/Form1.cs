@@ -120,6 +120,7 @@ namespace WinFormsApp1
         {
             Button clickedButton = (Button)sender;
             var position = (ValueTuple<int, int>)clickedButton.Tag;
+
             int x = position.Item1;
             int y = position.Item2;
 
@@ -147,19 +148,23 @@ namespace WinFormsApp1
                     ChessBoard.copyMoves.Clear();
 
                     if (selectedPiece.pieceName != "K" && ChessBoard.stopCheckWithPiece.ContainsKey(key))
-                        ChessBoard.copyMoves.AddRange(ChessBoard.stopCheckWithPiece[key]);
-                    else
-                        ChessBoard.copyMoves.AddRange(ChessBoard.validMoves);
+                    {
+                        List<CSquare> squareList = ChessBoard.stopCheckWithPiece[key];
+                        
+                        if (squareList.Any(square => square.x == x && square.y == y))
+                            ChessBoard.copyMoves.AddRange(ChessBoard.stopCheckWithPiece[key]);
+                    }
 
                     if (!ChessBoard.copyMoves.Exists(square => ChessBoard.validMoves.Exists(checkSquare => checkSquare.x == square.x && checkSquare.y == square.y)))
+                    {
+                        Debug.WriteLine("Entered");
                         return;
+                    }
 
                     // Clear the list associated with each Tuple
 
                     foreach (var entry in ChessBoard.stopCheckWithPiece)
-                    {
                         entry.Value.Clear();
-                    }
 
                     ChessBoard.stopCheckWithPiece.Clear(); // Clear the entire dictionary
                 }
@@ -445,6 +450,8 @@ namespace WinFormsApp1
 
             if (B.validMoves.Exists(move => move.x == king.x && move.y == king.y) == true)
                 check = true;
+            else 
+                check = false;
         }
 
         private CMatrixBoard StopCheck(CMatrixBoard ChessBoard, CPiece Piece)

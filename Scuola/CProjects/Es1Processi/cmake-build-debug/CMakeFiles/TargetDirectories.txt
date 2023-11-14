@@ -1,3 +1,0 @@
-/cygdrive/c/Users/AnticHp/Desktop/CProjects/cmake-build-debug/CMakeFiles/CProjects.dir
-/cygdrive/c/Users/AnticHp/Desktop/CProjects/cmake-build-debug/CMakeFiles/edit_cache.dir
-/cygdrive/c/Users/AnticHp/Desktop/CProjects/cmake-build-debug/CMakeFiles/rebuild_cache.dir

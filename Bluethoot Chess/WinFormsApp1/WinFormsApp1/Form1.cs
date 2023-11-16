@@ -240,7 +240,7 @@ namespace WinFormsApp1
                     ChessBoard = AvaibleSquares(ChessBoard, king);
                     ChessBoard = SaveInvalidSquares(ChessBoard, king);
 
-                    foreach (var key in ChessBoard.stopCheckWithPiece)
+                    foreach (var key in ChessBoard.stopCheckWithPiece.Keys)
                     {
                         Debug.WriteLine($"Key: {key}");
 

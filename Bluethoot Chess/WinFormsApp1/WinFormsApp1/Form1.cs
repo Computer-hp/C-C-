@@ -12,6 +12,7 @@ using Microsoft.VisualBasic.Devices;
 using System.Runtime.CompilerServices;
 using System.Reflection;
 using System.Windows.Forms;
+using System.Diagnostics.Metrics;
 
 namespace WinFormsApp1
 {
@@ -218,11 +219,12 @@ namespace WinFormsApp1
 
                 clickedButton.BackgroundImage = image;
 
-
                 if (check)
                 {
                     ChessBoard.copyMoves.Clear();
                     ChessBoard.copyMoves.AddRange(ChessBoard.validMoves);
+
+                    UpOrDown = (currentPlayer == "White") ? -1 : 1;
 
                     foreach (var piece in ChessBoard.Board)
                     {
@@ -231,11 +233,15 @@ namespace WinFormsApp1
                             ChessBoard = AvaibleSquares(ChessBoard, piece);
 
                             if (piece.pieceName == "P")
+                            {
+                                Debug.WriteLine("Pawn position: " + piece.x + " " + piece.y + " UpOrDown = " + UpOrDown);
                                 DiagonalMovementPawn(ChessBoard, piece, piece.x, piece.y + UpOrDown);
+                            }
 
                             ChessBoard = StopCheck(ChessBoard, piece);
                         }
                     }
+
                     // check valid moves for King
                     ChessBoard = AvaibleSquares(ChessBoard, king);
                     ChessBoard = SaveInvalidSquares(ChessBoard, king);
@@ -421,7 +427,9 @@ namespace WinFormsApp1
                     B = AvaibleSquares(B, piece);
 
                     if (piece.pieceName == "P")
+                    {
                         B.validMoves.RemoveAll(square => square.x == piece.x && square.y == piece.y + UpOrDown);
+                    }
 
                     B.invalidSquaresKing.RemoveAll(square => B.validMoves.Exists(move => move.x == square.x && move.y == square.y));
                 }
@@ -519,14 +527,19 @@ namespace WinFormsApp1
 
         private void DiagonalMovementPawn(CMatrixBoard ChessBoard, CPiece piece, int x, int y)
         {
+            // 7
             int oppositeX = x - 1;
+
+            if (oppositeX >= 0 && (ChessBoard.Board[oppositeX, y] == null))
+                Debug.WriteLine("There is no piece");
+
             x++;
 
             if (x < 8 && (ChessBoard.Board[x, y] == null ||
                 ChessBoard.Board[x, y].pieceName == "K"))
                 ChessBoard.validMoves.RemoveAll(square => square.x == x && square.y == y);
-
-            if (oppositeX > 0 && (ChessBoard.Board[oppositeX, y] == null || ChessBoard.Board[oppositeX, y].pieceName == "K"))
+            
+            if (oppositeX >= 0 && (ChessBoard.Board[oppositeX, y] == null || ChessBoard.Board[oppositeX, y].pieceName == "K"))
                 ChessBoard.validMoves.RemoveAll(square => square.x == oppositeX && square.y == y);
 
         }

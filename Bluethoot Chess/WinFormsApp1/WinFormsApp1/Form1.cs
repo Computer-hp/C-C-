@@ -13,6 +13,7 @@ using System.Runtime.CompilerServices;
 using System.Reflection;
 using System.Windows.Forms;
 using System.Diagnostics.Metrics;
+using Timer = System.Windows.Forms.Timer;
 
 namespace WinFormsApp1
 {
@@ -20,16 +21,20 @@ namespace WinFormsApp1
     {
         private const int boardSize = 8;
         public const int squareSize = 70;
-        
+
         private int turn = 0; // 0 for white, 1 for black
         private int UpOrDown;
-        
+
+        private int[] secondsElapsed = new int[2];
+
         private string currentPlayer = "";
         private string direction = "";
 
         private string[] rowLetter = { "a", "b", "c", "d", "e", "f", "g", "h" };
 
         public static string projectPath = (System.Environment.CurrentDirectory).Replace("WinFormsApp1\\bin\\Debug\\net6.0-windows", "");
+
+        private bool firstMove = false;
 
         private bool[] firstKingMove = { false, false };
 
@@ -45,11 +50,14 @@ namespace WinFormsApp1
 
         private MethodInfo method = null;
 
+        private Label[] timerLabel = new Label[2];
+
+        private Timer[] timer = new Timer[2];
+
 
         public Form1()
         {
             ChessBoard = new CMatrixBoard();
-
             InitializeComponent();
             ChessBoard.InitializePieces();
             InitializeChessBoard(ChessBoard);
@@ -64,7 +72,7 @@ namespace WinFormsApp1
         {
 
             // Calculate the position to center the chessboard
-            int centerX = (ClientSize.Width - boardSize * squareSize) / 2;
+            int centerX = (ClientSize.Width - boardSize * squareSize) / 2 - 70;
             int centerY = (ClientSize.Height - boardSize * squareSize) / 2;
 
             int x = 0, y = boardSize - 1; // Start from the bottom-left corner
@@ -105,7 +113,49 @@ namespace WinFormsApp1
                     }
                 }
             }
+
+            timerLabel[0] = new Label
+            {
+                Text = "White: 00:00",
+                Font = new Font("Arial", 18),
+                Location = new Point(centerX + boardSize * squareSize + 10, ClientSize.Height - squareSize/2 - 10),
+                AutoSize = true
+            };
+
+            Controls.Add(timerLabel[0]);
+
+            timerLabel[1] = new Label
+            {
+                Text = "Black: 00:00",
+                Font = new Font("Arial", 18),
+                Location = new Point(centerX + boardSize * squareSize + 10, centerY),
+                AutoSize = true
+            };
+
+            Controls.Add(timerLabel[1]);
+
+            // Initialize the timer
+            timer[0] = new Timer { Interval = 1000 };
+
+            timer[1] = new Timer { Interval = 1000 };
+
+            timer[0].Tick += Timer_Tick;
+            timer[1].Tick += Timer_Tick;
+            
         }
+
+        private void Timer_Tick(object sender, EventArgs e)
+        {
+            secondsElapsed[turn]++;
+
+            TimeSpan time = TimeSpan.FromSeconds(secondsElapsed[turn]);
+
+            string player = (turn == 0) ? "White: " : "Black: ";
+
+            string timerText = string.Format(player + "{0:D2}:{1:D2}", time.Minutes, time.Seconds);
+            timerLabel[turn].Text = timerText;
+        }
+
         public static Bitmap SetImageToButton(CPiece P)
         {
             string DIR = "images\\" + P.pieceType;
@@ -151,7 +201,7 @@ namespace WinFormsApp1
                     if (selectedPiece.pieceName != "K" && ChessBoard.stopCheckWithPiece.ContainsKey(key))
                     {
                         List<CSquare> squareList = ChessBoard.stopCheckWithPiece[key];
-                        
+
                         if (squareList.Any(square => square.x == x && square.y == y))
                             ChessBoard.copyMoves.AddRange(ChessBoard.stopCheckWithPiece[key]);
                     }
@@ -191,6 +241,17 @@ namespace WinFormsApp1
                 ChessBoard.Board[x, y].x = x;
                 ChessBoard.Board[x, y].y = y;
 
+                if (!firstMove)
+                {
+                    firstMove = true;
+                    timer[1].Start();
+                }
+                else
+                {
+                    timer[turn + UpOrDown].Stop();
+                    timer[turn].Start();
+                }
+
                 CPiece king = FindKing(ChessBoard, currentPlayer);
 
                 // finds only the moves of the piece that gives check which are after used in StopCheck()
@@ -202,10 +263,10 @@ namespace WinFormsApp1
 
                     if (selectedPiece.pieceName == "R")
                         DefineMethod("Straight", king, x, y);
-                    
+
                     if (selectedPiece.pieceName == "B")
                         DefineMethod("Diagonal", king, x, y);
-                    
+
                     if (selectedPiece.pieceName == "Q")
                         DefineMethod("Straight", king, x, y);
 
@@ -224,8 +285,6 @@ namespace WinFormsApp1
                     ChessBoard.copyMoves.Clear();
                     ChessBoard.copyMoves.AddRange(ChessBoard.validMoves);
 
-                    UpOrDown = (currentPlayer == "White") ? -1 : 1;
-
                     foreach (var piece in ChessBoard.Board)
                     {
                         if (piece != null && piece.pieceType != selectedPiece.pieceType && piece.pieceName != "K")
@@ -233,10 +292,7 @@ namespace WinFormsApp1
                             ChessBoard = AvaibleSquares(ChessBoard, piece);
 
                             if (piece.pieceName == "P")
-                            {
-                                Debug.WriteLine("Pawn position: " + piece.x + " " + piece.y + " UpOrDown = " + UpOrDown);
-                                DiagonalMovementPawn(ChessBoard, piece, piece.x, piece.y + UpOrDown);
-                            }
+                                DiagonalMovementPawn(ChessBoard, piece, piece.x, piece.y - UpOrDown);
 
                             ChessBoard = StopCheck(ChessBoard, piece);
                         }
@@ -354,9 +410,9 @@ namespace WinFormsApp1
             }
 
             if (x < king.x && y == king.y)
-            { 
-                direction = "Right"; 
-                return; 
+            {
+                direction = "Right";
+                return;
             }
 
             if (y > king.y && x == king.x)
@@ -444,7 +500,7 @@ namespace WinFormsApp1
         {
             if (B.validMoves.Exists(move => move.x == king.x && move.y == king.y))
                 check = true;
-            else 
+            else
                 check = false;
         }
 
@@ -538,7 +594,7 @@ namespace WinFormsApp1
             if (x < 8 && (ChessBoard.Board[x, y] == null ||
                 ChessBoard.Board[x, y].pieceName == "K"))
                 ChessBoard.validMoves.RemoveAll(square => square.x == x && square.y == y);
-            
+
             if (oppositeX >= 0 && (ChessBoard.Board[oppositeX, y] == null || ChessBoard.Board[oppositeX, y].pieceName == "K"))
                 ChessBoard.validMoves.RemoveAll(square => square.x == oppositeX && square.y == y);
 

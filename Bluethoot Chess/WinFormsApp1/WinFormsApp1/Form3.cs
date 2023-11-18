@@ -1,7 +1,9 @@
-﻿using System;
+﻿using Microsoft.Win32;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
+using System.Diagnostics;
 using System.Drawing;
 using System.Linq;
 using System.Text;
@@ -12,6 +14,10 @@ namespace WinFormsApp1
 {
     public partial class RestartForm : Form
     {
+        public static bool NewGame = false;
+        public static bool MainMenu = false;
+
+
         public RestartForm()
         {
             InitializeComponent();
@@ -29,30 +35,52 @@ namespace WinFormsApp1
             int formWidth = this.ClientSize.Width;
             int formHeight = this.ClientSize.Height;
 
-            Button button1 = new Button();
-            button1.Text = "New Game";
-            button1.Width = buttonWidth;
-            button1.Height = buttonHeight;
-            button1.Left = (formWidth - buttonWidth) / 2;
-            button1.Top = (formHeight - buttonHeight) / 2 - 30;
+            Button button1 = new Button()
+            {
+                Text = "New Game",
+                Width = buttonWidth,
+                Height = buttonHeight,
+                Left = (formWidth - buttonWidth) / 2,
+                Top = (formHeight - buttonHeight) / 2 - 30,
 
-            button1.BackColor = Color.PaleGreen;
-            button1.ForeColor = Color.Black;
-            button1.Font = new Font("Arial", 12, FontStyle.Bold);
+                BackColor = Color.PaleGreen,
+                ForeColor = Color.Black,
+                Font = new Font("Arial", 12, FontStyle.Bold)
+            };
 
-            Button button2 = new Button();
-            button2.Text = "Main Menu";
-            button2.Width = buttonWidth;
-            button2.Height = buttonHeight;
-            button2.Left = (formWidth - buttonWidth) / 2;
-            button2.Top = (formHeight - buttonHeight) / 2 + 30;
+            Button button2 = new Button 
+            {
+                Text = "Main Menu",
+                Width = buttonWidth,
+                Height = buttonHeight,
+                Left = (formWidth - buttonWidth) / 2,
+                Top = (formHeight - buttonHeight) / 2 + 30,
 
-            button2.BackColor = Color.PaleGreen;
-            button2.ForeColor = Color.Black;
-            button2.Font = new Font("Arial", 12, FontStyle.Bold);
+                BackColor = Color.PaleGreen,
+                ForeColor = Color.Black,
+                Font = new Font("Arial", 12, FontStyle.Bold)
+            };
+
+            button1.Click += Button_Click;
+            button2.Click += Button_Click;
 
             this.Controls.Add(button1);
             this.Controls.Add(button2);
+        }
+
+        private void Button_Click(object sender, EventArgs e)
+        {
+            Debug.WriteLine("Entered the Event");
+
+            Button clickedButton = (Button)sender;
+
+            if (clickedButton.Text == "New Game")
+                NewGame = true;
+
+            if (clickedButton.Text == "Main Menu")
+                MainMenu = true;
+
+            this.Close();
         }
     }
 }

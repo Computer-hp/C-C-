@@ -12,7 +12,7 @@ using System.Xml.Linq;
 
 namespace WinFormsApp1
 {
-    internal class CMatrixBoard
+    public class CMatrixBoard
     {
         private const int boardSize = 8;
 
@@ -388,7 +388,7 @@ namespace WinFormsApp1
         }
     }
 
-    class CSquare
+    public class CSquare
     {
         public int x { get; set; }
         public int y { get; set; }

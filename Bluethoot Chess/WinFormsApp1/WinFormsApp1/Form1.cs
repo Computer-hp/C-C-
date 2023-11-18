@@ -181,7 +181,6 @@ namespace WinFormsApp1
 
             UpOrDown = (currentPlayer == "White") ? 1 : -1;
 
-
             if (ChessBoard.Board[x, y] == null || ChessBoard.Board[x, y].pieceType != currentPlayer)
             {
                 if (!ChessBoard.validMoves.Exists(item => item.x == x && item.y == y))
@@ -193,8 +192,10 @@ namespace WinFormsApp1
                 int previous_piece_x = selectedPiece.x, previous_piece_y = selectedPiece.y;
 
                 // check handle
-                if (check)
+                if (check && !ChessBoard.validMoves.Any())
                 {
+                    ChessBoard.copyMoves.Clear();
+
                     Tuple<int, int> key = Tuple.Create(selectedPiece.x, selectedPiece.y);
                     ChessBoard.copyMoves.Clear();
 
@@ -282,6 +283,8 @@ namespace WinFormsApp1
 
                 if (check)
                 {
+                    Debug.WriteLine("Check");
+
                     ChessBoard.copyMoves.Clear();
                     ChessBoard.copyMoves.AddRange(ChessBoard.validMoves);
 
@@ -302,6 +305,8 @@ namespace WinFormsApp1
                     ChessBoard = AvaibleSquares(ChessBoard, king);
                     ChessBoard = SaveInvalidSquares(ChessBoard, king);
 
+                    int counter = 0;
+
                     foreach (var key in ChessBoard.stopCheckWithPiece.Keys)
                     {
                         Debug.WriteLine($"Key: {key}");
@@ -316,7 +321,18 @@ namespace WinFormsApp1
                         }
 
                         Debug.WriteLine("\n");
+                        counter++;
                     }
+
+                    Debug.WriteLine("There are {0} keys", counter);
+
+                    Debug.Write("validMoves = ");
+
+                    foreach (var square in ChessBoard.validMoves)
+                    {
+                        Debug.WriteLine($"{square.x}, {square.y}");
+                    }
+                    Debug.Write("\n");
 
                     // Check mate
                     if (!ChessBoard.validMoves.Any() && !ChessBoard.stopCheckWithPiece.Any(kv => kv.Value != null && kv.Value.Count > 0))
@@ -470,7 +486,7 @@ namespace WinFormsApp1
             return null;
         }
         // Calculates the squares of every piece and compares with validMoves, if there are == moves, saves them in InvalidSquares
-        private CMatrixBoard SaveInvalidSquares(CMatrixBoard B, CPiece P)
+        private CMatrixBoard SaveInvalidSquares(CMatrixBoard B, CPiece king)
         {
             B.invalidSquaresKing.Clear();
 
@@ -478,7 +494,7 @@ namespace WinFormsApp1
 
             foreach (var piece in B.Board)
             {
-                if (piece != null && piece.pieceType != P.pieceType && piece.pieceName != P.pieceName)
+                if (piece != null && piece.pieceType != king.pieceType && piece.pieceName != king.pieceName)
                 {
                     B = AvaibleSquares(B, piece);
 

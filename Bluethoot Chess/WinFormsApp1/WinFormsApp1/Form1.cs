@@ -14,6 +14,7 @@ using System.Reflection;
 using System.Windows.Forms;
 using System.Diagnostics.Metrics;
 using Timer = System.Windows.Forms.Timer;
+using System.Numerics;
 
 namespace WinFormsApp1
 {
@@ -292,7 +293,7 @@ namespace WinFormsApp1
                     {
                         if (piece != null && piece.pieceType != selectedPiece.pieceType && piece.pieceName != "K")
                         {
-                            ChessBoard = AvaibleSquares(ChessBoard, piece);
+                            AvaibleSquares(piece);
 
                             if (piece.pieceName == "P")
                                 DiagonalMovementPawn(ChessBoard, piece, piece.x, piece.y - UpOrDown);
@@ -302,7 +303,7 @@ namespace WinFormsApp1
                     }
 
                     // check valid moves for King
-                    ChessBoard = AvaibleSquares(ChessBoard, king);
+                    AvaibleSquares(king);
                     ChessBoard = SaveInvalidSquares(ChessBoard, king);
 
                     int counter = 0;
@@ -354,7 +355,7 @@ namespace WinFormsApp1
                 return;
             }
 
-            ChessBoard = AvaibleSquares(ChessBoard, ChessBoard.Board[x, y]);
+            AvaibleSquares(ChessBoard.Board[x, y]);
             selectedPiece = ChessBoard.Board[x, y];
 
             if (ChessBoard.Board[x, y].pieceName == "P")
@@ -496,7 +497,7 @@ namespace WinFormsApp1
             {
                 if (piece != null && piece.pieceType != king.pieceType && piece.pieceName != king.pieceName)
                 {
-                    B = AvaibleSquares(B, piece);
+                    AvaibleSquares(piece);
 
                     if (piece.pieceName == "P")
                     {
@@ -507,10 +508,42 @@ namespace WinFormsApp1
                 }
             }
 
+            CheckPieceNearKing(ref ChessBoard, king);
+
             B.validMoves.Clear();
             B.validMoves.AddRange(B.invalidSquaresKing);
             return B;
         }
+
+        private void CheckPieceNearKing(ref CMatrixBoard B, CPiece king)
+        {
+            for (int x = king.x - 1; x < king.x + 2; x++)
+            {
+                for (int y = king.y - 1; y < king.y + 2; y++)
+                {
+                    if (x >= 0 && x < boardSize && y >= 0 && y < boardSize && B.Board[x, y] != null && B.Board[x, y].pieceType != king.pieceType)
+                        FindInvalidCapturesKing(king, B.Board[x, y]);
+                }
+            }
+        }
+
+        private void FindInvalidCapturesKing(CPiece king, CPiece pieceNearKing)
+        {
+            ref CMatrixBoard B = ref ChessBoard;
+
+            foreach (var piece in B.Board)
+            {
+                if (piece != null && piece != pieceNearKing)
+                    AvaibleSquares(king);
+
+                if (B.validMoves.Exists(square => square.x == pieceNearKing.x && square.y == pieceNearKing.y))
+                {
+                    B.invalidSquaresKing.RemoveAll(square => square.x == pieceNearKing.x && square.y == pieceNearKing.y);
+                    break;
+                }
+            }
+        }
+
 
         private void IsCheck(CMatrixBoard B, CPiece P, CPiece king)
         {
@@ -632,7 +665,7 @@ namespace WinFormsApp1
             }
         }
 
-        private CMatrixBoard AvaibleSquares(CMatrixBoard ChessBoard, CPiece P)
+        private void AvaibleSquares(CPiece P)
         {
             ChessBoard.validMoves.Clear();
 
@@ -665,7 +698,6 @@ namespace WinFormsApp1
                     ChessBoard.Diagonal(P, 1, "");
                     break;
             }
-            return ChessBoard;
         }
     }
 }

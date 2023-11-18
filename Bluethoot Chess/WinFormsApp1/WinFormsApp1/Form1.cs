@@ -193,7 +193,7 @@ namespace WinFormsApp1
                 int previous_piece_x = selectedPiece.x, previous_piece_y = selectedPiece.y;
 
                 // check handle
-                if (check && !ChessBoard.validMoves.Any())
+                if (check)
                 {
                     ChessBoard.copyMoves.Clear();
 

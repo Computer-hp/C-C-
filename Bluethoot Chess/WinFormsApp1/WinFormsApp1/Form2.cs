@@ -14,7 +14,7 @@ namespace WinFormsApp1
     {
         public string pieceName;
 
-        private int buttonWidth = Form1.squareSize, buttonHeight = Form1.squareSize;
+        private const int buttonWidth = ChessBoardForm.squareSize, buttonHeight = ChessBoardForm.squareSize;
 
         private List<string> promotionPiecesName = new List<string> { "Q", "R", "B", "N" };
 
@@ -44,7 +44,7 @@ namespace WinFormsApp1
             int formWidth = this.ClientSize.Width;
             int formHeight = this.ClientSize.Height;
 
-            Bitmap resizedImage = Form1.SetImageToButton(new CPiece(0, 0, buttonName, DIR));
+            Bitmap resizedImage = ChessBoardForm.SetImageToButton(new CPiece(0, 0, buttonName, DIR));
 
             Button button = new Button
             {

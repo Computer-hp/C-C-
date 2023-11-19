@@ -17,6 +17,7 @@ namespace WinFormsApp1
         public static bool NewGame = false;
         public static bool MainMenu = false;
 
+        private ChessBoardForm ChessBoardForm;
 
         public RestartForm()
         {
@@ -70,8 +71,6 @@ namespace WinFormsApp1
 
         private void Button_Click(object sender, EventArgs e)
         {
-            Debug.WriteLine("Entered the Event");
-
             Button clickedButton = (Button)sender;
 
             if (clickedButton.Text == "New Game")
@@ -79,6 +78,8 @@ namespace WinFormsApp1
 
             if (clickedButton.Text == "Main Menu")
                 MainMenu = true;
+            /*ChessBoardForm = new Form1();
+            ChessBoardForm.Show();*/
 
             this.Close();
         }

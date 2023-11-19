@@ -19,7 +19,7 @@ using System.Diagnostics.CodeAnalysis;
 
 namespace WinFormsApp1
 {
-    public partial class Form1 : Form
+    public partial class ChessBoardForm : Form
     {
         private const int boardSize = 8;
         public const int squareSize = 70;
@@ -57,7 +57,7 @@ namespace WinFormsApp1
         private Timer[] timer = new Timer[2];
 
 
-        public Form1()
+        public ChessBoardForm()
         {
             ChessBoard = new CMatrixBoard();
             InitializeComponent();
@@ -67,7 +67,20 @@ namespace WinFormsApp1
 
         private void Form1_Load(object sender, EventArgs e)
         {
+            this.FormClosing += Form1_FormClosing;
+        }
 
+        private void Form1_FormClosing(object sender, FormClosingEventArgs e)
+        {
+
+            DialogResult result = MessageBox.Show("Are you sure you want to exit?", "Exit Confirmation", MessageBoxButtons.YesNo, MessageBoxIcon.Question);
+
+            if (result == DialogResult.No)
+                e.Cancel = true;
+            else if (result == DialogResult.Yes)
+                Application.Exit();
+
+            
         }
 
         private void InitializeChessBoard()
@@ -173,8 +186,6 @@ namespace WinFormsApp1
 
         private void Button_Click(object sender, EventArgs e)
         {
-            Debug.WriteLine("Turn = " + turn + " " + check);
-
             Button clickedButton = (Button)sender;
             var position = (ValueTuple<int, int>)clickedButton.Tag;
 
@@ -320,12 +331,16 @@ namespace WinFormsApp1
 
                         popUp.ShowDialog(this);
 
+                        //this.Close();
+
                         if (RestartForm.NewGame)
                         {
                             ResetProperties();
                             ResetChessBoard();
                             ChessBoard.InitializePieces();
                             InitializeChessBoard();
+
+                            //this.Close();
                         }
                         if (RestartForm.MainMenu)
                         {
@@ -334,6 +349,7 @@ namespace WinFormsApp1
                             // TODO the main menu
                         }
                         return;
+
                     }
                 }
                 ChessBoard.validMoves.Clear();
@@ -709,8 +725,11 @@ namespace WinFormsApp1
             timer[0].Stop();
             timer[1].Stop();
 
+            Controls.Remove(timerLabel[0]);
+            Controls.Remove(timerLabel[1]);
+
             timer = new Timer[2];
-    }
+        }
 
         private void ResetChessBoard()
         {

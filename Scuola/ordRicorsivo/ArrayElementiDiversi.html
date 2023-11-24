@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <script>
+        /* 
+            Dato un array, controllare se tutti gli elementi in esso sono diversi.
+        */
+        let n = Number(prompt("Inserisci la lunghezza dell'array"));
+        let v = new Array(n);
+        let i = 0;
+        v = feelArr(v,i);
+
+        function feelArr(v,i){
+            if (i < v.length){
+            v[i] = Number(prompt("Inserisci un numero"));
+            feelArr(v,i+1);
+            }
+            return v;
+        }
+        let start = 0;
+        let compare = v.length-1;
+        let ris;
+        let returnRis;
+        if (check(v,start,compare,ris) === undefined){
+            document.write("Gli elementi dell'array sono tutti diversi.");
+        }
+
+    function check(v,start,compare){
+        if (start<compare){
+            let pos = start;
+            if (checkDiferent(v[start],v,compare,pos) === undefined){
+                returnRis = check(v,start+1,compare);
+                return returnRis;
+            } else{
+                document.write("Gli elementi dell'array non sono tutti diversi.");
+                return false;
+            }
+        } else {
+            return returnRis;
+           }
+
+        }
+        function checkDiferent(val,v,compare,pos){
+            let ris;
+            if (pos == compare)
+                return ris;
+            else if (val != v[compare]){
+                ris = checkDiferent(val,v,compare-1,pos);
+                }
+            else{
+                ris = false;
+            }
+            return ris;
+        }
+
+
+    </script>
+</body>
+</html>

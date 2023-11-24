@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <script>
+        /*
+            Scrivere una funzione ricorsiva che (senza usare cicli) 
+            ricevuti due numeri interi calcoli la somma di tutti i numeri 
+            dell’intervallo tra i due numeri, compresi i numeri stessi.
+        */
+        let a = 1; 
+        let b = 100;
+        document.write(sommaInterni(a,b));
+
+        function sommaInterni(a, b){
+            let somma = 0;
+            if (a == b){
+                return somma = a+b;
+            } else if (a < b-1){
+                somma = a + sommaInterni(a+1, b);
+                return somma;
+            }
+            else {
+                return (b+b-1);
+            }
+        }
+    </script>
+</body>
+</html>

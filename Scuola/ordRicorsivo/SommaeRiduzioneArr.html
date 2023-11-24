@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <script>
+        /*
+        Ridurre l'array sommando il numero del array con il suo addiacente:
+        [1,2,3,4,5]
+        [3,5,7,9]
+        [8,12,16]
+        [20,28]
+        [48]
+        */
+        let arr = [1,2,3,4,5];
+        let fine = arr.length;
+
+        document.write(arr);
+        declare(arr, 0, fine);
+
+        function declare(arr, inizio, fine){
+            let result;
+            if (arr.length > 1){
+            let v = new Array(arr.length-1);
+            arr = riduzione(arr, inizio, fine, v);
+            result = declare(arr, 0, arr.length);
+            }else {
+            return arr;
+            }
+            return result;
+        }
+        function riduzione(arr, inizio, fine, v){
+            let i = inizio + 1;
+            
+            if (i < fine){
+                v[inizio] = arr[i] + arr[inizio];
+                v = riduzione(arr, inizio + 1, fine, v);
+            }else { 
+                document.write("<br>" + v);
+                return v;
+            }
+            return v;
+            
+        }
+
+    </script>
+    <br><br>
+    <script>
+        let a = [1,2,3,4,5];
+        let end = a.length;
+
+        document.write(a);
+
+        while (a.length >1){
+            let servoA = new Array(a.length-1);
+            for (let i = 0; i < a.length-1; i++){
+                servoA[i] = a[i] + a[i+1];
+            }
+            a = servoA;
+            document.write("<br>" + a);
+        }
+
+    </script>
+</body>
+</html>

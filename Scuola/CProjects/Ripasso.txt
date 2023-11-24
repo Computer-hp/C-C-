@@ -1,0 +1,144 @@
+CLION project:
+C Executable versione C11
+
+Processi:
+
+pid = process ID
+
+numero intero senza segno = processo padre
+
+getpid();
+
+processo    processo
+padre       figlio
+
+P           P'
+
+R = P       R = 0
+x = P''     x = P'''
+
+
+p. figlio   p. figlio
+
+p''         P'''
+
+R = P'      R = 0
+x = 0       x = 0
+
+
+int pid = fork(); --> si creano 2 processi che eseguono il codice contemporaneamente.
+                        Per questo si utilizzano le if per far lavorare i processi in due luoghi diversi
+
+if (ritorno == 0)
+    sleep(5);
+
+
+wait(NULL) --> il processo padre aspetta il figlio, se non ci fosse wait(NUll) 
+                il processo figlio diventerebbe orfano poiché il processo padre 
+                finirebbe prima
+
+
+----------------
+Pipe:
+
+// Pipe, file che bisogna decidere se aprire con la lettura e chiudere con la scrittura o al contrario
+// un char = 1 byte
+// int = 4 byte
+
+#include <stdio.h>
+#include <sys/wait.h>
+#include <unistd.h>
+
+int main()
+{
+    int fd[2];
+    // 0 - Read
+    // 1 - Write
+
+    pipe(fd); // deve essere creata prima del fork
+
+    int id = fork();
+
+    if (id < 0)
+    {
+        printf("Fork non eseguita");
+        return 1;
+    }
+    if (!id)  // id = 0 => negativo, però c'è !, quindi diventa positivo
+    {
+        close(fd[0]);
+        // processo figlio
+        int x;
+        printf("Inserisci un numero:\t");
+        scanf("%i", &x);
+    
+    //        pipe       numero byte
+        write(fd[1], &x, sizeof(x));
+
+        close(fd[1]);  // la cosa migliore è chiudere immediatamente 
+                       // il file se il processo non lo esegue
+    }
+    else
+    {
+        close(fd[1]);
+        int y;
+        read(fd[0], &y, sizeof(y));
+        printf("Il valore del processo figlio:\t%i", y);
+        close(fd[0]);
+    }
+
+    wait(NULL);
+
+    return 0;
+}
+
+/-/--------------------------------
+Threads:
+
+#include "stdio.h"
+#include "sys/wait.h"
+#include "pthread.h"
+
+struct argomenti
+{
+    int numero;
+    char *stringa;
+};
+
+
+/*
+void *stampa(struct argomenti a)
+{
+    printf("%i %s\n", a.numero, a.stringa);
+}
+*/
+
+// oppure, modo migliore:
+
+void *stampa(struct argomenti *a)
+{
+    printf("%i %s\n", a->numero, a->stringa);
+}
+
+/*void *stampa2(char *a)
+{
+    sleep(1);
+    printf("%s\n", a);
+}*/
+
+int main()
+{
+    pthread_t myThread1, myThread2;
+
+    struct argomenti valori;
+
+    valori.stringa = "Primo thread";
+
+    valori.numero = 12;
+
+    pthread_create(&myThread1, NULL, (void *(*)(void *))stampa, &valori);
+
+    pthread_join(myThread1, NULL);
+
+    return 0;
+}

@@ -84,6 +84,11 @@ namespace WinFormsApp1
         private void Create_ChessBoard(object sender, EventArgs e)
         {
             ChessBoardForm = new ChessBoardForm();
+
+            // popUp to choose the color and the time
+
+
+
             ChessBoardForm.Show();
             this.Hide();
         }

@@ -78,8 +78,6 @@ namespace WinFormsApp1
 
             if (clickedButton.Text == "Main Menu")
                 MainMenu = true;
-            /*ChessBoardForm = new Form1();
-            ChessBoardForm.Show();*/
 
             this.Close();
         }

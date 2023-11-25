@@ -80,7 +80,7 @@ namespace WinFormsApp1
             else if (result == DialogResult.Yes)
                 Application.Exit();
 
-            
+
         }
 
         private void InitializeChessBoard()
@@ -106,7 +106,7 @@ namespace WinFormsApp1
                         BackgroundImageLayout = ImageLayout.Zoom
                     };
 
-                    
+
                     square.Tag = (x, y);
 
                     if (ChessBoard.Board[x, y] != null)
@@ -135,7 +135,7 @@ namespace WinFormsApp1
             {
                 Text = "White: 00:00",
                 Font = new Font("Arial", 18),
-                Location = new Point(centerX + boardSize * squareSize + 10, ClientSize.Height - squareSize/2 - 10),
+                Location = new Point(centerX + boardSize * squareSize + 10, ClientSize.Height - squareSize / 2 - 10),
                 AutoSize = true
             };
 
@@ -158,7 +158,7 @@ namespace WinFormsApp1
 
             timer[0].Tick += Timer_Tick;
             timer[1].Tick += Timer_Tick;
-            
+
         }
 
         private void Timer_Tick(object sender, EventArgs e)
@@ -331,22 +331,18 @@ namespace WinFormsApp1
 
                         popUp.ShowDialog(this);
 
-                        //this.Close();
-
                         if (RestartForm.NewGame)
                         {
                             ResetProperties();
                             ResetChessBoard();
                             ChessBoard.InitializePieces();
                             InitializeChessBoard();
-
-                            //this.Close();
                         }
                         if (RestartForm.MainMenu)
                         {
-                                
-                                
                             // TODO the main menu
+
+
                         }
                         return;
 
@@ -639,7 +635,7 @@ namespace WinFormsApp1
 
         private void DiagonalMovementPawn(CMatrixBoard ChessBoard, CPiece piece, int x, int y)
         {
-            int oppositeX = x - 1; 
+            int oppositeX = x - 1;
             x++;
 
             if (x < 8 && (ChessBoard.Board[x, y] == null ||
@@ -710,11 +706,7 @@ namespace WinFormsApp1
             currentPlayer = "";
             direction = "";
             firstMove = false;
-            firstKingMove = new bool[] { false, false };
-            aRookFirstMove = new bool[] { false, false };
-            hRookFirstMove = new bool[] { false, false };
-            O_O = new bool[] { false, false };
-            O_O_O = new bool[] { false, false };
+
             check = false;
 
 
@@ -722,12 +714,18 @@ namespace WinFormsApp1
 
             method = null;
 
-            timer[0].Stop();
-            timer[1].Stop();
+            for (int i = 0; i < 2; i++)
+            {
+                firstKingMove[i] = false;
+                aRookFirstMove[i] = false;
+                hRookFirstMove[i] = false;
+                O_O[i] = false;
+                O_O_O[i] = false;
 
-            Controls.Remove(timerLabel[0]);
-            Controls.Remove(timerLabel[1]);
+                timer[i].Stop();
 
+                Controls.Remove(timerLabel[i]);
+            }
             timer = new Timer[2];
         }
 

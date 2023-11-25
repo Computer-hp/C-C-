@@ -30,12 +30,12 @@
         {
             SuspendLayout();
             // 
-            // Form1
+            // ChessBoardForm
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
             AutoScaleMode = AutoScaleMode.Font;
             ClientSize = new Size(834, 581);
-            Name = "Form1";
+            Name = "ChessBoardForm";
             Text = "Form1";
             Load += Form1_Load;
             ResumeLayout(false);

@@ -30,14 +30,27 @@ comparo la somma con la provisory_sum
 
 */
 
-/*int getK2(vector<int> &W, int j, int N, int provisory_sum, int aCapo)
+int getRowSum(vector<int> &W, int *position, int N)
 {
-    if (j < N - 1)
-        if (aCapo <= W[j])
-            return provisory_sum + W[j];
+    int row_sum = 0, i, spaces = 0;
 
-    return provisory_sum + aCapo;
-}*/
+    for (i = *position; i < N; i++)
+    {
+        if (W[i] == -1)
+        {
+            *position = i + 1;
+            break;
+        }
+
+        row_sum += W[i];
+        spaces++;
+    }
+
+    if (i + 1 < N)
+        return row_sum + W[i + 1] + spaces - 1;
+    
+    return row_sum + spaces - 1;
+}
 
 void solve(int t) {
     
@@ -56,7 +69,7 @@ void solve(int t) {
 
     // aggiungi codice...
 
-    int SUM = 0, position = 0;
+    int sum = 0, position = 0;
 
 
     // finds the value of K_min or K1
@@ -79,96 +92,36 @@ void solve(int t) {
         }
         provisory_sum += spaces - 1;
 
-        if (provisory_sum > SUM)
-            SUM = provisory_sum;
+        if (provisory_sum > sum)
+            sum = provisory_sum;
         
-        cout << "Spaces: " << spaces - 1 << "\n";
+        cout << "\nSpaces: " << spaces - 1 << "\n";
+        cout << "\nprovisory_sum: " << provisory_sum << "\n";
     }
 
     // K_MIN
-    K1 = SUM;
+    K1 = sum;
 
-    int save_first_sum = -1, provisory_sum = 0, spaces = 0;
+    int row_sum, main_position = 0, save_main_position = -1;
 
-    for (int i = 0; i < N; i++)
+    while (main_position != save_main_position)
     {
-        if (W[i] != -1)
+        save_main_position = main_position;
+
+        row_sum = getRowSum(W, &main_position, N);
+
+        int compare_sum, compare_position = 0;
+
+        for (int j = 0; j < N; j++)
         {
-            provisory_sum += W[i];
-            spaces++;
-        }
-        else
-        {
-            provisory_sum += (W[i + 1] - 1) + spaces - 1; // word after the -1 + spaces that were counter before
-            spaces = -1;
+            compare_sum = getRowSum(W, &compare_position, N);
 
-            // if there isn't saved the sum of the row before -1
-            if (save_first_sum == -1)
-                save_first_sum = provisory_sum;
-            else
-            {
-                if (save_first_sum < provisory_sum && K2 < provisory_sum)
-                    K2 = provisory_sum;
-
-                if (provisory_sum < save_first_sum && K2 < save_first_sum)
-                    K2 = save_first_sum;
-
-                save_first_sum = -1;
-            }
-
-            provisory_sum = 0;
-
+            K2 = (row_sum < compare_sum) ? compare_sum : row_sum;
         }
     }
-    
-
-    if (K2 < provisory_sum && save_first_sum < provisory_sum)
-        K2 = provisory_sum + spaces - 1;
-
-    if (provisory_sum < save_first_sum && K2 < save_first_sum)
-        K2 = save_first_sum + spaces - 1;
-
-    /*int aCapo = 0;
-
-    int provisory_sum = 0;
-
-    int j = 0;
-
-    while (j < N){
-
-       int sum = 0, counter = -1;
-
-        for (int i = j; W[i] != -1 && i < N; i++)
-        {
-            sum += W[i];
-            j++;
-            counter++; // spazi in mezzo ai caratteri
-        }
-        sum += counter;
-
-        if (j < N - 1)
-            j += 1; // to skip the -1 cell
-
-        if (provisory_K2 != -1)
-        {
-            K2 = getK2(W, j, N, provisory_sum, aCapo);
-
-            //
-            if (sum < provisory_sum && K1 < provisory_sum)
-                K1 = provisory_sum;
-            else if (provisory_sum < sum && K1 < sum)
-                K1 = sum;
-        }
-        else
-            provisory_K2 = K2;
-
-        provisory_sum = sum;
-
-        aCapo = W[j];  // prendo la parola a capo
-    }*/
 
 
-    cout << "Case #" << t << ": " << K1 << " " << K2 << "\n";
+    cout << "\nCase #" << t << ": " << K1 << " " << K2 << "\n";
 }
 
 int main() {

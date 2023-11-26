@@ -28,18 +28,17 @@ class Angolo {
 
         void set();
 
-        // Metodi per ottenere i valori dell'angolo
-        int getGradi() const 
+        int getGradi() const
         {
             return gradi;
         }
 
-        int getPrimi() const 
+        int getPrimi() const
         {
             return primi;
         }
 
-        int getSecondi() const 
+        int getSecondi() const
         {
             return secondi;
         }

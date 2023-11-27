@@ -79,10 +79,14 @@ int main()
 
     std::cout << "Angolo: " << a1.getGradi() << "° " << a1.getPrimi() << "' " << a1.getSecondi() << "''" << std::endl;
 
-    Angolo a2(33, 22, 11);
+    Angolo a2(33, 61, 11);
 
     std::cout << "Angolo: " << a2.getGradi() << "° " << a2.getPrimi() << "' " << a2.getSecondi() << "''" << std::endl;
 
+    a2.set();
+
+    std::cout << "Angolo: " << a2.getGradi() << "° " << a2.getPrimi() << "' " << a2.getSecondi() << "''" << std::endl;
+    
     std::cout << "Angolo in radianti: " << a2.radianti() << std::endl;
 
     return 0;

@@ -30,18 +30,16 @@ comparo la somma con la provisory_sum
 
 */
 
-int getRowSum(vector<int> &W, int *position, int N, int *counter)
+
+int getRowSum(vector<int> &W, int &position, int N)
 {
     int row_sum = 0, i, spaces = 0;
 
-    for (i = *position; i < N; i++)
+    for (i = position; i < N; i++)
     {
         if (W[i] == -1)
         {
-            *position = i + 1;
-
-            cout << "POSITION: " << *position << endl;
-
+            position = i + 1;
             break;
         }
 
@@ -49,13 +47,11 @@ int getRowSum(vector<int> &W, int *position, int N, int *counter)
         spaces++;
     }
 
-    *counter = i;
-
-    cout << "Counter: " << *counter << endl;
-
     if (i + 1 < N)
         return row_sum + W[i + 1] + spaces - 1;
     
+    position = i;
+
     return row_sum + spaces - 1;
 }
 
@@ -66,13 +62,13 @@ void solve(int t) {
 
     vector<int> W(N);
 
-    int K1 = 0, K2 = 0;
-
     // metto i numeri in ciascuna cella dell array
     for (int i = 0; i < N; i++) 
     {
         cin >> W[i];
     }
+
+    int K1 = 0;
 
     // aggiungi codice...
 
@@ -99,33 +95,45 @@ void solve(int t) {
 
         if (provisory_sum > sum)
             sum = provisory_sum;
-        
-        //cout << "\nSpaces: " << spaces - 1 << "\n";
-        //cout << "\nprovisory_sum: " << provisory_sum << "\n";
     }
 
     // K_MIN
     K1 = sum;
 
-    int row_sum, main_position = 0, save_main_position = -1;
+    int row_sum, main_position = 0, start = 0, last_aCapo = 0;
+    
+    int K2 = getRowSum(W, start, last_aCapo);
 
-    int counter = 0;
+    bool state = true;
 
-    while (counter < N)
+    for (int i = N; i > 0; i--)
     {
-        row_sum = getRowSum(W, &main_position, N, &counter);
-
-        int compare_sum, compare_position = 0, counter2 = 0;
-
-        for (int j = 0; j < N; j++)
+        if (W[i] == -1)
         {
-            compare_sum = getRowSum(W, &compare_position, N, &counter2);
+            last_aCapo = i;
+            break;
+        }
+    }
 
-            if (row_sum < compare_sum && K2 < compare_sum)
+    while (main_position < last_aCapo)
+    {
+        row_sum = getRowSum(W, main_position, last_aCapo);
+
+        int compare_sum = 0, compare_position = 0;
+
+        for (int j = 0; j < last_aCapo; j++)
+        {
+            compare_sum = getRowSum(W, compare_position, last_aCapo);
+
+            if (row_sum >= compare_sum && K2 >= compare_sum)
                 K2 = compare_sum;
-            else if (compare_sum < row_sum && K2 < row_sum)
+        
+            else if (compare_sum >= row_sum && K2 >= row_sum)
                 K2 = row_sum;
         }
+        cout << "row_sum = " << row_sum << endl;
+        cout << "compare_sum = " << compare_sum << endl;
+        cout << "K2 = " << K2 << endl;
     }
 
 

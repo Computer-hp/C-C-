@@ -1,95 +1,13 @@
-POSITION: 3
-Counter: 2
-POSITION: 3
-Counter: 2
-Counter: 6
-Counter: 6
-Counter: 6
-Counter: 6
-Counter: 6
-Counter: 6
-POSITION: 3
-Counter: 2
-Counter: 6
-Counter: 6
-Counter: 6
-Counter: 6
-Counter: 6
+row_sum = 9
+compare_sum = -1
+K2 = -1
 
-Case #1: 13 0
-POSITION: 7
-Counter: 6
-POSITION: 7
-Counter: 6
-POSITION: 14
-Counter: 13
-Counter: 21
-Counter: 21
-Counter: 21
-Counter: 21
-Counter: 21
-Counter: 21
-Counter: 21
-Counter: 21
-Counter: 21
-Counter: 21
-Counter: 21
-Counter: 21
-Counter: 21
-Counter: 21
-Counter: 21
-Counter: 21
-Counter: 21
-Counter: 21
-Counter: 21
-POSITION: 14
-Counter: 13
-POSITION: 7
-Counter: 6
-POSITION: 14
-Counter: 13
-Counter: 21
-Counter: 21
-Counter: 21
-Counter: 21
-Counter: 21
-Counter: 21
-Counter: 21
-Counter: 21
-Counter: 21
-Counter: 21
-Counter: 21
-Counter: 21
-Counter: 21
-Counter: 21
-Counter: 21
-Counter: 21
-Counter: 21
-Counter: 21
-Counter: 21
-Counter: 21
-POSITION: 7
-Counter: 6
-POSITION: 14
-Counter: 13
-Counter: 21
-Counter: 21
-Counter: 21
-Counter: 21
-Counter: 21
-Counter: 21
-Counter: 21
-Counter: 21
-Counter: 21
-Counter: 21
-Counter: 21
-Counter: 21
-Counter: 21
-Counter: 21
-Counter: 21
-Counter: 21
-Counter: 21
-Counter: 21
-Counter: 21
+Case #1: 13 -1
+row_sum = 48
+compare_sum = -1
+K2 = -1
+row_sum = 37
+compare_sum = -1
+K2 = -1
 
-Case #2: 43 48
+Case #2: 43 -1

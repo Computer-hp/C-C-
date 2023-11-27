@@ -69,11 +69,9 @@ void solve(int t) {
 
     // aggiungi codice...
 
-    int sum = 0, position = 0;
-
+    int sum = 0, position = 0, j = 0;
 
     // finds the value of K_min or K1
-    int j;
 
     while (j < N)
     {
@@ -116,7 +114,14 @@ void solve(int t) {
         {
             compare_sum = getRowSum(W, &compare_position, N);
 
-            K2 = (row_sum < compare_sum) ? compare_sum : row_sum;
+            /*K2 = (row_sum < compare_sum && K2 < compare_sum) ? compare_sum //: row_sum;
+
+            K2 = (compare_sum < row_sum && K2 < row_sum) ? row_sum;*/
+
+            if (row_sum < compare_sum && K2 < compare_sum)
+                K2 = compare_sum;
+            else if (compare_sum < row_sum && K2 < row_sum)
+                K2 = row_sum;
         }
     }
 

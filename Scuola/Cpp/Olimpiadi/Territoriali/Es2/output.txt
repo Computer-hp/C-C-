@@ -7,9 +7,17 @@ Spaces: 4
 
 provisory_sum: 215835012
 
-Case #1: 479229202 215835012
+Case #1: 479229202 521299187
 
-Case #2: 0 13
+Spaces: 1
+
+provisory_sum: 9
+
+Spaces: 2
+
+provisory_sum: 13
+
+Case #2: 13 0
 
 Spaces: 5
 
@@ -23,4 +31,4 @@ Spaces: 6
 
 provisory_sum: 43
 
-Case #3: 43 43
+Case #3: 43 48

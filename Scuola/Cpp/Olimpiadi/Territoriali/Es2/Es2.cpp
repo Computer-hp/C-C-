@@ -30,7 +30,7 @@ comparo la somma con la provisory_sum
 
 */
 
-int getRowSum(vector<int> &W, int *position, int N)
+int getRowSum(vector<int> &W, int *position, int N, int *counter)
 {
     int row_sum = 0, i, spaces = 0;
 
@@ -39,12 +39,19 @@ int getRowSum(vector<int> &W, int *position, int N)
         if (W[i] == -1)
         {
             *position = i + 1;
+
+            cout << "POSITION: " << *position << endl;
+
             break;
         }
 
         row_sum += W[i];
         spaces++;
     }
+
+    *counter = i;
+
+    cout << "Counter: " << *counter << endl;
 
     if (i + 1 < N)
         return row_sum + W[i + 1] + spaces - 1;
@@ -93,8 +100,8 @@ void solve(int t) {
         if (provisory_sum > sum)
             sum = provisory_sum;
         
-        cout << "\nSpaces: " << spaces - 1 << "\n";
-        cout << "\nprovisory_sum: " << provisory_sum << "\n";
+        //cout << "\nSpaces: " << spaces - 1 << "\n";
+        //cout << "\nprovisory_sum: " << provisory_sum << "\n";
     }
 
     // K_MIN
@@ -102,21 +109,17 @@ void solve(int t) {
 
     int row_sum, main_position = 0, save_main_position = -1;
 
-    while (main_position != save_main_position)
+    int counter = 0;
+
+    while (counter < N)
     {
-        save_main_position = main_position;
+        row_sum = getRowSum(W, &main_position, N, &counter);
 
-        row_sum = getRowSum(W, &main_position, N);
-
-        int compare_sum, compare_position = 0;
+        int compare_sum, compare_position = 0, counter2 = 0;
 
         for (int j = 0; j < N; j++)
         {
-            compare_sum = getRowSum(W, &compare_position, N);
-
-            /*K2 = (row_sum < compare_sum && K2 < compare_sum) ? compare_sum //: row_sum;
-
-            K2 = (compare_sum < row_sum && K2 < row_sum) ? row_sum;*/
+            compare_sum = getRowSum(W, &compare_position, N, &counter2);
 
             if (row_sum < compare_sum && K2 < compare_sum)
                 K2 = compare_sum;

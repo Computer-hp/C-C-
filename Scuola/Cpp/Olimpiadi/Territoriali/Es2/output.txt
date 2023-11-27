@@ -1,34 +1,95 @@
+POSITION: 3
+Counter: 2
+POSITION: 3
+Counter: 2
+Counter: 6
+Counter: 6
+Counter: 6
+Counter: 6
+Counter: 6
+Counter: 6
+POSITION: 3
+Counter: 2
+Counter: 6
+Counter: 6
+Counter: 6
+Counter: 6
+Counter: 6
 
-Spaces: 12
+Case #1: 13 0
+POSITION: 7
+Counter: 6
+POSITION: 7
+Counter: 6
+POSITION: 14
+Counter: 13
+Counter: 21
+Counter: 21
+Counter: 21
+Counter: 21
+Counter: 21
+Counter: 21
+Counter: 21
+Counter: 21
+Counter: 21
+Counter: 21
+Counter: 21
+Counter: 21
+Counter: 21
+Counter: 21
+Counter: 21
+Counter: 21
+Counter: 21
+Counter: 21
+Counter: 21
+POSITION: 14
+Counter: 13
+POSITION: 7
+Counter: 6
+POSITION: 14
+Counter: 13
+Counter: 21
+Counter: 21
+Counter: 21
+Counter: 21
+Counter: 21
+Counter: 21
+Counter: 21
+Counter: 21
+Counter: 21
+Counter: 21
+Counter: 21
+Counter: 21
+Counter: 21
+Counter: 21
+Counter: 21
+Counter: 21
+Counter: 21
+Counter: 21
+Counter: 21
+Counter: 21
+POSITION: 7
+Counter: 6
+POSITION: 14
+Counter: 13
+Counter: 21
+Counter: 21
+Counter: 21
+Counter: 21
+Counter: 21
+Counter: 21
+Counter: 21
+Counter: 21
+Counter: 21
+Counter: 21
+Counter: 21
+Counter: 21
+Counter: 21
+Counter: 21
+Counter: 21
+Counter: 21
+Counter: 21
+Counter: 21
+Counter: 21
 
-provisory_sum: 479229202
-
-Spaces: 4
-
-provisory_sum: 215835012
-
-Case #1: 479229202 521299187
-
-Spaces: 1
-
-provisory_sum: 9
-
-Spaces: 2
-
-provisory_sum: 13
-
-Case #2: 13 0
-
-Spaces: 5
-
-provisory_sum: 38
-
-Spaces: 5
-
-provisory_sum: 37
-
-Spaces: 6
-
-provisory_sum: 43
-
-Case #3: 43 48
+Case #2: 43 48

@@ -20,9 +20,9 @@ bool palindroma();   // restituisce true se la stringa è palindroma (ex: "otto"
 /// "false" se NON è palindroma (ex:"ciao") NB limitiamo il caso a singole parole
 
 /// operator
-int operator~() ;   // restiutuisce la lunghezza della stringa
-int operator+(striga s2) // permette di fare s3=s1+s2
-bool operator==(stringa s2);
+int operator ~() ;   // restiutuisce la lunghezza della stringa
+stringa operator +(striga s2) // permette di fare s3=s1+s2
+bool operator= =(stringa s2);
 */
 
 #include <iostream>
@@ -49,9 +49,9 @@ class Stringa
     void toFlip();
     bool palindroma();
 
-    int operator~();
-    int operator+(Stringa s2);
-    bool operator==(Stringa s2);
+    int operator ~();
+    Stringa operator +(Stringa s2);
+    bool operator ==(Stringa s2);
 };
 
 void Stringa::reverse()
@@ -102,6 +102,7 @@ int Stringa::conta(char c)
             counter++;
         i++;
     }
+
     return counter;
 }
 
@@ -127,7 +128,7 @@ void Stringa::toLower()
 }
 void Stringa::toFlip()
 {
-
+    
 }
 bool Stringa::palindroma()
 {
@@ -142,19 +143,43 @@ bool Stringa::palindroma()
     return true;
 }
 
-int Stringa::operator~()
+int Stringa::operator ~()
 {
+    int i;
 
+    for (i = 0; str[i] != '\0'; i++);
+
+    return i;
 }
 
-int Stringa::operator+(Stringa s2)
+void setString(char *str, int start, int end, const char* tmp)
 {
-    
+    for (int i = start; i < end; i++)
+    {
+        str[i] = tmp[i];
+    }
 }
 
-bool Stringa::operator==(Stringa s2)
+Stringa Stringa::operator +(Stringa s2)
 {
-    
+    int totalLength = strlen(this->str) + strlen(s2.str);
+
+    char *str = new char[totalLength + 1];
+
+    setString(str, 0, strlen(this->str), this->str);
+
+    setString(str, strlen(this->str), totalLength, this->str);
+
+    Stringa result;
+
+    result.set(str);
+
+    return result;
+}
+
+bool Stringa::operator ==(Stringa s2)
+{
+    return false;
 }
 
 int main()
@@ -175,6 +200,16 @@ int main()
 
     s.reverse();
     s.stampa();
+
+    std::cout << "String Length:" << ~s <<std::endl;
+
+    Stringa s2;
+
+    s2.set("Antic");
+
+    Stringa s3 = s + s2;
+
+    std::cout << "s3:" << s3.stampa() << std::endl;
 
     return 0;
 }

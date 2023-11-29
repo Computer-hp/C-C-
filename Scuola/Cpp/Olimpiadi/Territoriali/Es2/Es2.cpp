@@ -15,8 +15,6 @@ almeno un a capo !!!
 
 almeno due righe
 
-
-
 prima trovo la somma della prima riga prima di -1
 poi la salvo in sum
 salvo la parola dopo il -1
@@ -27,54 +25,11 @@ uso o salvo la parola dopo il -1
 
 comparo la somma con la provisory_sum
 
-
 */
 
-
-int getRowSum(vector<int> &W, int &position, int N)
+int getK1(vector<int> &W, int N)
 {
-    int row_sum = 0, i, spaces = 0;
-
-    for (i = position; i < N; i++)
-    {
-        if (W[i] == -1)
-        {
-            position = i + 1;
-            break;
-        }
-
-        row_sum += W[i];
-        spaces++;
-    }
-
-    if (i + 1 < N)
-        return row_sum + W[i + 1] + spaces - 1;
-    
-    position = i;
-
-    return row_sum + spaces - 1;
-}
-
-void solve(int t) {
-    
-    int N;
-    cin >> N;
-
-    vector<int> W(N);
-
-    // metto i numeri in ciascuna cella dell array
-    for (int i = 0; i < N; i++) 
-    {
-        cin >> W[i];
-    }
-
-    int K1 = 0;
-
-    // aggiungi codice...
-
     int sum = 0, position = 0, j = 0;
-
-    // finds the value of K_min or K1
 
     while (j < N)
     {
@@ -96,15 +51,67 @@ void solve(int t) {
         if (provisory_sum > sum)
             sum = provisory_sum;
     }
+    return sum;
+}
 
-    // K_MIN
-    K1 = sum;
+int getRowSum(vector<int> &W, int &position, int N)
+{
+    int row_sum = 0, i, spaces = 0;
 
-    int row_sum, main_position = 0, start = 0, last_aCapo = 0;
+    for (i = position; i < N; i++)
+    {
+        if (W[i] == -1)
+            break;
+        
+        row_sum += W[i];
+        spaces++;
+    }
+    position = i + 1;
     
-    int K2 = getRowSum(W, start, last_aCapo);
+    return row_sum + W[i + 1] + spaces - 1;
+}
 
-    bool state = true;
+int getK2(vector<int> &W, int K2, int counter, int last_aCapo)
+{
+    int row_sum, main_position = 0, start = 0;
+
+    while (main_position < last_aCapo)
+    {
+        row_sum = getRowSum(W, main_position, last_aCapo);
+
+        int compare_sum = 0, compare_position = 0, counter2 = 0;
+
+        while (counter2 < counter)
+        {
+            compare_sum = getRowSum(W, compare_position, last_aCapo);
+
+            if (row_sum >= compare_sum && K2 >= compare_sum)
+                K2 = compare_sum;
+        
+            else if (compare_sum >= row_sum && K2 >= row_sum)
+                K2 = row_sum;
+
+            counter2++;
+        }
+    }
+    return K2;
+}
+
+void solve(int t) {
+    
+    int N;
+    cin >> N;
+
+    vector<int> W(N);
+
+    for (int i = 0; i < N; i++) 
+    {
+        cin >> W[i];
+    }
+
+    int K1 = getK1(W, N);
+
+    int last_aCapo = 0, counter = 0;
 
     for (int i = N; i > 0; i--)
     {
@@ -115,13 +122,23 @@ void solve(int t) {
         }
     }
 
+    for (int i = 0; i < N; i++)
+    {
+        if (W[i] == -1)
+            counter++;
+    }
+
+    /*int K2 = getRowSum(W, start, last_aCapo);
+
+    if (counter != 1){
+
     while (main_position < last_aCapo)
     {
         row_sum = getRowSum(W, main_position, last_aCapo);
 
-        int compare_sum = 0, compare_position = 0;
+        int compare_sum = 0, compare_position = 0, counter2 = 0;
 
-        for (int j = 0; j < last_aCapo; j++)
+        while (counter2 < counter)
         {
             compare_sum = getRowSum(W, compare_position, last_aCapo);
 
@@ -130,14 +147,19 @@ void solve(int t) {
         
             else if (compare_sum >= row_sum && K2 >= row_sum)
                 K2 = row_sum;
+
+            counter2++;
         }
-        cout << "row_sum = " << row_sum << endl;
-        cout << "compare_sum = " << compare_sum << endl;
-        cout << "K2 = " << K2 << endl;
     }
+    }*/
 
+    int start = 0;
+    int K2 = getRowSum(W, start, last_aCapo);
 
-    cout << "\nCase #" << t << ": " << K1 << " " << K2 << "\n";
+    if (counter != 1)
+        K2 = getK2(W, K2, counter, last_aCapo);
+
+    cout << "Case #" << t << ": " << K1 << " " << K2 << "\n";
 }
 
 int main() {
@@ -148,7 +170,8 @@ int main() {
     int T;
     cin >> T;
 
-    for (int t = 1; t <= T; t++) {
+    for (int t = 1; t <= T; t++) 
+    {
         solve(t);
     }
 

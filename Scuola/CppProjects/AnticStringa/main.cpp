@@ -48,6 +48,10 @@ class Stringa
     void toLower();
     void toFlip();
     bool palindroma();
+
+    int operator~();
+    int operator+(Stringa s2);
+    bool operator==(Stringa s2);
 };
 
 void Stringa::reverse()
@@ -127,7 +131,30 @@ void Stringa::toFlip()
 }
 bool Stringa::palindroma()
 {
-    return false;
+    for (int i = 0; i < strlen(str) / 2; i++)
+    {
+        int back = strlen(str) - i - 1;
+
+        if (str[i] != str[back])
+            return false;
+    }
+    
+    return true;
+}
+
+int Stringa::operator~()
+{
+
+}
+
+int Stringa::operator+(Stringa s2)
+{
+    
+}
+
+bool Stringa::operator==(Stringa s2)
+{
+    
 }
 
 int main()

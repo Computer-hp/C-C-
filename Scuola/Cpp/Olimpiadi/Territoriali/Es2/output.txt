@@ -1,13 +1,2 @@
-row_sum = 9
-compare_sum = -1
-K2 = -1
-
-Case #1: 13 -1
-row_sum = 48
-compare_sum = -1
-K2 = -1
-row_sum = 37
-compare_sum = -1
-K2 = -1
-
-Case #2: 43 -1
+Case #1: 1 2
+Case #2: 474601136 488404633

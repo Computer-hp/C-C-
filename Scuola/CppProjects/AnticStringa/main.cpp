@@ -20,9 +20,9 @@ bool palindroma();   // restituisce true se la stringa è palindroma (ex: "otto"
 /// "false" se NON è palindroma (ex:"ciao") NB limitiamo il caso a singole parole
 
 /// operator
-int operator ~() ;   // restiutuisce la lunghezza della stringa
+int operator ~ () ;   // restiutuisce la lunghezza della stringa
 stringa operator +(striga s2) // permette di fare s3=s1+s2
-bool operator= =(stringa s2);
+bool operator == (stringa s2);
 */
 
 #include <iostream>
@@ -50,8 +50,8 @@ class Stringa
     bool palindroma();
 
     int operator ~();
-    Stringa operator +(Stringa s2);
-    bool operator ==(Stringa s2);
+    Stringa operator + (Stringa s2);
+    bool operator == (Stringa s2);
 };
 
 void Stringa::reverse()
@@ -128,7 +128,14 @@ void Stringa::toLower()
 }
 void Stringa::toFlip()
 {
-    
+    for (int i = 0; i < strlen(str); i++)
+    {
+        if (str[i] >= 'A' && str[i] <= 'Z')
+            str[i] = str[i] + LWR_UPR_Subtrahend;
+
+        else if (str[i] >= 'a' && str[i] <= 'z')
+            str[i] = str[i] - LWR_UPR_Subtrahend;
+    }
 }
 bool Stringa::palindroma()
 {
@@ -156,11 +163,11 @@ void setString(char *str, int start, int end, const char* tmp)
 {
     for (int i = start; i < end; i++)
     {
-        str[i] = tmp[i];
+        str[i] = tmp[i - start];
     }
 }
 
-Stringa Stringa::operator +(Stringa s2)
+Stringa Stringa::operator + (Stringa s2)
 {
     int totalLength = strlen(this->str) + strlen(s2.str);
 
@@ -168,7 +175,7 @@ Stringa Stringa::operator +(Stringa s2)
 
     setString(str, 0, strlen(this->str), this->str);
 
-    setString(str, strlen(this->str), totalLength, this->str);
+    setString(str, strlen(this->str), totalLength, s2.str);
 
     Stringa result;
 
@@ -177,39 +184,27 @@ Stringa Stringa::operator +(Stringa s2)
     return result;
 }
 
-bool Stringa::operator ==(Stringa s2)
+bool Stringa::operator == (Stringa s2)
 {
-    return false;
+    for (int i = 0; i < strlen(str); i++)
+    {
+        if (str[i] != s2.str[i])
+            return false;
+    }
+    
+    return true;
 }
 
 int main()
 {
     Stringa s;
 
-    s.set("Daniel");
+    s.set("Hello");
     s.stampa();
 
-    s.reverse();
+    s.toFlip();
+
     s.stampa();
-
-    s.toUpper();
-    s.stampa();
-
-    s.toLower();
-    s.stampa();
-
-    s.reverse();
-    s.stampa();
-
-    std::cout << "String Length:" << ~s <<std::endl;
-
-    Stringa s2;
-
-    s2.set("Antic");
-
-    Stringa s3 = s + s2;
-
-    std::cout << "s3:" << s3.stampa() << std::endl;
 
     return 0;
 }

@@ -291,6 +291,11 @@ namespace WinFormsApp1
                     // because the piece that gives check can also be captured to stop check, neccessary for Knight and Pawn
                     ChessBoard.validMoves.Add(new CSquare(x, y));
 
+                    foreach (var square in ChessBoard.validMoves)
+                    {
+                        Debug.WriteLine($"Bishop: {square.x} {square.y}");
+                    }
+
                     IsCheck(ChessBoard, ChessBoard.Board[x, y], king);
                 }
 
@@ -396,6 +401,7 @@ namespace WinFormsApp1
             if (direction != "")
             {
                 method = typeof(CMatrixBoard).GetMethod(moveTo);
+                Debug.WriteLine($"\n{direction}");
                 object[] parameters = new object[] { ChessBoard.Board[x, y], 8, direction };
                 method.Invoke(ChessBoard, parameters);
 
@@ -456,7 +462,7 @@ namespace WinFormsApp1
                 return;
             }
 
-            if (x < king.x && y > king.y)
+            if (x < king.x && y < king.y)
             {
                 direction = "RightUp";
                 return;

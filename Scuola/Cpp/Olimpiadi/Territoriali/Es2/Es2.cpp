@@ -68,7 +68,7 @@ int getRowSum(vector<int> &W, int &position, int N)
     }
     position = i + 1;
     
-    return row_sum + W[i + 1] + spaces - 1;
+    return (row_sum + W[i + 1] + spaces - 1);
 }
 
 int getK2(vector<int> &W, int K2, int counter, int last_aCapo)
@@ -127,31 +127,6 @@ void solve(int t) {
         if (W[i] == -1)
             counter++;
     }
-
-    /*int K2 = getRowSum(W, start, last_aCapo);
-
-    if (counter != 1){
-
-    while (main_position < last_aCapo)
-    {
-        row_sum = getRowSum(W, main_position, last_aCapo);
-
-        int compare_sum = 0, compare_position = 0, counter2 = 0;
-
-        while (counter2 < counter)
-        {
-            compare_sum = getRowSum(W, compare_position, last_aCapo);
-
-            if (row_sum >= compare_sum && K2 >= compare_sum)
-                K2 = compare_sum;
-        
-            else if (compare_sum >= row_sum && K2 >= row_sum)
-                K2 = row_sum;
-
-            counter2++;
-        }
-    }
-    }*/
 
     int start = 0;
     int K2 = getRowSum(W, start, last_aCapo);

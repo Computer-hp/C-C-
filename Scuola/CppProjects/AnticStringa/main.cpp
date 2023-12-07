@@ -36,7 +36,7 @@ class Stringa
     char *str;
 
   public:
-    Stringa() {str = (char*)"";}
+    Stringa() {str = nullptr;}
     Stringa(char *s) {str = s;}
 
     void reverse();
@@ -69,6 +69,8 @@ void Stringa::reverse()
 
 void Stringa::set(const char *stringa)
 {
+    delete[] str;
+
     str = new char[strlen(stringa) + 1]; // Allocate memory for the string
     strcpy(str, stringa);
 }
@@ -89,7 +91,7 @@ int Stringa::cerca(char c)
         i++;
     }
 
-    return -1;
+    return -1; 
 }
 
 int Stringa::conta(char c)

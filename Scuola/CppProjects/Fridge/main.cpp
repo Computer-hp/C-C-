@@ -1,5 +1,5 @@
 #include <iostream>
-#include <string>
+#include <cstring>
 
 using namespace std;
 
@@ -15,11 +15,11 @@ class Fridge
 {
   private:
     Tag_RFID *products;
-
+    int number_of_products;
   
   public:
 
-    Fridge() { products = new Tag_RFID[1]; }
+    Fridge();
 
     Tag_RFID get_product()
     {
@@ -40,29 +40,36 @@ class Fridge
     void get_products_from_file();
 
     bool is_less(string product_date, string current_date);
-
-    static int get_array_length(Tag_RFID* &p)
-    {
-        return (sizeof(p) / sizeof(p[0]));
-    }
 };
+
+Fridge::Fridge()
+{
+    products = new Tag_RFID[1]; 
+    number_of_products = 1;
+
+    products->id_cod = 69;
+    products->description = "yogurt";
+    products->expiration_date = "12:12:2023";
+    products->calories = 1789;
+}
 
 
 void Fridge::set_new_product(Tag_RFID value)
-    {
-        int new_size = Fridge::get_array_length(products) + 1;
+{
+    number_of_products += 1;
 
-        Tag_RFID *tmp = new Tag_RFID[new_size];
+    Tag_RFID *tmp = new Tag_RFID[number_of_products];
 
-        store_in_new_array(tmp, products, new_size);
+    store_in_new_array(tmp, products, number_of_products);
 
-        delete[] products;
+    delete[] products;
 
-        products = new Tag_RFID[new_size];
+    products = new Tag_RFID[number_of_products];
 
-        store_in_new_array(products, tmp, new_size);
+    store_in_new_array(products, tmp, number_of_products);
 
-    }
+    delete[] tmp;
+}
 
 void Fridge::store_in_new_array(Tag_RFID* (&tmp), Tag_RFID* (&tmp2), int size)
 {
@@ -74,7 +81,7 @@ void Fridge::store_in_new_array(Tag_RFID* (&tmp), Tag_RFID* (&tmp2), int size)
 
 void Fridge::print_products()
 {
-    int size = Fridge::get_array_length(this->products);
+    int size = number_of_products;
 
     cout << "\nProducts in the fridge:";
 
@@ -83,11 +90,6 @@ void Fridge::print_products()
         cout << "\nProduct n° " << i << '\n';
         cout << products->id_cod << ' ' << products->description << ' ' << products->expiration_date << ' ' << products->calories;
     }
-}
-
-int get_year_month_(int v[], int size)
-{
-    
 }
 
 bool Fridge::is_less(string product_date, string current_date)
@@ -128,7 +130,7 @@ string Fridge::get_expiration_products(string current_date)
 {
     string str = "";
     
-    int size = Fridge::get_array_length(this->products);
+    int size = number_of_products;
 
     for (int i = 0; i < size; i++)
     {
@@ -137,33 +139,97 @@ string Fridge::get_expiration_products(string current_date)
             str += products[i].expiration_date + ", ";
         }
     }
+    return str;
 }
 
 int Fridge::number_product_packaging(int id_cod)
 {
-
+    int counter = 0;
+    for (int i = 0; i < number_of_products; i++)
+    {
+        if ((*products).id_cod == id_cod)
+            counter++;
+    }
+    return counter;
 }
 
-void Fridge::save_products_in_file()
+
+int get_number_of_products(const char* file_path)
+{
+    FILE *f;
+
+    f = fopen(file_path, "r");
+
+    const char* product = "Product n°";
+
+    int N = 0, size = strlen(product);
+
+    char line[size];
+
+    while (fgets(line, sizeof(line), f))
+    {
+        if (strcmp(line, product))
+            N++;
+    }
+
+    fclose(f);
+
+    return N;
+}
+
+
+/*void Fridge::save_products_in_file()
 {
 
 }
 
 void Fridge::get_products_from_file()
 {
+    int N = get_number_of_products("file.txt"), properties_number = 4;
 
-}
+    FILE *f = fopen("file.txt", "r");
+
+    char line[256];
+
+    for (int i = 0; i < N; i++)
+    {
+        for (int j = 0; j < properties_number && fgets(line, sizeof(line), f) != NULL; ++i)
+        {
+            
+        }
+    }
+
+    
+    //(int)cod   (char*)description    (char*)expiration_date    (int)calories
+    
+    //products->eachproperty
+
+    //get_each_property(int position, )
 
 
 
 
+    fclose(f);
+}*/
 
 
 
 int main()
 {
+    Fridge f1;
 
+    f1.print_products();
 
+    Tag_RFID tag1
+    {
+        .id_cod = 123,
+        .description = "sdfjadsfjs", 
+        .expiration_date = "08:12:2023",
+        .calories = 12343
+    };
+
+    f1.set_new_product(tag1);
+    f1.print_products();
 
     return 0;
 }

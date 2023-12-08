@@ -32,13 +32,14 @@ class Fridge
 
     void print_products();
 
-    string get_expiration_products();
+    string get_expiration_products(string current_date);
 
     int number_product_packaging(int id_cod);
 
     void save_products_in_file();
     void get_products_from_file();
 
+    bool is_less(string product_date, string current_date);
 
     static int get_array_length(Tag_RFID* &p)
     {
@@ -84,9 +85,58 @@ void Fridge::print_products()
     }
 }
 
-string Fridge::get_expiration_products()
+int get_year_month_(int v[], int size)
 {
+    
+}
 
+bool Fridge::is_less(string product_date, string current_date)
+{
+    int i = 0;
+
+    int sum = 0, sum2 = 0;
+
+    bool state = false;
+
+    while (product_date[i] != '\0')
+    {
+        if (product_date[i] != ':')
+        {
+            sum += product_date[i];
+            sum2 += current_date[i];
+        }
+        else if (sum < sum2)
+        {
+            state = true;
+
+            sum = 0; sum2 = 0;
+        }
+        else
+        {
+            if (state)
+                state = false;
+
+            sum = 0; sum2 = 0;
+        }
+        i++;
+    }
+
+    return state;
+}
+
+string Fridge::get_expiration_products(string current_date)
+{
+    string str = "";
+    
+    int size = Fridge::get_array_length(this->products);
+
+    for (int i = 0; i < size; i++)
+    {
+        if (is_less(products[i].expiration_date, current_date))
+        {
+            str += products[i].expiration_date + ", ";
+        }
+    }
 }
 
 int Fridge::number_product_packaging(int id_cod)

@@ -26,7 +26,7 @@ class Fridge
         return *products;
     }
 
-    void set_new_product(Tag_RFID value);
+    void set_new_product(Tag_RFID &value);
 
     void store_in_new_array(Tag_RFID* (&tmp), Tag_RFID* (&tmp2), int size);
 
@@ -47,20 +47,24 @@ Fridge::Fridge()
     products = new Tag_RFID[1]; 
     number_of_products = 1;
 
-    products->id_cod = 69;
-    products->description = "yogurt";
-    products->expiration_date = "12:12:2023";
-    products->calories = 1789;
+    products[0].id_cod = 69;
+    products[0].description = "yogurt";
+    products[0].expiration_date = "12:12:2023";
+    products[0].calories = 1789;
 }
 
 
-void Fridge::set_new_product(Tag_RFID value)
+void Fridge::set_new_product(Tag_RFID &value)
 {
     number_of_products += 1;
 
+    cout << "ENTERED " << number_of_products << '\n';
+
     Tag_RFID *tmp = new Tag_RFID[number_of_products];
 
-    store_in_new_array(tmp, products, number_of_products);
+    store_in_new_array(tmp, products, number_of_products - 1);
+
+    tmp[number_of_products - 1] = value;
 
     delete[] products;
 
@@ -87,8 +91,9 @@ void Fridge::print_products()
 
     for (int i = 0; i < size; i++)
     {
-        cout << "\nProduct n° " << i << '\n';
-        cout << products->id_cod << ' ' << products->description << ' ' << products->expiration_date << ' ' << products->calories;
+        cout << "\nProduct n° " << i + 1<< '\n';
+        cout << "\tId: " << products->id_cod << ' ' << "Description: " << products->description << ' ';
+        cout << "Expiration date: " << products->expiration_date << ' ' << "Calories: " << products->calories << endl;
     }
 }
 
@@ -154,7 +159,7 @@ int Fridge::number_product_packaging(int id_cod)
 }
 
 
-int get_number_of_products(const char* file_path)
+/*int get_number_of_products(const char* file_path)
 {
     FILE *f;
 
@@ -178,7 +183,7 @@ int get_number_of_products(const char* file_path)
 }
 
 
-/*void Fridge::save_products_in_file()
+void Fridge::save_products_in_file()
 {
 
 }
@@ -229,6 +234,7 @@ int main()
     };
 
     f1.set_new_product(tag1);
+
     f1.print_products();
 
     return 0;

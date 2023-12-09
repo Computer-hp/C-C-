@@ -1,5 +1,6 @@
 #include <iostream>
 #include <cstring>
+#include <sstream>
 
 using namespace std;
 
@@ -21,8 +22,8 @@ class Fridge
 
     Fridge();
 
-    Tag_RFID get_product()
-    {
+    Tag_RFID& get_product()     // using a reference so i don't return a copy of the Tag_RFID struct,
+    {                           // and i can modify the value of (private) products outside the class
         return *products;
     }
 
@@ -39,7 +40,7 @@ class Fridge
     void save_products_in_file();
     void get_products_from_file();
 
-    bool is_less(string product_date, string current_date);
+    bool is_less(string& product_date, string& current_date);
 };
 
 Fridge::Fridge()
@@ -57,8 +58,6 @@ Fridge::Fridge()
 void Fridge::set_new_product(Tag_RFID &value)
 {
     number_of_products += 1;
-
-    cout << "ENTERED " << number_of_products << '\n';
 
     Tag_RFID *tmp = new Tag_RFID[number_of_products];
 
@@ -87,48 +86,36 @@ void Fridge::print_products()
 {
     int size = number_of_products;
 
-    cout << "\nProducts in the fridge:";
-
     for (int i = 0; i < size; i++)
     {
         cout << "\nProduct n° " << i + 1<< '\n';
-        cout << "\tId: " << products->id_cod << ' ' << "Description: " << products->description << ' ';
-        cout << "Expiration date: " << products->expiration_date << ' ' << "Calories: " << products->calories << endl;
+        cout << "\tId: " << products[i].id_cod << ' ' << "Description: " << products[i].description << ' ';
+        cout << "Expiration date: " << products[i].expiration_date << ' ' << "Calories: " << products[i].calories << endl;
     }
 }
 
-bool Fridge::is_less(string product_date, string current_date)
+bool Fridge::is_less(string& product_date, string& current_date)
 {
-    int i = 0;
+    std::istringstream ss_product(product_date);
+    std::istringstream ss_current(current_date);
 
-    int sum = 0, sum2 = 0;
+    int day_product, month_product, year_product, day_current, month_current, year_current;
+    char sep; // for the ':' separator
 
-    bool state = false;
+    ss_product >> day_product >> sep >> month_product >> sep >> year_product;
+    ss_current >> day_current >> sep >> month_current >> sep >> year_current;
 
-    while (product_date[i] != '\0')
-    {
-        if (product_date[i] != ':')
-        {
-            sum += product_date[i];
-            sum2 += current_date[i];
-        }
-        else if (sum < sum2)
-        {
-            state = true;
-
-            sum = 0; sum2 = 0;
-        }
-        else
-        {
-            if (state)
-                state = false;
-
-            sum = 0; sum2 = 0;
-        }
-        i++;
+    if (year_product < year_current) {
+        return true;
+    } else if (year_product > year_current) {
+        return false;
+    } else if (month_product < month_current) {
+        return true;
+    } else if (month_product > month_current) {
+        return false;
+    } else {
+        return day_product < day_current;
     }
-
-    return state;
 }
 
 string Fridge::get_expiration_products(string current_date)
@@ -141,7 +128,7 @@ string Fridge::get_expiration_products(string current_date)
     {
         if (is_less(products[i].expiration_date, current_date))
         {
-            str += products[i].expiration_date + ", ";
+            str += products[i].expiration_date + " ";
         }
     }
     return str;
@@ -236,6 +223,8 @@ int main()
     f1.set_new_product(tag1);
 
     f1.print_products();
+
+    cout << "\nExpired products: " << f1.get_expiration_products("01:11:2024");
 
     return 0;
 }

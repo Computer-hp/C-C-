@@ -1,11 +1,10 @@
-﻿/*using System;
+﻿using System;
 using System.Collections.Generic;
-
+using System.Threading;
+using System.Diagnostics;
 class SquareNull : Character
 {
-    public bool isSquareOccupied { get; set; }
-
-    public SquareNull()
+    public SquareNull() : base()
     {
         isSquareOccupied = false;
     }
@@ -15,15 +14,16 @@ class Character
 {
     public char Value { get; set; }
     public List<Tuple<int, int>> ValidMoves { get; set; }
-
-    public int Life {get; set;} = 5;
+    public bool isSquareOccupied { get; set; }
+    public int Life { get; set; } = 5;
 
     public Character(char value)
     {
         Value = value;
         ValidMoves = new List<Tuple<int, int>>();
+        isSquareOccupied = false;
     }
-    
+
     public Character() { Value = '*'; }
 }
 
@@ -33,7 +33,11 @@ class CharMatrix
     private Random random;
     private int matrixSize;
 
+    private bool gameIsRunning = false;
     private Character Winner = null;
+    private HashSet<Character> chosenCharacters = new HashSet<Character>();
+
+    private ManualResetEvent stopEvent = new ManualResetEvent(false);
 
     public CharMatrix(int size)
     {
@@ -42,6 +46,7 @@ class CharMatrix
         matrix = new Character[matrixSize, matrixSize];
         random = new Random();
 
+        gameIsRunning = true;
         StartGame();
     }
 
@@ -49,20 +54,121 @@ class CharMatrix
     {
         FillWithRandomCharacters();
 
-        while (true)
+        Thread thread1 = new Thread(MoveRandomCharacter), thread2 = new Thread(MoveRandomCharacter), thread3 = new Thread(MoveRandomCharacter);
+        thread1.Name = "Thread 1"; thread2.Name = "Thread 2"; thread3.Name = "Thread 3";
+
+        Thread printThread = new Thread(Printing), checkForWinnerThread = new Thread(CheckForWinner);
+
+        thread1.Start();
+        thread2.Start();
+        thread3.Start();
+
+
+        printThread.Start();
+        checkForWinnerThread.Start();
+
+        // Keep the main thread alive until all other threads complete
+        stopEvent.WaitOne();
+    }
+
+    private void Printing()
+    {
+        while (gameIsRunning)
         {
             PrintMatrix();
+            Thread.Sleep(10);
+        }
+    }
 
-            int x = random.Next(0, matrixSize);
-            int y = random.Next(0, matrixSize);
+    private void CheckForWinner()
+    {
+        while (gameIsRunning)
+        {
+            if (CheckWinner() <= 1)
+            {
+                gameIsRunning = false;
+                break;
+            }
+            Thread.Sleep(1000);
+        }
+
+        stopEvent.Set();
+    }
+
+    private void MoveRandomCharacter()
+    {
+        while (gameIsRunning)
+        {
+            int x, y;
+
+            Monitor.Enter(this);
+
+            x = random.Next(0, matrixSize);
+            y = random.Next(0, matrixSize);
+
+            Debug.WriteLine($"{Thread.CurrentThread.Name} character => {x}, {y}");
+
+            if (chosenCharacters.Contains(matrix[x, y]))
+            {
+                Monitor.Wait(this);
+                Debug.WriteLine($"Passed {Thread.CurrentThread.Name}");
+            }
+
+            chosenCharacters.Add(matrix[x, y]);
 
             MoveCharacter(x, y);
 
-            if (CheckWinner() <= 1)
-                break;
+            if (chosenCharacters.Count() > 0)
+                chosenCharacters.Remove(matrix[x, y]);
+
+            Monitor.Pulse(this);
+
+            Monitor.Exit(this);
+        }
+    }
+
+    private void MoveToCell(int previousX, int previousY, int destX, int destY)
+    {
+        Thread.Sleep(8);
+
+        if (matrix[previousX, previousY].isSquareOccupied)
+            return;
+
+        Character character = matrix[previousX, previousY];
+
+        if (matrix[destX, destY] is SquareNull)
+        {
+            SquareNull squareNull = (SquareNull)matrix[destX, destY];
+            matrix[previousX, previousY] = squareNull;
+        }
+        else
+            matrix[previousX, previousY] = new SquareNull();
+
+        matrix[destX, destY] = character;
+
+        matrix[destX, destY].Life--;
+
+        matrix[previousX, previousY].isSquareOccupied = false;
+    }
+
+    private void LockSquare(int previousX, int previousY, int destX, int destY)
+    {
+        Monitor.Enter(this);
+
+        if (matrix[destX, destY].isSquareOccupied)
+        {
+            Monitor.Wait(this);
         }
 
-        PrintMatrix();
+        matrix[destX, destY].isSquareOccupied = true;
+
+        MoveToCell(previousX, previousY, destX, destY);
+
+        Monitor.Pulse(this);
+
+        Monitor.Exit(this);
+
+        Thread.Sleep(5);
     }
 
     private void MoveCharacter(int x, int y)
@@ -80,33 +186,28 @@ class CharMatrix
 
         Tuple<int, int> destination = RandomMove(x, y);
 
-        Character character = matrix[x, y];
+        Debug.WriteLine($"{Thread.CurrentThread.Name} => destination = {destination.Item1}, {destination.Item2}");
 
-        if (!(matrix[destination.Item1, destination.Item2] is SquareNull))
+        LockSquare(previousX, previousY, destination.Item1, destination.Item2);
+
+        Thread.Sleep(1000);
+
+        /*if (character.Life <= 0)
         {
-            matrix[destination.Item1, destination.Item2] = character;
-            matrix[previousX, previousY] = new SquareNull();
+            Monitor.Enter(this);
 
-            Thread.Sleep(1000);
-            return;
-        }
-
-        SquareNull squareNull = (SquareNull)matrix[destination.Item1, destination.Item2];
-
-        character.Life--;
-
-        matrix[destination.Item1, destination.Item2] = character;
-        matrix[previousX, previousY] = squareNull;
-
-        Thread.Sleep(1500);
-
-        if (character.Life <= 0)
-        {
-            matrix[destination.Item1, destination.Item2].Value = (char)(matrix[destination.Item1, destination.Item2].Value - 32);
-            PrintMatrix();
-            Thread.Sleep(1500);
-            matrix[destination.Item1, destination.Item2] = new SquareNull();
-        }
+            try
+            {
+                matrix[destination.Item1, destination.Item2].Value = (char)(matrix[destination.Item1, destination.Item2].Value - 32);
+                PrintMatrix();
+                Thread.Sleep(1500);
+                matrix[destination.Item1, destination.Item2] = new SquareNull();
+            }
+            finally
+            {
+                Monitor.Exit(this);
+            }
+        }*/
     }
 
     private Tuple<int, int> RandomMove(int x, int y)
@@ -115,7 +216,6 @@ class CharMatrix
 
         return matrix[x, y].ValidMoves[random.Next(0, validMovesLength)];
     }
-
 
     private int CheckWinner()
     {
@@ -163,6 +263,7 @@ class CharMatrix
 
         matrix[i, j] = new SquareNull();
     }
+
     private char GetRandomChar()
     {
         const string chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
@@ -171,12 +272,11 @@ class CharMatrix
 
     public void PrintMatrix()
     {
-        Console.SetCursorPosition(0, 5);
-        //Console.WriteLine();
+        Console.SetCursorPosition(0, 4);
 
-        for (int i = 0; i < matrix.GetLength(0); i++)
+        for (int i = 0; i < matrixSize; i++)
         {
-            for (int j = 0; j < matrix.GetLength(1); j++)
+            for (int j = 0; j < matrixSize; j++)
             {
                 Console.Write(matrix[i, j].Value + " ");
             }
@@ -188,7 +288,6 @@ class CharMatrix
     public void CalculateValidMoves(int row, int col)
     {
         ref Character character = ref matrix[row, col];
-
         character.ValidMoves.Clear();
 
         character.ValidMoves.Add(Tuple.Create(row - 1, col));
@@ -223,4 +322,3 @@ class Program
         CharMatrix charMatrix = new CharMatrix(3);
     }
 }
-*/

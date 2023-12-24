@@ -99,7 +99,7 @@ class CharMatrix
     {
         while (gameIsRunning)
         {
-            int x, y;
+            /*int x, y;
 
             Monitor.Enter(this);
 
@@ -123,7 +123,37 @@ class CharMatrix
 
             Monitor.Pulse(this);
 
-            Monitor.Exit(this);
+            Monitor.Exit(this);*/
+
+            int x, y;
+
+            Monitor.Enter(this);
+
+            try
+            {
+                x = random.Next(0, matrixSize);
+                y = random.Next(0, matrixSize);
+
+                Debug.WriteLine($"{Thread.CurrentThread.Name} character => {x}, {y}");
+
+                if (chosenCharacters.Contains(matrix[x, y]))
+                {
+                    Monitor.Wait(this);
+                    Debug.WriteLine($"Passed {Thread.CurrentThread.Name}");
+                }
+
+                chosenCharacters.Add(matrix[x, y]);
+                MoveCharacter(x, y);
+
+                if (chosenCharacters.Count() > 0)
+                    chosenCharacters.Remove(matrix[x, y]);
+
+                Monitor.Pulse(this);
+            }
+            finally
+            {
+                Monitor.Exit(this);
+            }
         }
     }
 
@@ -153,7 +183,7 @@ class CharMatrix
 
     private void LockSquare(int previousX, int previousY, int destX, int destY)
     {
-        Monitor.Enter(this);
+        /*Monitor.Enter(this);
 
         if (matrix[destX, destY].isSquareOccupied)
         {
@@ -167,6 +197,27 @@ class CharMatrix
         Monitor.Pulse(this);
 
         Monitor.Exit(this);
+
+        Thread.Sleep(5);*/
+
+        Monitor.Enter(this);
+
+        try
+        {
+            if (matrix[destX, destY].isSquareOccupied)
+            {
+                Monitor.Wait(this);
+            }
+
+            matrix[destX, destY].isSquareOccupied = true;
+            MoveToCell(previousX, previousY, destX, destY);
+
+            Monitor.Pulse(this);
+        }
+        finally
+        {
+            Monitor.Exit(this);
+        }
 
         Thread.Sleep(5);
     }

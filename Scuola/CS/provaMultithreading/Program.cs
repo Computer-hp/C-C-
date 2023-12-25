@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Threading;
 using System.Diagnostics;
+using System.Runtime.CompilerServices;
 class SquareNull : Character
 {
     public SquareNull() : base()
@@ -39,6 +40,12 @@ class CharMatrix
 
     private ManualResetEvent stopEvent = new ManualResetEvent(false);
 
+    private bool passed = false;
+
+    private int waitTime = 400;
+
+    private bool skip = false;
+
     public CharMatrix(int size)
     {
         matrixSize = size;
@@ -54,20 +61,18 @@ class CharMatrix
     {
         FillWithRandomCharacters();
 
-        Thread thread1 = new Thread(MoveRandomCharacter), thread2 = new Thread(MoveRandomCharacter), thread3 = new Thread(MoveRandomCharacter);
-        thread1.Name = "Thread 1"; thread2.Name = "Thread 2"; thread3.Name = "Thread 3";
-
         Thread printThread = new Thread(Printing), checkForWinnerThread = new Thread(CheckForWinner);
 
-        thread1.Start();
-        thread2.Start();
-        thread3.Start();
-
+        for (int i = 0; i < 2; i++)
+        {
+            Thread thread = new Thread(MoveRandomCharacter);
+            thread.Name = "Thread " + (i + 1);
+            thread.Start();
+        }
 
         printThread.Start();
         checkForWinnerThread.Start();
 
-        // Keep the main thread alive until all other threads complete
         stopEvent.WaitOne();
     }
 
@@ -89,43 +94,20 @@ class CharMatrix
                 gameIsRunning = false;
                 break;
             }
-            Thread.Sleep(1000);
+            Thread.Sleep(waitTime);
         }
-
         stopEvent.Set();
     }
 
     private void MoveRandomCharacter()
     {
+        Thread.Sleep(800);
+
         while (gameIsRunning)
         {
-            /*int x, y;
-
-            Monitor.Enter(this);
-
-            x = random.Next(0, matrixSize);
-            y = random.Next(0, matrixSize);
-
-            Debug.WriteLine($"{Thread.CurrentThread.Name} character => {x}, {y}");
-
-            if (chosenCharacters.Contains(matrix[x, y]))
-            {
-                Monitor.Wait(this);
-                Debug.WriteLine($"Passed {Thread.CurrentThread.Name}");
-            }
-
-            chosenCharacters.Add(matrix[x, y]);
-
-            MoveCharacter(x, y);
-
-            if (chosenCharacters.Count() > 0)
-                chosenCharacters.Remove(matrix[x, y]);
-
-            Monitor.Pulse(this);
-
-            Monitor.Exit(this);*/
-
             int x, y;
+
+            passed = false; skip = false;
 
             Monitor.Enter(this);
 
@@ -138,7 +120,20 @@ class CharMatrix
 
                 if (chosenCharacters.Contains(matrix[x, y]))
                 {
+                    Thread controlDeadLockThread = new Thread(HandleDeadLock);
+
+                    controlDeadLockThread.Start();
+
                     Monitor.Wait(this);
+
+                    if (skip)
+                    {
+                        Debug.WriteLine(Thread.CurrentThread.Name + " skipped the loop");
+                        continue;
+                    }
+
+                    passed = true;
+
                     Debug.WriteLine($"Passed {Thread.CurrentThread.Name}");
                 }
 
@@ -155,6 +150,21 @@ class CharMatrix
                 Monitor.Exit(this);
             }
         }
+    }
+
+    private void HandleDeadLock()
+    {
+        Thread.Sleep(3);
+
+        Monitor.Enter(this);
+
+        if (!passed)
+        {
+            Monitor.PulseAll(this);
+            skip = true;
+        }
+
+        Monitor.Exit(this);
     }
 
     private void MoveToCell(int previousX, int previousY, int destX, int destY)
@@ -183,23 +193,6 @@ class CharMatrix
 
     private void LockSquare(int previousX, int previousY, int destX, int destY)
     {
-        /*Monitor.Enter(this);
-
-        if (matrix[destX, destY].isSquareOccupied)
-        {
-            Monitor.Wait(this);
-        }
-
-        matrix[destX, destY].isSquareOccupied = true;
-
-        MoveToCell(previousX, previousY, destX, destY);
-
-        Monitor.Pulse(this);
-
-        Monitor.Exit(this);
-
-        Thread.Sleep(5);*/
-
         Monitor.Enter(this);
 
         try
@@ -241,7 +234,7 @@ class CharMatrix
 
         LockSquare(previousX, previousY, destination.Item1, destination.Item2);
 
-        Thread.Sleep(1000);
+        Thread.Sleep(waitTime);
 
         /*if (character.Life <= 0)
         {
@@ -323,10 +316,10 @@ class CharMatrix
 
     public void PrintMatrix()
     {
-        Console.SetCursorPosition(0, 4);
-
         for (int i = 0; i < matrixSize; i++)
         {
+            Console.SetCursorPosition(10, 10 + i);
+
             for (int j = 0; j < matrixSize; j++)
             {
                 Console.Write(matrix[i, j].Value + " ");
@@ -370,6 +363,8 @@ class Program
 {
     static void Main()
     {
+        Console.CursorVisible = false;
+
         CharMatrix charMatrix = new CharMatrix(3);
     }
 }

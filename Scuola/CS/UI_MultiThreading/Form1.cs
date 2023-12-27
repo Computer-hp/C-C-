@@ -14,7 +14,6 @@ namespace displayMultiThreading
         private CharacterMover character1;
         private CharacterMover character2;
         private CharacterMover character3;
-        private Random random = new Random();
 
         private int waitTime = 1000;
 

@@ -8,7 +8,7 @@ class CharMatrix
 {
     private int matrixSize, waitTime = 500;
 
-    private bool gameIsRunning = false, isDeadLockOccured = false, skipLoop = false;
+    private bool gameIsRunning = false, isDeadLockOccured = false;
 
     private object lockObject = new object();
 
@@ -279,26 +279,33 @@ class CharMatrix
 
     public void PrintMatrix()
     {
-        Monitor.Enter(lockObject);
+        /*Monitor.Enter(lockObject);
 
         try
         {
             for (int i = 0; i < matrixSize; i++)
             {
-                Console.SetCursorPosition(50, 8 + i);
+                Console.SetCursorPosition(5, 5 + i);
 
                 for (int j = 0; j < matrixSize; j++)
                 {
                     Console.Write(matrix[i, j].Value + " ");
                 }
-                Console.WriteLine();
             }
-
-            Console.WriteLine();
         }
         finally
         {
             Monitor.Exit(lockObject);
+        }*/
+
+        for (int i = 0; i < matrixSize; i++)
+        {
+            Console.SetCursorPosition(5, 5 + i);
+
+            for (int j = 0; j < matrixSize; j++)
+            {
+                Console.Write(matrix[i, j].Value + " ");
+            }
         }
     }
 
@@ -356,9 +363,6 @@ class Program
     static void Main()
     {
         Console.CursorVisible = false;
-
-        
-
         CharMatrix charMatrix = new CharMatrix(10);
     }
 }

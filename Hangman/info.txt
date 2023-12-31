@@ -1,0 +1,28 @@
+Obiettivo: Gioco dell'Impiccato con Punteggi in C++
+Scrivere un programma in C++ per implementare il classico gioco dell'impiccato. Il gioco dovrà avere le seguenti caratteristiche:
+
+    All'avvio del programma, richiedere all'utente di inserire il proprio nome come giocatore.
+    Generare casualmente una parola da indovinare selezionandola da un file con percorso specificato nel codice. Utilizzare il file 
+    fornito su Classroom come riferimento.
+    Chiedere in un menù se l'utente ha intenzione di giocare, visualizzare il punteggio o uscire dal gioco.
+    Se l'utente seleziona l'opzione "gioca" visualizzare la parola da indovinare come una serie di trattini bassi iniziali, indicando 
+    la lunghezza della parola.
+    Per ogni turno, chiedere all'utente di inserire una lettera.
+    Nel caso in cui la lettera sia presente nella parola da indovinare, aggiornare la visualizzazione mostrando tutte le occorrenze di 
+    quella lettera nella parola.
+    Nel caso in cui la lettera non sia presente, decrementare il numero di vite rimaste e mostrare il numero di vite rimaste all'utente.
+    Continuare finché l'utente indovina la parola o fino a quando le vite rimaste raggiungono zero.
+    In caso di successo (indovinamento della parola), visualizzare un messaggio di vittoria e successivamente generare e mostrare una 
+    nuova parola da indovinare. Incrementare il punteggio dell'utente.
+    In caso di insuccesso (tutte le vite perse), visualizzare un messaggio di Game Over e salvare il nome utente e il numero totale di 
+    parole indovinate (punteggio) in un file di punteggi. Il percorso del file è specificato nel codice.
+    Se nel menù principale l'utente chiede di visualizzare i punteggi, stampare il contenuto del file di punteggi.
+
+
+Assicurarsi di organizzare il codice utilizzando una classe (Game nel tuo codice) per gestire le informazioni del gioco e 
+implementare le funzioni necessarie per le varie fasi del gioco. Commentare il codice per spiegare le diverse sezioni e 
+funzionalità del programma.
+
+Per capire meglio come gestire I/O di file txt su c++ guardare la guida sul link
+
+Nota: Assicurati di commentare il codice in modo appropriato per spiegare le diverse sezioni e funzionalità del tuo programma.

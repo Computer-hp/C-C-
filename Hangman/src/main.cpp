@@ -197,9 +197,9 @@ void Game::get_credentials_from_user_input(void)
 
 void Game::handle_credentials(void)
 {
-    const std::string exe_path = std::filesystem::current_path();
+    const std::string program_running_path = std::filesystem::current_path();
 
-    const std::string credentials_dir_name = exe_path + "Hangman Player Credentials";
+    const std::string credentials_dir_name = program_running_path + "Hangman Player Credentials";
     const std::string credentials_file_name = "credentials.txt";
     
     if (!std::filesystem::exists(credentials_dir_name))
@@ -252,13 +252,14 @@ void Game::handle_credentials(void)
     credentials_file.close();    
 }
 
+// Starts the Hangman game.
+
 void Game::start(void)
 {
     get_credentials_from_user_input();
     handle_credentials();
     menu();
 }
-
 
 int main()
 {

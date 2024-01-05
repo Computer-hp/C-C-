@@ -1,11 +1,16 @@
 #include <iostream>
 #include <cctype>
-#include <limits>
+#include <cstdlib>
+#include <ctime>
 #include <fstream>
-#include <string>
 #include <filesystem>
+#include <limits>
+#include <string>
+#include <vector>
 
 #define USERNAME_MAX_LENGTH 12
+
+const std::filesystem::path program_running_path = std::filesystem::current_path();
 
 /*
 class Game -> start method, to start the game
@@ -45,12 +50,16 @@ player profile:
 class Game
 {
   private:
-    std::string username;
-    int score;
 
+    int score;
+    std::string username;
+    std::string word_to_guess;
+    std::vector<std::string> words_to_guess;
+    std::streampos questions_file_size;
 
   public:
-    Game() { username = ""; score = 0; }
+
+    Game() { username = ""; score = 0; word_to_guess = "";  set_words_to_vector(); }
 
     void start(void);
     void get_credentials_from_user_input(void);
@@ -62,6 +71,9 @@ class Game
     bool check_character_from_input(char &input_character);
     
     void play(void);
+    void set_words_to_vector(void);
+    void chose_randomly_word_to_guess(void);
+
     void see_score(void);
     void exit(void);
 };
@@ -119,9 +131,71 @@ char Game::menu_user_input(void)
     return input_character;
 }
 
+
+void Game::chose_randomly_word_to_guess(void)
+{
+    srand((unsigned) time(NULL));
+
+    std::cout << "\narrived\n";
+    int random = rand() % (long)(long)questions_file_size;
+    std::cout << "\npassed\n";
+    std::cout << "\nrandom = " << random << std::endl;
+
+    word_to_guess = words_to_guess[random];
+}
+
+void Game::set_words_to_vector(void)
+{
+    const std::string questions_dir_name = "questions";
+    const std::string questions_file_name = "questions.txt";
+
+    std::string questions_dir_path = program_running_path.parent_path().string() + '/' + questions_dir_name + '/' + questions_file_name;
+
+    std::ifstream questions_file(questions_dir_path, std::ios::in | std::ios::out);
+
+    if (!questions_file)
+    {
+        std::cout << "\nError occured while creating credentials directory\n";
+        return;
+    }
+    
+    std::string word;
+
+    while (questions_file >> word)
+    {
+        word.resize(word.length() - 1);
+        words_to_guess.push_back(word);
+    }
+
+    questions_file.seekg(0, std::ios::end);
+    std::streampos questions_file_size = questions_file.tellg();
+
+    questions_file.close();
+
+    // DOESNT WORK
+
+    if (questions_file_size == -1)
+    {
+        std::cout << "Unable to determine file size." << std::endl;
+        return;
+    }
+}
+
 void Game::play(void)
 {
+    chose_randomly_word_to_guess();
 
+    int word_length = word_to_guess.length();
+
+    while (true)
+    {
+        std::cout << "\n\t\t";
+
+        for (int i = 0; i < word_length; i++)
+        {
+            std::cout << "_ ";
+        }
+    }
 }
 
 void Game::see_score(void)
@@ -208,7 +282,7 @@ void Game::get_credentials_from_user_input(void)
 
 void Game::handle_credentials(void)
 {
-    const std::string program_running_path = std::filesystem::current_path();
+    //const std::string program_running_path = std::filesystem::current_path();
 
     const std::string credentials_dir_name = "Hangman Player Credentials";
     const std::string credentials_file_name = "credentials.txt";
@@ -235,7 +309,7 @@ void Game::handle_credentials(void)
         credentials_file.close();
     }
 
-    std::fstream credentials_file(credentials_dir_name + "/" + credentials_file_name);
+    std::fstream credentials_file(credentials_dir_name + "/" + credentials_file_name, std::ios::in | std::ios::out);
 
     if (!credentials_file)
     {

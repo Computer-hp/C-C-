@@ -1,4 +1,5 @@
 #include <iostream>
+#include <cctype>
 #include <limits>
 #include <fstream>
 #include <string>
@@ -54,9 +55,12 @@ class Game
     void start(void);
     void get_credentials_from_user_input(void);
     void handle_credentials(void);
+    
     void menu(void);
     char menu_user_input(void);
+
     bool check_character_from_input(char &input_character);
+    
     void play(void);
     void see_score(void);
     void exit(void);
@@ -75,15 +79,18 @@ bool Game::check_character_from_input(char &input_character)
 
     if (std::cin.fail())
     {
-        std::cin.clear(); // Clear the fail state
-        std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n'); // Clear the buffer
+        std::cin.clear();
+        std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
 
         std::cout << "Invalid input. Insert a character" << std::endl;
         return false;
     }
+
+    if (std::isupper(input_character))
+        std::tolower(input_character);
+
     return true;
 }
-
 
 /*
     Returns the character
@@ -95,19 +102,19 @@ char Game::menu_user_input(void)
 {
     char input_character;
 
-    while (true)
+    do
     {
-        printf("\n\n\t\tPlay\n\n\t\tScore\n\n\t\tExit");
-        printf("Type:\t'p' to Play\t's' to see the Score\t'e' to Exit\n");
+        printf("\n\n\t\tPlay\t\tScore\t\tExit");
+        printf("\nType:\n\t\t'p' to Play\t's' to see the Score\t'e' to Exit\n");
 
-        if (check_character_from_input(input_character))
-            if (input_character == 'p' || 
-                input_character == 's' || 
-                input_character == 'e')
+        if (check_character_from_input(input_character) && 
+            (input_character == 'p' ||
+            input_character == 's' || 
+            input_character == 'e'))
                 
-                break;
-
+            break;
     }
+    while (true);
 
     return input_character;
 }
@@ -123,20 +130,22 @@ void Game::see_score(void)
 
     char input_character;
 
-    while (true)
+    do
     {
         std::cout << "\nPress 'e' to exit: ";
         
-        if (check_character_from_input(input_character) && input_character != 'e')
+        if (check_character_from_input(input_character) && input_character == 'e')
             break;
-    }
-
+    } 
+    while (true);
+    
+    menu();
     // return to menu
 }
 
 void Game::exit(void)
 {
-
+    std::exit(0);
 }
 
 // TODO after visualizing or finishing the game, add
@@ -149,17 +158,14 @@ void Game::menu(void)
     switch (input_character)
     {
     case 'p':
-    case 'P':
         play();
         break;
 
     case 's':
-    case 'S':
         see_score();
         break;
 
     case 'e':
-    case 'E':
         exit();
         break;
 
@@ -168,15 +174,20 @@ void Game::menu(void)
     }
 }
 
+/*
+    Takes the username written in input by the user.
+    If the username is too long, reasks.
+*/
+
 void Game::get_credentials_from_user_input(void)
 {
-    std::string input_username;
+    std::string input_username = "";
     
     do
     {
         char input_string[USERNAME_MAX_LENGTH + 1];
 
-        std::cout << "\n\t Enter you name: ";
+        std::cout << "\n    Enter you name: ";
         std::cin.getline(input_string, USERNAME_MAX_LENGTH + 1);
 
         input_username = input_string;
@@ -190,16 +201,16 @@ void Game::get_credentials_from_user_input(void)
 }
 
 /*
-    Creates the directory Hangman Credentials, if doesn't exists.
-    Creates the directory credentials.txt, if doesn't exists.
-    Controls whether username exists if there is already credentials.txt.
+    Creates the directory Hangman Credentials, if doesn't exist.
+    Creates the file credentials.txt, if doesn't exist.
+    Controls whether username exists (if credentials.txt exists).
 */
 
 void Game::handle_credentials(void)
 {
     const std::string program_running_path = std::filesystem::current_path();
 
-    const std::string credentials_dir_name = program_running_path + "Hangman Player Credentials";
+    const std::string credentials_dir_name = "Hangman Player Credentials";
     const std::string credentials_file_name = "credentials.txt";
     
     if (!std::filesystem::exists(credentials_dir_name))
@@ -211,9 +222,10 @@ void Game::handle_credentials(void)
         }
     }
 
-    if (!std::filesystem::exists(credentials_file_name))
+    if (!std::filesystem::exists(credentials_dir_name + "/" + credentials_file_name))
     {
-        std::ofstream credentials_file(credentials_file_name);
+        // TODO create the file inside the 'credentials_dir_name' directory
+        std::ofstream credentials_file(credentials_dir_name + "/" + credentials_file_name);
 
         if (!credentials_file)
         {
@@ -223,7 +235,7 @@ void Game::handle_credentials(void)
         credentials_file.close();
     }
 
-    std::fstream credentials_file(credentials_file_name);
+    std::fstream credentials_file(credentials_dir_name + "/" + credentials_file_name);
 
     if (!credentials_file)
     {
@@ -247,9 +259,12 @@ void Game::handle_credentials(void)
             return;
         }
     }
-    
-    credentials_file << this->username << " score: " << this->score;
-    credentials_file.close();    
+
+    credentials_file.clear();
+    credentials_file.seekp(0, std::ios::end);
+
+    credentials_file << this->username << " score: " << this->score << std::endl;
+    credentials_file.close();
 }
 
 // Starts the Hangman game.

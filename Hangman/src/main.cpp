@@ -51,22 +51,30 @@ player profile:
 class Game
 {
   private:
-
+    int lives;
     int score;
     std::string username;
     std::string word_to_guess;
     std::vector<std::string> words_to_guess;
     std::streampos questions_file_size;
+    bool player_has_won;
 
   public:
 
-    Game() { username = ""; score = 0; word_to_guess = "";  set_words_to_vector(); }
+    Game() { score = 0; username = ""; word_to_guess = "";  set_words_to_vector(); }
 
     void setScore(int s) 
     { 
         if (s < 0) score = 0;
         
         else       score = s;
+    }
+
+    void setLives(int l)
+    {
+        if (l < 0) lives = 0;
+
+        else       lives = l;
     }
 
     void start(void);
@@ -83,7 +91,8 @@ class Game
     void chose_randomly_word_to_guess(void);
     void handle_guessed_character(char guessed_characters[], char &input_character);
     void print_word_to_be_guessed(char guessed_characters[]);
-
+    void check_victory(const char* guessed_characters);
+    void check_win_or_loss();
 
     void see_score(void);
     void exit(void);
@@ -214,20 +223,26 @@ void Game::print_word_to_be_guessed(char guessed_characters[])
         std::cout << guessed_characters[i] << " ";
 }
 
+// add the possibility to exit
+
 void Game::play(void)
 {
+
+    player_has_won = false;
+    setLives(LIVES);
+
     chose_randomly_word_to_guess();
 
-    char guessed_characters[word_to_guess.length()];
+    char guessed_characters[word_to_guess.length() + 1];
 
-    for (int i = 0; i < word_to_guess.length(); i++)
+    for (int i = 0; i < word_to_guess.length(); i++) // maybe in a better way
     {
         guessed_characters[i] = '_';
     }
 
     char input_character;
 
-    while (true)
+    while (lives > 0 && !player_has_won)
     {
         print_word_to_be_guessed(guessed_characters);
 
@@ -242,32 +257,36 @@ void Game::play(void)
 
 
         if (word_to_guess.find(input_character) == std::string::npos)
-            
-            setScore(this->score - 1);
+            setLives(lives - 1);
         
         else
             handle_guessed_character(guessed_characters, input_character);
 
-
-
-    }
-
+    }    
     // at the end of the game save the score in credentials.txt
 
 }
 
+void Game::check_victory(const char *guessed_characters)
+{
+    while (guessed_characters != '\0')
+    {
+        if (*guessed_characters == '_')
+            return;
+    }
+
+    player_has_won = true;
+}
 
 void Game::handle_guessed_character(char guessed_characters[], char &input_character)
 {
     for (int i = 0; i < word_to_guess.length(); i++)
     {
         if (word_to_guess[i] == input_character)
-        {
             guessed_characters[i] = input_character;
-        }
     }
 
-    setScore(this->score + 1);
+    check_victory(guessed_characters);
 }
 
 
@@ -296,6 +315,23 @@ void Game::exit(void)
     std::exit(0);
 }
 
+void Game::write_score_in_credentials_file()
+{
+
+}
+
+void Game::check_win_or_loss()
+{
+    if (player_has_won)
+        setScore(word_to_guess.length());
+
+    else
+        setScore(-word_to_guess.length());
+
+    write_score_in_credentials_file();
+    
+}
+
 // TODO after visualizing or finishing the game, add
 // the possibility to return to the main menu.
 
@@ -307,6 +343,7 @@ void Game::menu(void)
     {
     case 'p':
         play();
+        check_win_or_loss();
         break;
 
     case 's':
@@ -401,7 +438,7 @@ void Game::handle_credentials(void)
         {
             size_t score_position = line.find_last_of(" ");
 
-            this->score = std::stoi(line.substr(score_position + 1));
+            setScore(std::stoi(line.substr(score_position + 1)));
 
             credentials_file.close();
             return;

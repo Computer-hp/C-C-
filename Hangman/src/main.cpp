@@ -8,7 +8,8 @@
 #include <string>
 #include <vector>
 
-#define USERNAME_MAX_LENGTH 12
+#define LIVES                3
+#define USERNAME_MAX_LENGTH  12
 
 const std::filesystem::path program_running_path = std::filesystem::current_path();
 
@@ -61,6 +62,13 @@ class Game
 
     Game() { username = ""; score = 0; word_to_guess = "";  set_words_to_vector(); }
 
+    void setScore(int s) 
+    { 
+        if (s < 0) score = 0;
+        
+        else       score = s;
+    }
+
     void start(void);
     void get_credentials_from_user_input(void);
     void handle_credentials(void);
@@ -73,6 +81,9 @@ class Game
     void play(void);
     void set_words_to_vector(void);
     void chose_randomly_word_to_guess(void);
+    void handle_guessed_character(char guessed_characters[], char &input_character);
+    void print_word_to_be_guessed(char guessed_characters[]);
+
 
     void see_score(void);
     void exit(void);
@@ -105,8 +116,8 @@ bool Game::check_character_from_input(char &input_character)
 }
 
 /*
-    Returns the character
-    which is used to start playing the game,
+    Returns the character which is 
+    used to start playing the game,
     to see the score or to exit the game.
 */
 
@@ -132,6 +143,12 @@ char Game::menu_user_input(void)
 }
 
 
+/*
+    Sets the word that has to be guessed 
+    in the game by chosing it randomly from 
+    a file which contains a list of words.
+*/
+
 void Game::chose_randomly_word_to_guess(void)
 {
     srand((unsigned) time(NULL));
@@ -143,6 +160,14 @@ void Game::chose_randomly_word_to_guess(void)
 
     word_to_guess = words_to_guess[random];
 }
+
+/* 
+    Extract's the words from the file questions.txt
+    and sets them to a vector, so after the
+    'chose_randomly_word_to_guess' method will
+    chose from this vector a word that the 
+    player will have to guess.
+*/
 
 void Game::set_words_to_vector(void)
 {
@@ -181,22 +206,70 @@ void Game::set_words_to_vector(void)
     }
 }
 
+void Game::print_word_to_be_guessed(char guessed_characters[])
+{
+    std::cout << "\n\t\t";
+
+    for (int i = 0; i < word_to_guess.length(); i++)
+        std::cout << guessed_characters[i] << " ";
+}
+
 void Game::play(void)
 {
     chose_randomly_word_to_guess();
 
-    int word_length = word_to_guess.length();
+    char guessed_characters[word_to_guess.length()];
+
+    for (int i = 0; i < word_to_guess.length(); i++)
+    {
+        guessed_characters[i] = '_';
+    }
+
+    char input_character;
 
     while (true)
     {
-        std::cout << "\n\t\t";
+        print_word_to_be_guessed(guessed_characters);
 
-        for (int i = 0; i < word_length; i++)
+        std::cout << "\nType a letter: ";
+        
+        do
         {
-            std::cout << "_ ";
+            if (check_character_from_input(input_character))
+                break;
+        }
+        while (true);
+
+
+        if (word_to_guess.find(input_character) == std::string::npos)
+            
+            setScore(this->score - 1);
+        
+        else
+            handle_guessed_character(guessed_characters, input_character);
+
+
+
+    }
+
+    // at the end of the game save the score in credentials.txt
+
+}
+
+
+void Game::handle_guessed_character(char guessed_characters[], char &input_character)
+{
+    for (int i = 0; i < word_to_guess.length(); i++)
+    {
+        if (word_to_guess[i] == input_character)
+        {
+            guessed_characters[i] = input_character;
         }
     }
+
+    setScore(this->score + 1);
 }
+
 
 void Game::see_score(void)
 {
@@ -216,6 +289,7 @@ void Game::see_score(void)
     menu();
     // return to menu
 }
+
 
 void Game::exit(void)
 {

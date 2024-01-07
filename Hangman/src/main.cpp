@@ -12,6 +12,8 @@
 #define USERNAME_MAX_LENGTH  12
 
 const std::filesystem::path program_running_path = std::filesystem::current_path();
+const std::string credentials_dir_name = "Hangman Player Credentials";
+const std::string credentials_file_name = "credentials.txt";
 
 /*
 class Game -> start method, to start the game
@@ -93,6 +95,7 @@ class Game
     void print_word_to_be_guessed(char guessed_characters[]);
     void check_victory(const char* guessed_characters);
     void check_win_or_loss();
+    void write_new_score_in_credentials_file();
 
     void see_score(void);
     void exit(void);
@@ -315,9 +318,38 @@ void Game::exit(void)
     std::exit(0);
 }
 
-void Game::write_score_in_credentials_file()
+void Game::write_new_score_in_credentials_file()
 {
+    std::fstream credentials_file(credentials_dir_name + "/" + credentials_file_name, std::ios::in | std::ios::out);
 
+    if (!credentials_file)
+    {
+        std::cout << "\nError occured while opening the credentials file\n";
+        return;
+    }
+
+    std::string line;
+
+    while (std::getline(credentials_file, line))
+    {
+        std::string first_word = line.substr(0, line.find_first_of(" "));
+
+        if (first_word.compare(this->username) == 0)
+        {
+            size_t score_position = line.find_last_of(" ");
+            std::string old_score = line.substr(score_position + 1);
+            std::string modified_line = line.replace(score_position, old_score.length(), std::to_string(this->score));
+
+            credentials_file << modified_line; // not sure if it works
+
+            // Clear any remaining characters in the line in case the new word is shorter than the old one
+            credentials_file << std::string(old_score.length() - line.length(), ' ');
+            
+
+            break;
+        }
+    }
+    credentials_file.close();
 }
 
 void Game::check_win_or_loss()
@@ -328,7 +360,7 @@ void Game::check_win_or_loss()
     else
         setScore(-word_to_guess.length());
 
-    write_score_in_credentials_file();
+    write_new_score_in_credentials_file();
     
 }
 
@@ -395,8 +427,7 @@ void Game::handle_credentials(void)
 {
     //const std::string program_running_path = std::filesystem::current_path();
 
-    const std::string credentials_dir_name = "Hangman Player Credentials";
-    const std::string credentials_file_name = "credentials.txt";
+    
     
     if (!std::filesystem::exists(credentials_dir_name))
     {

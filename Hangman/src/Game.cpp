@@ -7,9 +7,11 @@
 #include <limits>
 #include <string>
 #include <vector>
+#include <algorithm>
 
 #define LIVES                3
-#define USERNAME_MAX_LENGTH  12
+#define USERNAME_MAX_LENGTH  14
+
 
 const std::filesystem::path program_running_path = std::filesystem::current_path();
 const std::string credentials_dir_name = "Hangman Player Credentials";
@@ -49,12 +51,13 @@ class Game
 
     void start(void);
     void get_credentials_from_user_input(void);
+    bool username_has_spaces_or_new_lines(const std::string& str);
     void handle_credentials(void);
     
     void menu(void);
     char menu_user_input(void);
 
-    bool check_character_from_input(char &input_character);
+    char get_character_from_input(void);
     
     void play(void);
     void setWordsToGuess(void);
@@ -134,23 +137,48 @@ void Game::start(void)
 
 void Game::get_credentials_from_user_input(void)
 {
-    std::string input_username = "";
+    std::string input_username;
     
     do
     {
-        char input_string[USERNAME_MAX_LENGTH + 1];
+        std::cout << "\n    Enter your name (max " << USERNAME_MAX_LENGTH << "characters without spaces): ";
+        std::getline(std::cin, input_username);
 
-        std::cout << "\n    Enter your name: ";
-        std::cin.getline(input_string, USERNAME_MAX_LENGTH + 1);
+        std::cout << "\nsize = " << input_username.size();
 
-        input_username = input_string;
-
-        if (input_username.length() <= USERNAME_MAX_LENGTH) 
+        if (input_username.size() > 0 && !username_has_spaces_or_new_lines(input_username) &&
+            input_username.length() <= USERNAME_MAX_LENGTH)
+            
             break;
+        
+        else
+            std::cout << "\nInvalid username.\n";
 
-    } while (true);
+        /*std::cin.clear();
+        std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');*/
+    }
+    while (true);
 
     this->username = input_username;
+}
+
+
+
+/*
+    Controls if username has spaces or new line ("\n"),
+    'return true' if it has the spaces,
+    otherwise 'false'.
+*/
+
+bool Game::username_has_spaces_or_new_lines(const std::string& str)
+{
+    for (char c : str) 
+    {
+        if (c == ' ' || c == '\n')
+            return true;
+    }
+
+    return false;
 }
 
 
@@ -260,10 +288,11 @@ char Game::menu_user_input(void)
         printf("\n\n\t\tPlay\t\tScore\t\tExit");
         printf("\nType:\n\t\t'p' to Play\t's' to see the Score\t'e' to Exit\n");
 
-        if (check_character_from_input(input_character) && 
-            (input_character == 'p' ||
+        input_character = get_character_from_input();
+
+        if (input_character == 'p' ||
             input_character == 's' || 
-            input_character == 'e'))
+            input_character == 'e')
                 
             break;
     }
@@ -274,7 +303,33 @@ char Game::menu_user_input(void)
 
 
 
-// add the possibility to exit
+/*
+    Controls if the character taken 
+    from the input is valid or not.
+*/
+
+char Game::get_character_from_input(void)
+{
+    std::string input_string;
+
+    std::cin >> input_string;
+
+    if (std::cin.fail())
+    {
+        std::cin.clear();
+        std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
+        std::cerr << "Invalid input. Insert a character" << std::endl;
+        return '\0';
+    }
+
+    char character_to_return = input_string[0];
+
+    if (std::isupper(character_to_return))
+        std::tolower(character_to_return);
+
+    return character_to_return;
+}
+
 
 void Game::play(void)
 {
@@ -307,11 +362,13 @@ void Game::play(void)
         
         do
         {
-            if (check_character_from_input(input_character))
-                if (input_character == '.')
-                    menu();
-                else
-                    break;
+            input_character = get_character_from_input();
+
+            if (input_character == '.')
+                menu();
+            
+            else
+                break;
         }
         while (true);
 
@@ -370,32 +427,6 @@ void Game::print_characters_written_by_the_player(const char guessed_characters[
 
     for (int i = 0; i < typed_characters.length(); i++)
             std::cout << typed_characters[i] << " ";
-}
-
-
-/*
-    Controls if the character taken 
-    from the input is valid or not.
-*/
-
-bool Game::check_character_from_input(char &input_character)
-{
-    std::cin >> input_character;
-    std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
-
-    if (std::cin.fail())
-    {
-        std::cin.clear();
-        std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
-
-        std::cout << "Invalid input. Insert a character" << std::endl;
-        return false;
-    }
-
-    if (std::isupper(input_character))
-        std::tolower(input_character);
-
-    return true;
 }
 
 
@@ -489,19 +520,23 @@ void Game::write_new_score_in_credentials_file()
         {
             size_t score_position = line.find_last_of(" ");
             std::string old_score = line.substr(score_position + 1);
-            std::string modified_line = line.replace(score_position, old_score.length(), std::to_string(this->score));
-
+            std::string modified_line = line.replace(score_position + 1, old_score.length(), std::to_string(this->score));
+            
+            std::cout << "\n\n\nnmodified_line = " << modified_line;
+            
             line = modified_line;
         }
 
         all_credentials.push_back(line);
     }
 
-    std::cout << "\nwrite_new_score_in_credentials_file()\n";
+
+    credentials_file.clear();
+    credentials_file.seekp(0, std::ios::beg);
 
     for (const std::string& line : all_credentials)
     {
-        credentials_file << line << '\n';
+        credentials_file << line << std::endl;
     }
 
     credentials_file.close();
@@ -524,13 +559,14 @@ void Game::see_score(void)
     {
         std::cout << "\nPress 'e' to exit: ";
         
-        if (check_character_from_input(input_character) && input_character == 'e')
+        input_character = get_character_from_input();
+
+        if (input_character == 'e')
             break;
     } 
     while (true);
     
     menu();
-    // return to menu
 }
 
 
@@ -543,6 +579,3 @@ void Game::exit(void)
 {
     std::exit(0);
 }
-
-
-

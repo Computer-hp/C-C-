@@ -141,10 +141,8 @@ void Game::get_credentials_from_user_input(void)
     
     do
     {
-        std::cout << "\n    Enter your name (max " << USERNAME_MAX_LENGTH << "characters without spaces): ";
+        std::cout << "\n    Enter your name (max " << USERNAME_MAX_LENGTH << " characters without spaces): ";
         std::getline(std::cin, input_username);
-
-        std::cout << "\nsize = " << input_username.size();
 
         if (input_username.size() > 0 && !username_has_spaces_or_new_lines(input_username) &&
             input_username.length() <= USERNAME_MAX_LENGTH)
@@ -152,10 +150,7 @@ void Game::get_credentials_from_user_input(void)
             break;
         
         else
-            std::cout << "\nInvalid username.\n";
-
-        /*std::cin.clear();
-        std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');*/
+            std::cout << "\n\tInvalid username.\n";
     }
     while (true);
 
@@ -255,7 +250,6 @@ void Game::menu(void)
     {
     case 'p':
         play();
-        check_win_or_loss();
         break;
 
     case 's':
@@ -310,19 +304,18 @@ char Game::menu_user_input(void)
 
 char Game::get_character_from_input(void)
 {
-    std::string input_string;
+    char character_to_return;
 
-    std::cin >> input_string;
+    std::cin >> character_to_return;
+
+    std::cin.clear();
+    std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
 
     if (std::cin.fail())
     {
-        std::cin.clear();
-        std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
         std::cerr << "Invalid input. Insert a character" << std::endl;
         return '\0';
     }
-
-    char character_to_return = input_string[0];
 
     if (std::isupper(character_to_return))
         std::tolower(character_to_return);
@@ -357,26 +350,18 @@ void Game::play(void)
 
         if (lives <= 0 || player_has_won)
             break;
-
-        std::cout << "\n\nType a letter or press '.' to exit the game: ";
         
-        do
-        {
-            input_character = get_character_from_input();
+        std::cout << "\n\nType a letter or press '.' to exit the game: ";
+        input_character = get_character_from_input();
 
-            if (input_character == '.')
-                menu();
-            
-            else
-                break;
-        }
-        while (true);
+        if (input_character == '.')
+            break;
 
         if (word_to_guess.find(input_character) != std::string::npos)
         {
             if (typed_characters.find(input_character) != std::string::npos)
             {
-                std::cout << "\n\nYou have already typed the character '" << input_character << "' !!!\n";
+                std::cout << "\n\n\t\t\tYou have already typed the character '" << input_character << "' !!!\n";
                 continue;
             }
 
@@ -390,6 +375,12 @@ void Game::play(void)
             setLives(lives - 1);
         }   
     }
+
+    if (input_character == '.')
+        menu();
+
+    else
+        check_win_or_loss();
 }
 
 
@@ -481,12 +472,20 @@ void Game::check_victory(const char *guessed_characters)
 void Game::check_win_or_loss()
 {
     if (player_has_won)
+    {
         setScore(word_to_guess.length());
-
+        
+        std::cout << "\n\n\n Player '" << this->username << "' has WON !!!";
+    }
     else
+    {
         setScore(-word_to_guess.length());
+        std::cout << "\n\n\n Player '" << this->username << "' has LOST !!!";
+    }
 
     write_new_score_in_credentials_file();
+
+    std::cout << "\nCurrent score: " << this->score << std::endl;
 
     play();
     
@@ -522,8 +521,6 @@ void Game::write_new_score_in_credentials_file()
             std::string old_score = line.substr(score_position + 1);
             std::string modified_line = line.replace(score_position + 1, old_score.length(), std::to_string(this->score));
             
-            std::cout << "\n\n\nnmodified_line = " << modified_line;
-            
             line = modified_line;
         }
 
@@ -551,7 +548,7 @@ void Game::write_new_score_in_credentials_file()
 
 void Game::see_score(void)
 {
-    std::cout << '\n' << this->username << "\tCurrent score: " << this->score;
+    std::cout << '\n' << this->username << "  ----->  current score: " << this->score << std::endl;
 
     char input_character;
 

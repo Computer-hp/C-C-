@@ -38,7 +38,7 @@ namespace WinFormsApp1
 
         public CMatrixBoard()
         {
-            this.Board = new CPiece[boardSize, boardSize];
+            Board = new CPiece[boardSize, boardSize];
         }
 
         // add pieces
@@ -48,11 +48,11 @@ namespace WinFormsApp1
 
             for (int x = 0; x < 8; x++)
             {
-                this.Board[x, 1] = new CPiece(x, 1, "P", "White");
-                this.Board[x, 0] = new CPiece(x, 0, pieces[x], "White");
+                Board[x, 1] = new CPiece(x, 1, "P", "White");
+                Board[x, 0] = new CPiece(x, 0, pieces[x], "White");
 
-                this.Board[x, 6] = new CPiece(x, 6, "P", "Black");
-                this.Board[x, 7] = new CPiece(x, 7, pieces[x], "Black");
+                Board[x, 6] = new CPiece(x, 6, "P", "Black");
+                Board[x, 7] = new CPiece(x, 7, pieces[x], "Black");
             }
         }
 

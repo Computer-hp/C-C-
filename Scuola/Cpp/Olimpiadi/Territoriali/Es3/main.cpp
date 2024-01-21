@@ -44,7 +44,7 @@ void find_colors_to_remove(vector<int> &v, int color_to_put_length)
 				remaining_colors++;
 		}
 
-		if (max_number_of_visible_colors < remaining_colors++;)
+		if (max_number_of_visible_colors < remaining_colors)
 		{
 			start = tmp_start;
 			end = tmp_end;

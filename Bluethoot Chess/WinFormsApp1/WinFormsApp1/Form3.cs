@@ -17,8 +17,6 @@ namespace WinFormsApp1
         public static bool NewGame = false;
         public static bool MainMenu = false;
 
-        private ChessBoardForm ChessBoardForm;
-
         public RestartForm()
         {
             InitializeComponent();
@@ -27,14 +25,14 @@ namespace WinFormsApp1
 
         private void InitializeRetartMenu()
         {
-            this.BackColor = Color.RosyBrown;
-            this.ForeColor = Color.White;
-            this.Font = new Font("Arial", 12, FontStyle.Bold);
+            BackColor = Color.RosyBrown;
+            ForeColor = Color.White;
+            Font = new Font("Arial", 12, FontStyle.Bold);
 
             int buttonWidth = 100;
             int buttonHeight = 40;
-            int formWidth = this.ClientSize.Width;
-            int formHeight = this.ClientSize.Height;
+            int formWidth = ClientSize.Width;
+            int formHeight = ClientSize.Height;
 
             Button button1 = new Button()
             {
@@ -65,8 +63,8 @@ namespace WinFormsApp1
             button1.Click += Button_Click;
             button2.Click += Button_Click;
 
-            this.Controls.Add(button1);
-            this.Controls.Add(button2);
+            Controls.Add(button1);
+            Controls.Add(button2);
         }
 
         private void Button_Click(object sender, EventArgs e)
@@ -79,7 +77,7 @@ namespace WinFormsApp1
             if (clickedButton.Text == "Main Menu")
                 MainMenu = true;
 
-            this.Close();
+            Close();
         }
     }
 }

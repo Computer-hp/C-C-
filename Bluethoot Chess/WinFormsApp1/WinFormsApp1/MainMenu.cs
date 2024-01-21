@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
+using System.Diagnostics;
 using System.Drawing;
 using System.Linq;
 using System.Text;
@@ -12,25 +13,27 @@ namespace WinFormsApp1
 {
     public partial class MainMenu : Form
     {
-        private ChessBoardForm ChessBoardForm;
+        private ChessBoardForm chessBoardForm;
+        private Thread mainFormThread;
 
         public MainMenu()
         {
             InitializeComponent();
             InitializeChessBoard();
         }
+
         private void InitializeChessBoard()
         {
-            this.BackColor = Color.RosyBrown;
-            this.ForeColor = Color.White;
-            this.Font = new Font("Arial", 12, FontStyle.Bold);
+            BackColor = Color.RosyBrown;
+            ForeColor = Color.White;
+            Font = new Font("Arial", 12, FontStyle.Bold);
 
             int buttonWidth = 100;
             int buttonHeight = 60;
-            int formWidth = this.ClientSize.Width;
-            int formHeight = this.ClientSize.Height;
+            int formWidth = ClientSize.Width;
+            int formHeight = ClientSize.Height;
 
-            Button buttonNewGame = new Button()
+            Button buttonNewGame = new()
             {
                 Text = "New Game",
                 Width = buttonWidth,
@@ -43,7 +46,7 @@ namespace WinFormsApp1
                 Font = new Font("Arial", 12, FontStyle.Bold)
             };
 
-            Button buttonExit = new Button
+            Button buttonExit = new()
             {
                 Text = "Exit",
                 Width = buttonWidth,
@@ -56,7 +59,7 @@ namespace WinFormsApp1
                 Font = new Font("Arial", 12, FontStyle.Bold)
             };
 
-            Button buttonConnect = new Button
+            Button buttonConnect = new()
             {
                 Text = "Connect",
                 Width = buttonWidth - 20,
@@ -76,22 +79,51 @@ namespace WinFormsApp1
 
 
 
-            this.Controls.Add(buttonNewGame);
-            this.Controls.Add(buttonExit);
-            this.Controls.Add(buttonConnect);
+            Controls.Add(buttonNewGame);
+            Controls.Add(buttonExit);
+            Controls.Add(buttonConnect);
         }
 
         private void Create_ChessBoard(object sender, EventArgs e)
         {
-            ChessBoardForm = new ChessBoardForm();
+            chessBoardForm = new ChessBoardForm();
+
+            GC.Collect();
+            GC.WaitForPendingFinalizers();
+            GC.Collect();
 
             // popUp to choose the color and the time
 
+            this.Invoke(chessBoardForm.Show);
+            this.Invoke(new Action(Hide));
 
-
-            ChessBoardForm.Show();
-            this.Hide();
+            mainFormThread = new Thread(() => HandleChessBoard());
+            mainFormThread.Start();
         }
+
+        private void HandleChessBoard()
+        {
+            while (true)
+            {
+                if (chessBoardForm.isRestarted)
+                    break;
+
+                if (chessBoardForm.isClosed)
+                {
+                    this.Invoke(new Action(Show));
+                    break;
+                }
+
+            }
+
+            if (chessBoardForm.isRestarted)
+            {
+                this.Invoke(new Action(chessBoardForm.Close));
+                Create_ChessBoard(null, EventArgs.Empty);
+            }
+        }
+
+        
 
         private void Button_ConnectBluetooth(object sender, EventArgs e)
         {

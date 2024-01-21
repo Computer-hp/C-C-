@@ -17,6 +17,9 @@ using Timer = System.Windows.Forms.Timer;
 using System.Numerics;
 using System.Diagnostics.CodeAnalysis;
 
+
+// TODO  Pin on pieces
+
 namespace WinFormsApp1
 {
     public partial class ChessBoardForm : Form
@@ -32,11 +35,11 @@ namespace WinFormsApp1
         private string currentPlayer = "";
         private string direction = "";
 
-        private string[] rowLetter = { "a", "b", "c", "d", "e", "f", "g", "h" };
-
-        public static readonly string projectPath = (System.Environment.CurrentDirectory).Replace("WinFormsApp1\\bin\\Debug\\net6.0-windows", "");
+        public static readonly string projectPath = GetProjectPath();
 
         private bool firstMove = false;
+
+        private bool check = false;
 
         private bool[] firstKingMove = { false, false };
 
@@ -44,13 +47,13 @@ namespace WinFormsApp1
 
         private bool[] O_O = { false, false }, O_O_O = { false, false };
 
-        private bool check = false;
+        public bool isRestarted = false, isClosed = false;
 
         private CMatrixBoard ChessBoard;
 
-        private CPiece selectedPiece = null;
+        private CPiece? selectedPiece = null;
 
-        private MethodInfo method = null;
+        private MethodInfo? method = null;
 
         private Label[] timerLabel = new Label[2];
 
@@ -65,26 +68,44 @@ namespace WinFormsApp1
             InitializeChessBoard();
         }
 
-        private void Form1_Load(object sender, EventArgs e)
+        private static string GetProjectPath()
         {
-            this.FormClosing += Form1_FormClosing;
+            string appDirectory = Application.StartupPath;
+            string imagesFolder = Path.GetFullPath(Path.Combine(appDirectory, "..\\..\\..\\..\\images\\"));
+            return imagesFolder;
         }
 
-        private void Form1_FormClosing(object sender, FormClosingEventArgs e)
+
+        private void Form1_Load(object sender, EventArgs e)
         {
+            FormClosing += Form1_FormClosing;
+        }
+
+        private void Form1_FormClosing(object? sender, FormClosingEventArgs e)
+        {
+            if (isRestarted)
+            {
+                FormClosing -= Form1_FormClosing;
+                Close();
+                return;
+            }
 
             DialogResult result = MessageBox.Show("Are you sure you want to exit?", "Exit Confirmation", MessageBoxButtons.YesNo, MessageBoxIcon.Question);
 
             if (result == DialogResult.No)
                 e.Cancel = true;
+
             else if (result == DialogResult.Yes)
-                Application.Exit();
-
-
+            {
+                FormClosing -= Form1_FormClosing;
+                isClosed = true;
+                Close();
+            }
         }
 
         private void InitializeChessBoard()
         {
+            this.StartPosition = FormStartPosition.CenterScreen;
 
             // Calculate the position to center the chessboard
             int centerX = (ClientSize.Width - boardSize * squareSize) / 2 - 70;
@@ -103,26 +124,25 @@ namespace WinFormsApp1
                         BackColor = (row + col) % 2 == 0 ? Color.Ivory : Color.Brown,
                         FlatStyle = FlatStyle.Flat,
                         FlatAppearance = { BorderSize = 0 },
-                        BackgroundImageLayout = ImageLayout.Zoom
+                        BackgroundImageLayout = ImageLayout.Zoom,
+                        Tag = (x, y)
                     };
-
-
-                    square.Tag = (x, y);
 
                     if (ChessBoard.Board[x, y] != null)
                     {
                         Bitmap resizedImage = SetImageToButton(ChessBoard.Board[x, y]);
                         square.BackgroundImage = resizedImage;
                     }
+                    else
+                        square.BackgroundImage = null;
 
                     square.Click += Button_Click;
 
                     Controls.Add(square);
 
                     if (x < boardSize - 1)
-                    {
                         x++;
-                    }
+
                     else
                     {
                         x = 0;
@@ -161,7 +181,7 @@ namespace WinFormsApp1
 
         }
 
-        private void Timer_Tick(object sender, EventArgs e)
+        private void Timer_Tick(object? sender, EventArgs e)
         {
             secondsElapsed[turn]++;
 
@@ -175,7 +195,7 @@ namespace WinFormsApp1
 
         public static Bitmap SetImageToButton(CPiece P)
         {
-            string DIR = "images\\" + P.pieceType;
+            string DIR = P.pieceType;
 
             string imagePath = DIR + "\\" + P.pieceName + ".png";
 
@@ -337,17 +357,12 @@ namespace WinFormsApp1
                         popUp.ShowDialog(this);
 
                         if (RestartForm.NewGame)
-                        {
-                            ResetProperties();
-                            ResetChessBoard();
-                            ChessBoard.InitializePieces();
-                            InitializeChessBoard();
-                        }
-                        if (RestartForm.MainMenu)
+                            isRestarted = true;
+
+                        else if (RestartForm.MainMenu)
                         {
                             // TODO the main menu
-
-
+                            Close();
                         }
                         return;
 
@@ -662,7 +677,7 @@ namespace WinFormsApp1
                 var promotion = new Form2(turn);
                 promotion.ShowDialog();
 
-                this.selectedPiece = new CPiece(x, y, promotion.pieceName, selectedPiece.pieceType);
+                selectedPiece = new CPiece(x, y, promotion.pieceName, selectedPiece.pieceType);
 
                 Debug.WriteLine("Promotion: " + promotion.pieceName);
 
@@ -701,57 +716,6 @@ namespace WinFormsApp1
                     ChessBoard.Straight(P, 1, "");
                     ChessBoard.Diagonal(P, 1, "");
                     break;
-            }
-        }
-
-        private void ResetProperties()
-        {
-            turn = 0;
-            UpOrDown = 1;
-            secondsElapsed = new int[2];
-            currentPlayer = "";
-            direction = "";
-            firstMove = false;
-
-            check = false;
-
-
-            selectedPiece = null;
-
-            method = null;
-
-            for (int i = 0; i < 2; i++)
-            {
-                firstKingMove[i] = false;
-                aRookFirstMove[i] = false;
-                hRookFirstMove[i] = false;
-                O_O[i] = false;
-                O_O_O[i] = false;
-
-                timer[i].Stop();
-
-                Controls.Remove(timerLabel[i]);
-            }
-            timer = new Timer[2];
-        }
-
-        private void ResetChessBoard()
-        {
-            for (int x = 0; x < boardSize; x++)
-            {
-                for (int y = 0; y < boardSize; y++)
-                {
-                    ChessBoard.Board[x, y] = null;
-                }
-            }
-
-            for (int i = this.Controls.Count - 1; i >= 0; i--)
-            {
-                if (this.Controls[i] is Button dynamicButton)
-                {
-                    this.Controls.Remove(dynamicButton);
-                    dynamicButton.Dispose();
-                }
             }
         }
     }

@@ -84,7 +84,7 @@ namespace WinFormsApp1
             Controls.Add(buttonConnect);
         }
 
-        private void Create_ChessBoard(object sender, EventArgs e)
+        private void Create_ChessBoard(object? sender, EventArgs e)
         {
             chessBoardForm = new ChessBoardForm();
 
@@ -111,16 +111,13 @@ namespace WinFormsApp1
                 if (chessBoardForm.isClosed)
                 {
                     this.Invoke(new Action(Show));
-                    break;
+                    return;
                 }
 
             }
 
-            if (chessBoardForm.isRestarted)
-            {
-                this.Invoke(new Action(chessBoardForm.Close));
-                Create_ChessBoard(null, EventArgs.Empty);
-            }
+            this.Invoke(new Action(chessBoardForm.Close));
+            Create_ChessBoard(null, EventArgs.Empty);
         }
 
         

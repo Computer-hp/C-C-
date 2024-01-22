@@ -12,11 +12,11 @@ namespace WinFormsApp1
 {
     public partial class Form2 : Form
     {
-        public string pieceName;
+        public string PieceName { get; set; }
 
         private const int buttonWidth = ChessBoardForm.squareSize, buttonHeight = ChessBoardForm.squareSize;
 
-        private List<string> promotionPiecesName = new List<string> { "Q", "R", "B", "N" };
+        private readonly List<string> promotionPiecesName = new() { "Q", "R", "B", "N" };
 
 
         public Form2(int turn)
@@ -25,51 +25,42 @@ namespace WinFormsApp1
 
             this.BackColor = Color.Black;
 
-            string DIR;
+            string pieceTypeDir;
 
-            DIR = (turn == 0) ? "White" : "Black";
+            pieceTypeDir = (turn == 0) ? "White" : "Black";
 
             int counter = 0;
 
             foreach (var buttonName in promotionPiecesName)
             {
-
-                InitializePromotionForm(DIR, buttonName, counter);
+                InitializePromotionForm(pieceTypeDir, buttonName, counter);
                 counter += buttonHeight;
             }
         }
 
-        private void InitializePromotionForm(string DIR, string buttonName, int counter)
+        private void InitializePromotionForm(string pieceTypeDir, string buttonName, int counter)
         {
             int formWidth = this.ClientSize.Width;
             int formHeight = this.ClientSize.Height;
 
-            Bitmap resizedImage = ChessBoardForm.SetImageToButton(new CPiece(0, 0, buttonName, DIR));
+            Bitmap resizedImage = ChessBoardForm.SetImageToButton(new CPiece(0, 0, buttonName, pieceTypeDir));
 
-            Button button = new Button
+            Button button = new()
             {
-                Width = buttonWidth,
-                Height = buttonHeight,
-                Left = (formWidth - buttonWidth) / 2,
-                Top = counter,
-                Name = buttonName,
-                BackColor = Color.Ivory,
-                FlatStyle = FlatStyle.Flat,
-                FlatAppearance = { BorderSize = 1 },
-                BackgroundImage = resizedImage,
-                BackgroundImageLayout = ImageLayout.Zoom,
+                Width = buttonWidth, Height = buttonHeight, 
+                Left = (formWidth - buttonWidth) / 2, Top = counter, Name = buttonName, 
+                BackColor = Color.Ivory, FlatStyle = FlatStyle.Flat, FlatAppearance = { BorderSize = 1 }, 
+                BackgroundImage = resizedImage, BackgroundImageLayout = ImageLayout.Zoom
             };
 
             button.Click += Piece_Promote;
-
             this.Controls.Add(button);
         }
 
         private void Piece_Promote(object sender, EventArgs e)
         {
             Button button = (Button)sender;
-
-            pieceName = button.Name;
+            PieceName = button.Name;
             this.Close();
         }
     }

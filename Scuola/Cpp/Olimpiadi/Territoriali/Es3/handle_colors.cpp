@@ -15,44 +15,66 @@ using namespace std;
 
 */
 
-void find_colors_to_remove(vector<int> &v, int color_to_put_length)
+void put_color_in_vector(vector<int> &v, int color_to_add)
 {
-	int start, tmp_start = 0;
-	
-	int end, tmp_end = 0;
-	
-	int max_number_of_visible_colors = -1;
+    int start = 0, end 0;
 
-	while (tmp_end != v.size() - 1)
-	{
-		int length_of_colors_to_remove = 0;
-		int i = tmp_start;
+    int max_sum_of_colors = 0;
 
-		while (length_of_colors_to_remove > color_to_put_length && i < v.size()) 	// [4, 4]  da aggiungere 4
-		{																		 	// v_f = [2, 4, 2]
-			length_of_colors_to_remove += v[i];
-			i++;
-		}
+    int min_color_length = 0;
 
-		tmp_end = i;
+    while (true)
+    {
+        int sum_of_colors = 0;
 
-		int remaining_colors = 0;
+        int i = start;
 
-		for (int j = 0; j < v.size(); j++)
-		{
-			if (j < start || j > end)
-				remaining_colors++;
-		}
+        while (sum_of_colors >= color_to_add && i < v.size())
+        {
+            sum_of_colors += v[i];
+            i++;
+        }
 
-		if (max_number_of_visible_colors < remaining_colors)
-		{
-			start = tmp_start;
-			end = tmp_end;
-			max_number_of_visible_colors = remaining_colors++;;
-		}
+        end = i;
+        
+        //  smallest number     |||  color > color_to_add and the smallest of that type
+        int position_min_color = -1, position_bigger_min_color = -1;
 
-		tmp_start++;
-	}
+        get_min_color_length(v, start, end, &position_min_color, &position_bigger_min_color, color_to_add);
+
+        if (position_bigger_min_color != -1)
+        {
+            v[position_bigger_min_color] -= color_to_add;
+            return;
+        }
+
+
+    }
+}
+
+
+
+
+void get_min_color_length(vector<int> &v, int start, int end, int *position_min_color, int *position_bigger_min_color, int color_to_add)
+{
+    int min_color = v[start], bigger_min_color = -1;
+
+    for (int i = start; i <= end; i++)
+    {
+        if (v[i] < min_color)
+        {
+            min_color = v[i];
+            *position_min_color = i;
+
+            if (min_color > color_to_add)
+            {
+                bigger_min_color = provisory_min;
+                *position_bigger_min_color = i; 
+            }
+        }
+    }
+
+    return provisory_min;
 }
 
 
@@ -101,11 +123,15 @@ void solve(int t)
             used_colors.push_back(L[i]);
             continue;
         }
+	
+	put_color_in_vector();
+
+	/*
 
         // bisogna capire quali colori possono essere colorati sopra in modo
         // da avere il massimo dei colori nel muro
 
-		int j = used_colors.size();
+	int j = used_colors.size();
         int r = -(white_spaces - L[i]);
 
         while (j - 1 >= 0)
@@ -158,6 +184,7 @@ void solve(int t)
         out_f << line << endl << endl;
         in_f.close();
         out_f.close();
+	*/
         
     }
 
@@ -171,7 +198,8 @@ void solve(int t)
 }
 
 
-int main() {
+int main() 
+{
 
     freopen("input.txt", "r", stdin);
     freopen("output.txt", "w", stdout);

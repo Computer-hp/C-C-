@@ -17,13 +17,13 @@ using namespace std;
 
 void put_color_in_vector(vector<int> &v, int color_to_add)
 {
-    int start = 0, end 0;
+    int start = 0, end = 0;
 
     int max_sum_of_colors = 0;
 
     int min_color_length = 0;
 
-    while (true)
+    while (end < v.size())
     {
         int sum_of_colors = 0;
 
@@ -45,6 +45,9 @@ void put_color_in_vector(vector<int> &v, int color_to_add)
         if (position_bigger_min_color != -1)
         {
             v[position_bigger_min_color] -= color_to_add;
+
+            // place left or right the color_to_add
+            place_new_color_right_or_left(v, color_to_add, position_bigger_min_color);
             return;
         }
 
@@ -54,10 +57,40 @@ void put_color_in_vector(vector<int> &v, int color_to_add)
 
 
 
+void place_new_color_right_or_left(vector<int> &v, int color_to_add, int position_bigger_min_color)
+{
+    if (position_bigger_min_color == 0)
+    {
+        v.insert(v.begin() + 1, color_to_add);
+        return; 
+    }
+    
+    if (position_bigger_min_color == v.size() - 1)
+    {
+        v.insert(v.end() - 1, color_to_add);
+        return; 
+    }
+
+    int end = v.size() - 1;
+    int left_colors_index = position_bigger_min_color - 1;
+    int right_colors_index = position_bigger_min_color + 1;
+
+    // checks only one number, one on the left and the other on the right
+    int left_color_position = position_bigger_min_color - 1;
+    int right_color_position = position_bigger_min_color + 1;
+
+    if (v[left_color_position] > v[right_color_position])
+        v.insert(v.begin() + left_color_position, v[left_color_position]); 
+    
+    else
+        v.insert(v.begin() + right_color_position, v[right_color_position]);
+}
+
+
 
 void get_min_color_length(vector<int> &v, int start, int end, int *position_min_color, int *position_bigger_min_color, int color_to_add)
 {
-    int min_color = v[start], bigger_min_color = -1;
+    int min_color = v[start], bigger_min_color = v[start];
 
     for (int i = start; i <= end; i++)
     {
@@ -66,15 +99,14 @@ void get_min_color_length(vector<int> &v, int start, int end, int *position_min_
             min_color = v[i];
             *position_min_color = i;
 
-            if (min_color > color_to_add)
+            if (min_color > color_to_add && min_color < bigger_min_color)
             {
-                bigger_min_color = provisory_min;
+                bigger_min_color = min_color;
                 *position_bigger_min_color = i; 
             }
         }
     }
 
-    return provisory_min;
 }
 
 
@@ -124,68 +156,7 @@ void solve(int t)
             continue;
         }
 	
-	put_color_in_vector();
-
-	/*
-
-        // bisogna capire quali colori possono essere colorati sopra in modo
-        // da avere il massimo dei colori nel muro
-
-	int j = used_colors.size();
-        int r = -(white_spaces - L[i]);
-
-        while (j - 1 >= 0)
-        {
-			used_colors[j - 1] -= r;
-
-            if (used_colors[j - 1] < 0)
-			{
-				r = -(used_colors[j - 1]);      // salvo il nuovo resto da togliere al numero ancora prima
-				used_colors.pop_back();  	 // rimuove l'elemento che non si vede più dal nuovo colore
-                j--;
-                continue;
-			}
-
-			if (used_colors[j - 1] == 0)
-            {
-                if (used_colors.size() < N - 1)
-                {
-                    used_colors[j - 1] = 1;
-                    used_colors.push_back(L[i]);
-                }
-                else
-                {
-                    used_colors[j - 1] = L[i];
-                }
-            }
-            else    
-                used_colors.push_back(L[i]);
-
-
-            break;
-        }
-
-        if (t != 2)
-            continue;
-
-        ifstream in_f("colors.txt");
-        ofstream out_f("colors.txt", std::ios::app);
-
-        in_f.seekg(0, ios::end);
-
-        out_f << "\ntry " << t << endl;
-        in_f.seekg(0, ios::end);
-        string line = "";
-
-        for (int element : used_colors)
-        {
-            line += (to_string(element) + ", ");
-        }
-        out_f << line << endl << endl;
-        in_f.close();
-        out_f.close();
-	*/
-        
+    	put_color_in_vector(used_colors, L[i]);
     }
 
 
@@ -200,7 +171,6 @@ void solve(int t)
 
 int main() 
 {
-
     freopen("input.txt", "r", stdin);
     freopen("output.txt", "w", stdout);
 

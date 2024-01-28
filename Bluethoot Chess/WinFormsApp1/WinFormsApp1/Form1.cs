@@ -263,10 +263,6 @@ namespace WinFormsApp1
 
                         return;
 
-
-                    Debug.Write("\n\nPASSED_CHECK\n\n");
-                    // Clear the list associated with each Tuple
-
                     foreach (var entry in ChessBoard.stopCheckWithPiece)
                         entry.Value.Clear();
 
@@ -329,7 +325,7 @@ namespace WinFormsApp1
                     // because the piece that gives check can also be captured to stop check, neccessary for Knight and Pawn
                     ChessBoard.validMoves.Add(new CSquare(x, y));
 
-                    IsCheck(ChessBoard.Board[x, y], king);
+                    IsCheck(king);
                 }
 
                 Bitmap image = SetImageToButton(ChessBoard.Board[x, y]);
@@ -352,6 +348,8 @@ namespace WinFormsApp1
                             if (piece.pieceName == "P")
                                 DiagonalMovementPawn(piece.x, piece.y - UpOrDown);
 
+                            ChessBoard.validMoves.RemoveAll(move => move.x == king.x && move.y == king.y);
+
                             StopCheck(piece);
                         }
                     }
@@ -360,11 +358,11 @@ namespace WinFormsApp1
                     AvaibleSquares(king);
                     SaveInvalidSquaresOfKing(king);
 
-                    Debug.WriteLine("\nKING: ");
+                    Debug.Write("\n\nKing moves: \n");
 
                     foreach (var square in ChessBoard.validMoves)
                     {
-                        Debug.Write($"{square.x}, {square.y} | ");
+                        Debug.Write($"{square.x}, {square.y}; ");
                     }
 
                     // Check mate
@@ -380,7 +378,7 @@ namespace WinFormsApp1
                             isRestarted = true;
 
                         else if (RestartForm.MainMenu)
-                           Close();
+                            this.Close();
 
                         return;
 
@@ -449,7 +447,7 @@ namespace WinFormsApp1
                 object[] parameters = new object[] { ChessBoard.Board[x, y], 8, direction };
                 method.Invoke(ChessBoard, parameters);
 
-                IsCheck(ChessBoard.Board[selectedPiece.x, selectedPiece.y], king);
+                IsCheck(king);
             }
 
             if (selectedPiece.pieceName == "Q" && !check && moveTo != "Diagonal")
@@ -588,13 +586,6 @@ namespace WinFormsApp1
                 }
             }
 
-            Debug.WriteLine("\nKING: ");
-
-            foreach (var square in ChessBoard.invalidSquaresKing)
-            {
-                Debug.Write($"{square.x}, {square.y} | ");
-            }
-
             CheckPieceNearKing(king);
 
             ChessBoard.validMoves.Clear();
@@ -611,8 +602,9 @@ namespace WinFormsApp1
             {
                 for (int y = king.y - 1; y < king.y + 2; y++)
                 {
-                    if (x >= 0 && x < boardSize && y >= 0 && y < boardSize && 
-                        B.Board[x, y] != null && B.Board[x, y].pieceType != king.pieceType)
+                    if (x >= 0 && x < boardSize && 
+                        y >= 0 && y < boardSize && 
+                        B.Board[x, y] != null)
 
                         FindInvalidCapturesKing(king, B.Board[x, y]);
                 }
@@ -620,14 +612,17 @@ namespace WinFormsApp1
         }
 
 
-        // problem
-        // when i check the moves of a piece thats protecting
-        // the main piece that has given check it doesn't contain
-        // the position of the piece bacause it's of the same color
-        // the method that calculates the position needs to add it
+        
+
         private void FindInvalidCapturesKing(CPiece king, CPiece pieceNearKing)
         {
             ref CMatrixBoard B = ref ChessBoard;
+
+            if (king.pieceType == pieceNearKing.pieceType)
+            {
+                B.invalidSquaresKing.RemoveAll(square => square.x == pieceNearKing.x && square.y == pieceNearKing.y);
+                return;
+            }
 
             foreach (var piece in B.Board)
             {
@@ -637,16 +632,6 @@ namespace WinFormsApp1
                     continue;
                 
                 AvaibleSquares(piece);
-
-                if (piece.pieceName == "B")
-                {
-                    Debug.WriteLine($"B [{piece.x}, {piece.y}]: ");
-
-                    foreach (var square in ChessBoard.validMoves)
-                    {
-                        Debug.Write($"{square.x}, {square.y} | ");
-                    }
-                }
 
                 if (B.validMoves.Exists(square => square.x == pieceNearKing.x && square.y == pieceNearKing.y))
                 {
@@ -658,7 +643,7 @@ namespace WinFormsApp1
 
 
 
-        private void IsCheck(CPiece P, CPiece king)
+        private void IsCheck(CPiece king)
         {
             if (ChessBoard.validMoves.Exists(move => move.x == king.x && move.y == king.y))
                 check = true;

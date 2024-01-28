@@ -64,7 +64,7 @@ namespace WinFormsApp1
 
 
         /*
-            Calculates the lega pawn moves. 
+            Calculates the legal pawn moves. 
         */
 
         public void Pawns(CPiece P)
@@ -156,7 +156,7 @@ namespace WinFormsApp1
                 }
 
                 //if (B.Board[P.x, y].pieceType != P.pieceType)
-
+                //if (P.pieceName != "K")
                     validMoves.Add(new CSquare(P.x, y));
 
                 up = false;
@@ -173,7 +173,7 @@ namespace WinFormsApp1
                 }
 
                 //if (B.Board[P.x, oppositeY].pieceType != P.pieceType)
-
+              //  if (P.pieceName != "K")
                     validMoves.Add(new CSquare(P.x, oppositeY));
 
                 down = false;
@@ -191,7 +191,7 @@ namespace WinFormsApp1
                 }
 
                 //if (B.Board[oppositeX, P.y].pieceType != P.pieceType)
-
+                //if (P.pieceName != "K")
                     validMoves.Add(new CSquare(oppositeX, P.y));
                 
                 left = false;
@@ -208,7 +208,7 @@ namespace WinFormsApp1
                 }
 
                 //if (B.Board[x, P.y].pieceType != P.pieceType)
-
+                //if (P.pieceName != "K")
                     validMoves.Add(new CSquare(x, P.y));
                 
                 right = false;
@@ -262,6 +262,7 @@ namespace WinFormsApp1
                 }
 
                 //if (B.Board[x, y] != null && B.Board[x, y].pieceType != P.pieceType)
+                //if (P.pieceName != "K")
                     validMoves.Add(new CSquare(x, y));
 
                 rightUp = false;
@@ -276,8 +277,9 @@ namespace WinFormsApp1
                     validMoves.Add(new CSquare(x, oppositeY));
                     return;
                 }
-                
+
                 //if (B.Board[x, oppositeY] != null && B.Board[x, oppositeY].pieceType != P.pieceType)
+                //if (P.pieceName != "K")
                     validMoves.Add(new CSquare(x, oppositeY));
 
                 rightDown = false;
@@ -294,6 +296,7 @@ namespace WinFormsApp1
                 }
 
                 //if (B.Board[oppositeX, y] != null && B.Board[oppositeX, y].pieceType != P.pieceType)
+               // if (P.pieceName != "K")
                     validMoves.Add(new CSquare(oppositeX, y));
 
                 leftUp = false;
@@ -310,6 +313,7 @@ namespace WinFormsApp1
                 }
 
                 //if (B.Board[oppositeX, oppositeY] != null && B.Board[oppositeX, oppositeY].pieceType != P.pieceType)
+             //   if (P.pieceName != "K")
                     validMoves.Add(new CSquare(oppositeX, oppositeY));
                     
 

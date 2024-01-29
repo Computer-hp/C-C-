@@ -119,7 +119,7 @@ void place_new_color_at_the_best_side(vector<int> &v, int color_to_add, int posi
 
         // place the color at the index returned
         v.erase(v.begin() + left_index, v.begin() + position_min_color + 1);
-        v.insert(v.begin() + left_index, color_to_add)
+        v.insert(v.begin() + left_index, color_to_add);
         return;
     }
 

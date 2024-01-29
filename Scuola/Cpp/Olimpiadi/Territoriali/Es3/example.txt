@@ -154,3 +154,21 @@ else
 	do the opposite of the 'if'
 
 
+---------------------------------------------------------------------------------------
+
+
+also check right and left at the same time
+
+
+[3, 1, 5, 7]  <--- 4
+
+
+int r = 1 - 4 = -3
+
+
+- 4 goes between 3 and 5.
+
+
+
+
+

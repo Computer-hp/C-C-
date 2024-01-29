@@ -16,73 +16,15 @@ namespace WinFormsApp1
         private ChessBoardForm chessBoardForm;
         private Thread mainFormThread;
 
+
+
         public MainMenu()
         {
             InitializeComponent();
-            InitializeChessBoard();
+            InitializeMainMenuButtons();
         }
 
-        private void InitializeChessBoard()
-        {
-            BackColor = Color.RosyBrown;
-            ForeColor = Color.White;
-            Font = new Font("Arial", 12, FontStyle.Bold);
 
-            int buttonWidth = 100;
-            int buttonHeight = 60;
-            int formWidth = ClientSize.Width;
-            int formHeight = ClientSize.Height;
-
-            Button buttonNewGame = new()
-            {
-                Text = "New Game",
-                Width = buttonWidth,
-                Height = buttonHeight,
-                Left = (formWidth - buttonWidth) / 2,
-                Top = (formHeight - buttonHeight) / 2 - 70,
-
-                BackColor = Color.PaleGreen,
-                ForeColor = Color.Black,
-                Font = new Font("Arial", 12, FontStyle.Bold)
-            };
-
-            Button buttonExit = new()
-            {
-                Text = "Exit",
-                Width = buttonWidth,
-                Height = buttonHeight,
-                Left = (formWidth - buttonWidth) / 2,
-                Top = (formHeight - buttonHeight) / 2 + 70,
-
-                BackColor = Color.PaleGreen,
-                ForeColor = Color.Black,
-                Font = new Font("Arial", 12, FontStyle.Bold)
-            };
-
-            Button buttonConnect = new()
-            {
-                Text = "Connect",
-                Width = buttonWidth - 20,
-                Height = buttonHeight - 20,
-                Left = formWidth - 90,
-                Top = formHeight - 50,
-
-                BackColor = Color.PaleGreen,
-                ForeColor = Color.Black,
-                Font = new Font("Arial", 11, FontStyle.Bold)
-            };
-
-            buttonNewGame.Click += Create_ChessBoard;
-            buttonExit.Click += Button_Exit;
-
-            buttonExit.Click += Button_ConnectBluetooth;
-
-
-
-            Controls.Add(buttonNewGame);
-            Controls.Add(buttonExit);
-            Controls.Add(buttonConnect);
-        }
 
         private void Create_ChessBoard(object? sender, EventArgs e)
         {
@@ -100,6 +42,8 @@ namespace WinFormsApp1
             mainFormThread = new Thread(() => HandleChessBoard());
             mainFormThread.Start();
         }
+
+
 
         private void HandleChessBoard()
         {
@@ -126,6 +70,8 @@ namespace WinFormsApp1
         {
 
         }
+
+
 
         private void Button_Exit(object sender, EventArgs e)
         {

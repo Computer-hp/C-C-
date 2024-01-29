@@ -53,11 +53,11 @@ namespace WinFormsApp1
 
             for (int x = 0; x < 8; x++)
             {
-                Board[x, 1] = new CPiece(x, 1, "P", "White");
-                Board[x, 0] = new CPiece(x, 0, pieces[x], "White");
+                Board[x, 1] = new CPiece(x, 1, "P", "white");
+                Board[x, 0] = new CPiece(x, 0, pieces[x], "white");
 
-                Board[x, 6] = new CPiece(x, 6, "P", "Black");
-                Board[x, 7] = new CPiece(x, 7, pieces[x], "Black");
+                Board[x, 6] = new CPiece(x, 6, "P", "black");
+                Board[x, 7] = new CPiece(x, 7, pieces[x], "black");
             }
         }
 
@@ -69,7 +69,7 @@ namespace WinFormsApp1
 
         public void Pawns(CPiece P)
         {
-            if (P.pieceType == "White" && P.y < boardSize) 
+            if (P.pieceType == "white" && P.y < boardSize) 
             {
                 if (Board[P.x, P.y + 1] == null)
                     validMoves.Add(new CSquare(P.x, P.y + 1));
@@ -81,7 +81,7 @@ namespace WinFormsApp1
                     validMoves.Add(new CSquare(P.x, P.y + 2));
             }
 
-            if (P.pieceType == "Black" && P.y >= 0)
+            if (P.pieceType == "black" && P.y >= 0)
             {
                 if (Board[P.x, P.y - 1] == null)
                     validMoves.Add(new CSquare(P.x, P.y - 1));

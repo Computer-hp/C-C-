@@ -27,7 +27,7 @@ namespace WinFormsApp1
 
             string pieceTypeDir;
 
-            pieceTypeDir = (turn == 0) ? "White" : "Black";
+            pieceTypeDir = (turn == 0) ? "white" : "black";
 
             int counter = 0;
 

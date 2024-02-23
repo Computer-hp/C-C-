@@ -3,18 +3,19 @@
 #include <condition_variable>
 #include <thread>
 #include <queue>
+#include <ctime>
+#include <atomic>
 
-#define TEMPO_INSERIMENTO  21
-#define TEMPO_PRELEVAMENTO 56 
+#define TEMPO_INSERIMENTO   3
+#define TEMPO_PRELEVAMENTO  8 
+#define N_MAX_ORDINI        10
+
 
 std::condition_variable_any queue_full, queue_empty;
 
-std::mutex spillone_mutex, queue_full_mutex, queue_empty_mutex;
+std::mutex critical;
 
-std::atomic<int> queue_count = 0;
-
-void inserisciOrdine();
-void prelevaOrdine();
+std::atomic<int> numero_ordini = 0;
 
 
 typedef struct
@@ -24,6 +25,7 @@ typedef struct
 } ordine;
 
 
+
 class Spillone
 {
 private:
@@ -31,50 +33,99 @@ private:
 
 
 public:
-    void setOrdine(ordine* ordine);
-    ordine getOrdine();
-    int getNumeroOrdini(); 
     
+    Spillone() { }
+
+    void setOrdine(const ordine* o);
+
+    ordine getOrdine()
+    {
+        return ordini.front();
+    }
+
+    int getNumeroOrdini()
+    {
+        return ordini.size();
+    }
+
+    void rimuoviPrimoOrdine()
+    {
+        ordini.pop();
+    }
 };
 
 
-
+void Spillone::setOrdine(const ordine* o)
+{
+    ordini.push(*o);
+}
 
 
 
 void inserisciOrdine(Spillone *spillone)
 {
+    srand(time(NULL));
+
     while (true)
     {
-        if (queue)
-        ordine o = { .numero = 3; .persona = "Paolo"; }
-        spillone -> ordini.push(o);
+        critical.lock();
+            
+            if (spillone -> getNumeroOrdini() >= N_MAX_ORDINI)
+                queue_empty.wait(critical);
 
-        srand(time(NULL));
-        int random_time = rand() % TEMPO_INSERIMENTO + 10;
+            ordine o = { .numero = numero_ordini++, .persona = (char*)"Paolo" };
 
-        std::this_thread::sleep_for(std::chrono::milliseconds(random_time));
+            spillone -> setOrdine(&o);
+
+            int random_time = rand() % TEMPO_INSERIMENTO + 1;
+            std::this_thread::sleep_for(std::chrono::seconds(random_time));
+
+            std::cout << "Ordine " << numero_ordini << " e' stato inserito." << std::endl;
+
+            queue_full.notify_one();
+
+        critical.unlock();
     }
 }
 
 
-void prelevaOrdine()
+void prelevaOrdine(Spillone *spillone)
 {
+    srand(time(NULL));
+
     while (true)
     {
+        critical.lock(); 
         
-        srand(time(NULL));
-        int random_time = rand() % TEMPO_INSERIMENTO + 5;
+            if (spillone -> getNumeroOrdini() <= 0)
+            {
+                queue_full.wait(critical);
+                critical.unlock();
+                continue;
+            }
 
-        std::this_thread::sleep_for(std::chrono::milliseconds(random_time));
+            int random_time = rand() % TEMPO_INSERIMENTO + 1;
+            std::this_thread::sleep_for(std::chrono::seconds(random_time));
+   
+            spillone -> rimuoviPrimoOrdine();
+            std::cout << "Ordine " << numero_ordini-- << " e' stato prelevato." << std::endl;
+
+            queue_empty.notify_one();
+
+        critical.unlock();
     }
 }
 
 
 int main()
 {
-    thread cassiere(inserisciOrdine);
-    thread cuoco(prelevaOrdine);
+    Spillone spillone;
+
+    std::thread cassiere(inserisciOrdine, &spillone);
+    std::thread cuoco(prelevaOrdine, &spillone);
+
+    cassiere.join();
+    cuoco.join();
 
     return 0;
 }

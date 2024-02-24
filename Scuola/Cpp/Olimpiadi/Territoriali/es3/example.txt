@@ -21,7 +21,7 @@ while (true)
 	right++
 	left++
 
-	if (right < end
+	if (right < end)
 		right_elements++
 		right_sum += v[right]	
 	if (left >= 0)

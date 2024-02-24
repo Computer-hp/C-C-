@@ -12,12 +12,13 @@ void put_color_in_best_position(vector<int> &v, int color_to_add);
 void set_value_to_result_wall(vector<int> &result_wall, vector<int> &tmp_wall);
 int get_sum_of_colors_behind(vector<int> &v);
 void solve(int t);
+void print_vector(vector<int> &v, string vector_name);
 
 
 int main() 
 {
-    freopen("in.txt", "r", stdin);
-    freopen("out.txt", "w", stdout);
+    freopen("input.txt", "r", stdin);
+    freopen("output.txt", "w", stdout);
 
     int T;
     cin >> T;
@@ -44,6 +45,7 @@ void put_color_in_vector(vector<int> &v, int color_to_add, int wall_length)
 	{
 		v[pos_min_color_to_be_decreased] -= color_to_add;
 		v.insert(v.begin() + pos_min_color_to_be_decreased + 1, color_to_add);
+
 		return;
 	}
 
@@ -81,7 +83,7 @@ void put_color_in_best_position(vector<int> &v, int color_to_add)
 	result_wall.insert(result_wall.end(), v.begin(), v.end());
 
 
-	while (end < v.size())   // ?????????????????????
+	while (end < v.size())
 	{
 		tmp_wall.clear();
 		tmp_wall.insert(tmp_wall.end(), v.begin(), v.end());
@@ -91,6 +93,9 @@ void put_color_in_best_position(vector<int> &v, int color_to_add)
 
 		while (sum_of_colors < color_to_add && i < tmp_wall.size())
 			sum_of_colors += tmp_wall[i++];
+
+		if (sum_of_colors < color_to_add)
+			break;
 
 		if (sum_of_colors == color_to_add)
 		{
@@ -121,12 +126,15 @@ void put_color_in_best_position(vector<int> &v, int color_to_add)
 		}
 
 		// sum_of_colors is necessarily > color_to_add
-		int rest_of_color_to_add = tmp_wall[start] - 1 - color_to_add;
+		int length_between_start_end = sum_of_colors - start - end;
+		int rest_of_color_to_add = (tmp_wall[start] - 1 + length_between_start_end) - color_to_add;
 		tmp_wall[start] = 1;
+
+		tmp_wall.erase(tmp_wall.begin() + start + 1, tmp_wall.begin() + end);
 		tmp_wall.insert(tmp_wall.begin() + start + 1, color_to_add);
 
-		if ((tmp_wall[end - 1] -= rest_of_color_to_add) == 0)
-			tmp_wall.erase(tmp_wall.begin() + end - 1);
+		if ((tmp_wall[end] += rest_of_color_to_add) == 0)
+			tmp_wall.erase(tmp_wall.begin() + end);
 
 		set_value_to_result_wall(result_wall, tmp_wall);
 	}	
@@ -143,22 +151,6 @@ void set_value_to_result_wall(vector<int> &result_wall, vector<int> &tmp_wall)
 		result_wall.clear();
 		result_wall.insert(result_wall.end(), tmp_wall.begin(), tmp_wall.end());
 	}
-
-	std::cout << "\nresult_wall = ";
-	for (auto e : result_wall)
-	{
-		std::cout << e << " ";
-	}
-	std::cout << endl;
-
-
-	std::cout << "\ntmp_wall = ";
-	for (auto e : tmp_wall)
-	{
-		std::cout << e << " ";
-	}
-	std::cout << endl;
-
 }
 
 
@@ -195,6 +187,7 @@ void solve(int t)
 
     for (int i = start + 1; i < Q; i++)
     {
+		std::cout << "\ncase = " << t << std::endl;
         int white_spaces = N - get_sum_of_colors_behind(used_colors);
 
 		if (white_spaces > 0)
@@ -222,22 +215,37 @@ void solve(int t)
 					used_colors.erase(used_colors.begin() + j);
 				}
 			}
-			std::cout << "used_colors = ";
-			for (auto e : used_colors)
-				std::cout << e << " ";
-
 			continue;
 		}	
 
     	put_color_in_vector(used_colors, L[i], N);
+	
+		print_vector(used_colors, "used_colors");
     }
 
 
-	int result = 0;
-
+	/*std::cout << "\n\nfinal result: ";
+	
 	for (int i : used_colors)
+	{
 		result++;
+		std::cout << i << " ";
+	}
+	std::cout << std::endl;
+	*/
 
-    std::cout << "Case #" << t << ": " << result << endl;
+    std::cout << "Case #" << t << ": " << used_colors.size() << endl;
+}
 
+
+void print_vector(vector<int> &v, string vector_name)
+{
+	cout << '\n' << vector_name << " = ";
+
+	for (int e : v)
+	{
+		cout << e << " ";
+	}
+
+	cout << '\n';
 }

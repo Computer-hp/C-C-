@@ -12,13 +12,13 @@ void put_color_in_best_position(vector<int> &v, int color_to_add);
 void set_value_to_result_wall(vector<int> &result_wall, vector<int> &tmp_wall);
 int get_sum_of_colors_behind(vector<int> &v);
 void solve(int t);
-void print_vector(vector<int> &v, string vector_name);
+void print_vector(vector<int> &v, string vector_name, int i);
 
 
 int main() 
 {
-    freopen("input.txt", "r", stdin);
-    freopen("output.txt", "w", stdout);
+    freopen("in.txt", "r", stdin);
+    freopen("out.txt", "w", stdout);
 
     int T;
     cin >> T;
@@ -134,7 +134,7 @@ void put_color_in_best_position(vector<int> &v, int color_to_add)
 		tmp_wall.insert(tmp_wall.begin() + start + 1, color_to_add);
 
 		if ((tmp_wall[end] += rest_of_color_to_add) == 0)
-			tmp_wall.erase(tmp_wall.begin() + end);
+			tmp_wall.erase(tmp_wall.begin() + end - 1);
 
 		set_value_to_result_wall(result_wall, tmp_wall);
 	}	
@@ -187,7 +187,8 @@ void solve(int t)
 
     for (int i = start + 1; i < Q; i++)
     {
-		std::cout << "\ncase = " << t << std::endl;
+		std::cout << "\ncolor_to_add = " << L[i] << std::endl;
+
         int white_spaces = N - get_sum_of_colors_behind(used_colors);
 
 		if (white_spaces > 0)
@@ -220,7 +221,7 @@ void solve(int t)
 
     	put_color_in_vector(used_colors, L[i], N);
 	
-		print_vector(used_colors, "used_colors");
+		print_vector(used_colors, "used_colors", i);
     }
 
 
@@ -238,9 +239,9 @@ void solve(int t)
 }
 
 
-void print_vector(vector<int> &v, string vector_name)
+void print_vector(vector<int> &v, string vector_name, int i)
 {
-	cout << '\n' << vector_name << " = ";
+	cout << '\n' << vector_name << " " << i << " = ";
 
 	for (int e : v)
 	{

@@ -1,15 +1,5 @@
 Case #1: 1
-
-case = 2
-
-used_colors = 7 3 
-
-case = 2
-
-used_colors = 3 7 
-
-case = 2
-
-used_colors = 3 4 3 
-
-case = 2
+Case #2: 3
+Case #3: 3
+Case #4: 3
+Case #5: 2

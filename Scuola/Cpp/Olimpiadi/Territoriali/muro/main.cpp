@@ -17,8 +17,8 @@ void print_vector(vector<int> &v, string vector_name, int i);
 
 int main() 
 {
-    freopen("in.txt", "r", stdin);
-    freopen("out.txt", "w", stdout);
+    freopen("input.txt", "r", stdin);
+    freopen("output.txt", "w", stdout);
 
     int T;
     cin >> T;
@@ -82,6 +82,8 @@ void put_color_in_best_position(vector<int> &v, int color_to_add)
 	vector<int> result_wall;
 	result_wall.insert(result_wall.end(), v.begin(), v.end());
 
+	if (color_to_add == 62)
+		cout << "";
 
 	while (end < v.size())
 	{
@@ -99,7 +101,7 @@ void put_color_in_best_position(vector<int> &v, int color_to_add)
 
 		if (sum_of_colors == color_to_add)
 		{
-			if (i < tmp_wall.size() - 1)
+			if (i < tmp_wall.size())
 				sum_of_colors += tmp_wall[i++];
 			else
 			{
@@ -126,15 +128,17 @@ void put_color_in_best_position(vector<int> &v, int color_to_add)
 		}
 
 		// sum_of_colors is necessarily > color_to_add
-		int length_between_start_end = sum_of_colors - start - end;
+		int length_between_start_end = (end - start == 2) ? 0 : sum_of_colors - tmp_wall[start] - tmp_wall[end - 1];
 		int rest_of_color_to_add = (tmp_wall[start] - 1 + length_between_start_end) - color_to_add;
 		tmp_wall[start] = 1;
 
-		tmp_wall.erase(tmp_wall.begin() + start + 1, tmp_wall.begin() + end);
+		if (length_between_start_end != 0)
+			tmp_wall.erase(tmp_wall.begin() + start + 1, tmp_wall.begin() + end);
+
 		tmp_wall.insert(tmp_wall.begin() + start + 1, color_to_add);
 
-		if ((tmp_wall[end] += rest_of_color_to_add) == 0)
-			tmp_wall.erase(tmp_wall.begin() + end - 1);
+		if ((tmp_wall[start + 2] += rest_of_color_to_add) == 0)
+			tmp_wall.erase(tmp_wall.begin() + start + 2);
 
 		set_value_to_result_wall(result_wall, tmp_wall);
 	}	
@@ -187,7 +191,7 @@ void solve(int t)
 
     for (int i = start + 1; i < Q; i++)
     {
-		std::cout << "\ncolor_to_add = " << L[i] << std::endl;
+		// std::cout << "\ncolor_to_add = " << L[i] << std::endl;
 
         int white_spaces = N - get_sum_of_colors_behind(used_colors);
 
@@ -221,7 +225,7 @@ void solve(int t)
 
     	put_color_in_vector(used_colors, L[i], N);
 	
-		print_vector(used_colors, "used_colors", i);
+		//print_vector(used_colors, "used_colors", i);
     }
 
 

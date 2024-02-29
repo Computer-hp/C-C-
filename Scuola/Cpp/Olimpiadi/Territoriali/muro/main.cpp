@@ -112,7 +112,6 @@ void put_color_in_best_position(vector<int> &v, int color_to_add)
 				continue;
 			}	
 		}	
-		
 
 		end = i; // after the last color used
 
@@ -128,7 +127,7 @@ void put_color_in_best_position(vector<int> &v, int color_to_add)
 		}
 
 		// sum_of_colors is necessarily > color_to_add
-		int length_between_start_end = (end - start == 2) ? 0 : sum_of_colors - tmp_wall[start] - tmp_wall[end - 1];
+		int length_between_start_end = sum_of_colors - tmp_wall[start] - tmp_wall[end - 1];
 		int rest_of_color_to_add = (tmp_wall[start] - 1 + length_between_start_end) - color_to_add;
 		tmp_wall[start] = 1;
 

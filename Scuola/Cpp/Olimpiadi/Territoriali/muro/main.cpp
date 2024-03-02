@@ -80,10 +80,6 @@ void put_color_in_best_position(vector<int> &v, int color_to_add)
 
 	vector<int> tmp_wall;	
 	vector<int> result_wall;
-	result_wall.insert(result_wall.end(), v.begin(), v.end());
-
-	if (color_to_add == 62)
-		cout << "";
 
 	while (end < v.size())
 	{
@@ -106,8 +102,8 @@ void put_color_in_best_position(vector<int> &v, int color_to_add)
 			else
 			{
 				end = i;
-				tmp_wall.erase(tmp_wall.begin() + start, tmp_wall.begin() + end);
-				tmp_wall.insert(tmp_wall.begin() + start + 1, color_to_add);
+				tmp_wall.insert(tmp_wall.begin() + start, color_to_add);
+				tmp_wall.erase(tmp_wall.begin() + start + 1, tmp_wall.begin() + end);
 				set_value_to_result_wall(result_wall, tmp_wall);
 				continue;
 			}	
@@ -132,7 +128,7 @@ void put_color_in_best_position(vector<int> &v, int color_to_add)
 		tmp_wall[start] = 1;
 
 		if (length_between_start_end != 0)
-			tmp_wall.erase(tmp_wall.begin() + start + 1, tmp_wall.begin() + end);
+			tmp_wall.erase(tmp_wall.begin() + start + 1, tmp_wall.begin() + end - 1);
 
 		tmp_wall.insert(tmp_wall.begin() + start + 1, color_to_add);
 
@@ -149,6 +145,12 @@ void put_color_in_best_position(vector<int> &v, int color_to_add)
 
 void set_value_to_result_wall(vector<int> &result_wall, vector<int> &tmp_wall)
 {
+	if (result_wall.size() == 0)
+	{
+		result_wall.insert(result_wall.end(), tmp_wall.begin(), tmp_wall.end());
+		return;
+	}
+	
 	if (result_wall.size() <= tmp_wall.size())
 	{
 		result_wall.clear();
@@ -190,8 +192,6 @@ void solve(int t)
 
     for (int i = start + 1; i < Q; i++)
     {
-		// std::cout << "\ncolor_to_add = " << L[i] << std::endl;
-
         int white_spaces = N - get_sum_of_colors_behind(used_colors);
 
 		if (white_spaces > 0)
@@ -227,18 +227,7 @@ void solve(int t)
 		//print_vector(used_colors, "used_colors", i);
     }
 
-
-	/*std::cout << "\n\nfinal result: ";
-	
-	for (int i : used_colors)
-	{
-		result++;
-		std::cout << i << " ";
-	}
-	std::cout << std::endl;
-	*/
-
-    std::cout << "Case #" << t << ": " << used_colors.size() << endl;
+    cout << "Case #" << t << ": " << used_colors.size() << endl;
 }
 
 

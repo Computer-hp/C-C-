@@ -33,7 +33,13 @@ int main()
     initialize_files();
 
     std::thread read(read_file);
+
+    std::this_thread::sleep_for(std::chrono::seconds(2));
+
     std::thread elaborate(elaborate_file);
+
+    std::this_thread::sleep_for(std::chrono::seconds(2));
+
     std::thread write(write_file);
 
     while (active_threads > 0);
@@ -54,27 +60,27 @@ void read_file()
     while (counter < in_file_size)
     {
         char ch;
-        std::array<char, N_CHAR> char_array{};
+        std::array<char, N_CHAR> char_array;
 
         std::this_thread::sleep_for(std::chrono::milliseconds(400));
 
-	{
-	    std::lock_guard<std::mutex> lck(critical);
+        {
+            std::lock_guard<std::mutex> lck(critical);
 
-	    if (in_queue_is_occupied)
-		wait_for_in_queue.wait(critical);
+            if (in_queue_is_occupied)
+                wait_for_in_queue.wait_for(critical, std::chrono::milliseconds(300));
 
-	    in_queue_is_occupied = true;
+            in_queue_is_occupied = true;
 
-	    std::ifstream in_file(IN_FILE);
+            std::ifstream in_file(IN_FILE);
 
-	    if (!in_file)
-	    {
-		std::cout << "\nError occured while opening " << IN_FILE << std::endl;
-		break;
-	    }
+            if (!in_file)
+            {
+                std::cout << "\nError occured while opening " << IN_FILE << std::endl;
+                break;
+            }
 
-	    in_file.seekg(current_position);
+            in_file.seekg(current_position);
 
             for (int i = 0; i < N_CHAR && counter < in_file_size; i++)
             {
@@ -87,20 +93,20 @@ void read_file()
                 counter++;
             }
 
-	    in_words.push(char_array);
+            in_words.push(char_array);
 
             std::cout << "\n\tin_words.back() = " << in_words.back().data() << '\n';
 
             std::cout << "\n\t\tin_current_position = " << counter << '\n';
-	    
-	    current_position = in_file.tellg();
+        
+            current_position = in_file.tellg();
 
             in_file.close();
 
-	    in_queue_is_occupied = false;
-	}
+            in_queue_is_occupied = false;
+        }
 		
-	wait_for_in_queue.notify_one();
+	    wait_for_in_queue.notify_one();
     }
 
     in_queue_is_occupied = false;
@@ -125,9 +131,16 @@ void elaborate_file()
             std::lock_guard<std::mutex> lck(critical);
 
             if (in_queue_is_occupied)
-                wait_for_in_queue.wait(critical);
+                wait_for_in_queue.wait_for(critical, std::chrono::milliseconds(250));
 
             in_queue_is_occupied = true;
+
+            if (in_words.front().empty())
+            {
+                in_queue_is_occupied = false;
+                wait_for_in_queue.notify_one();
+                continue;
+            }
 
             std::copy(in_words.front().begin(), in_words.front().end(), str);
 
@@ -138,8 +151,10 @@ void elaborate_file()
 
         wait_for_in_queue.notify_one();
 
-	std::cout << "\nelaborate_str = " << str << '\n';
-        counter += array_size(str);
+    	std::cout << "\nelaborate_str = " << str << '\n';
+        
+        counter += array_size(str); 
+
         DES_encode(str, 0x0F);
     }
 
@@ -163,9 +178,16 @@ void write_file()
             std::lock_guard<std::mutex> lck(critical);
             
             if (out_queue_is_occupied)
-                wait_for_out_queue.wait(critical);
+                wait_for_out_queue.wait_for(critical, std::chrono::milliseconds(300));
 
             out_queue_is_occupied = true;
+
+            if (out_words.front().empty())
+            {
+                out_queue_is_occupied = false;
+                wait_for_out_queue.notify_one();
+                continue;
+            }
 
             std::ofstream out_file(OUT_FILE, std::ios::app);
 
@@ -178,7 +200,7 @@ void write_file()
             out_file << out_words.front().data() << '\n';
             out_file.close();
 
-	    std::cout << "\nout_words.front().data() = " << out_words.front().data() << '\n';
+    	    std::cout << "\nout_words.front().data() = " << out_words.front().data() << '\n';
             counter = array_size(&out_words.front()[0]);
 
             out_words.pop();
@@ -200,19 +222,19 @@ void write_file()
 
 void DES_encode(char *input, const char key)
 {
-    std::array<char, N_CHAR> char_array{};
+    std::array<char, N_CHAR> char_array;
 
     DES_critical.lock();
 
         if (out_queue_is_occupied)
-            wait_for_out_queue.wait(critical);
+            wait_for_out_queue.wait_for(critical, std::chrono::milliseconds(450));
 
         out_queue_is_occupied = true;
 
-        while (*input)
+        while (*input != '\0')
             *(input++) ^= key;
 
-        std::copy(input, input + std::strlen(input) + 1, char_array.begin());
+        std::copy(input, input + N_CHAR, char_array.begin());
         out_words.push(char_array);
 
     	out_queue_is_occupied = false;
@@ -225,22 +247,22 @@ void DES_encode(char *input, const char key)
 
 void DES_decode(char *input, const char key)
 {
-    std::array<char, N_CHAR> char_array{};
+    std::array<char, N_CHAR> char_array;
     
     DES_critical.lock();
         
         if (out_queue_is_occupied)
-            wait_for_out_queue.wait(critical);
+            wait_for_out_queue.wait_for(critical, std::chrono::milliseconds(450));
 
         out_queue_is_occupied = true;
 
         while (*input)
             *(input++) ^= key;
 
-        std::copy(input, input + std::strlen(input) + 1, char_array.begin());
+        std::copy(input, input + N_CHAR, char_array.begin());
         out_words.push(char_array);
 	
-	out_queue_is_occupied = false;
+    	out_queue_is_occupied = false;
 
     DES_critical.unlock();
 

@@ -17,7 +17,7 @@ bool input_file_is_empty();
 int array_size(const char *str);
 
 std::mutex critical, DES_critical;
-std::condition_variable_any wait_for_in_queue, wait_for_out_queue; 
+std::condition_variable wait_for_in_queue, wait_for_out_queue; 
 std::queue<std::array<char, N_CHAR>> in_words, out_words;
 
 bool in_queue_is_occupied = false;
@@ -65,10 +65,13 @@ void read_file()
         std::this_thread::sleep_for(std::chrono::milliseconds(400));
 
         {
-            std::lock_guard<std::mutex> lck(critical);
+            std::unique_lock<std::mutex> lock(critical);
 
-            if (in_queue_is_occupied)
-                wait_for_in_queue.wait_for(critical, std::chrono::milliseconds(300));
+            if (wait_for_out_queue.wait_for
+                    (lock, std::chrono::milliseconds(300), []{ return !in_queue_is_occupied; })
+                )
+                continue;
+
 
             in_queue_is_occupied = true;
 
@@ -128,10 +131,12 @@ void elaborate_file()
         char str[N_CHAR + 1];
 
         {
-            std::lock_guard<std::mutex> lck(critical);
+            std::unique_lock<std::mutex> lock(critical);
 
-            if (in_queue_is_occupied)
-                wait_for_in_queue.wait_for(critical, std::chrono::milliseconds(250));
+            if (!wait_for_out_queue.wait_for
+                    (lock, std::chrono::milliseconds(450), []{ return !in_queue_is_occupied; })
+                )
+                continue;
 
             in_queue_is_occupied = true;
 
@@ -175,10 +180,12 @@ void write_file()
         std::this_thread::sleep_for(std::chrono::milliseconds(800));
 
         {
-            std::lock_guard<std::mutex> lck(critical);
+            std::unique_lock<std::mutex> lock(critical);
             
-            if (out_queue_is_occupied)
-                wait_for_out_queue.wait_for(critical, std::chrono::milliseconds(300));
+            if (!wait_for_out_queue.wait_for
+                    (lock, std::chrono::milliseconds(300), []{ return !out_queue_is_occupied; })
+                )
+                continue;
 
             out_queue_is_occupied = true;
 
@@ -198,6 +205,7 @@ void write_file()
             }
 
             out_file << out_words.front().data() << '\n';
+            out_file.flush();
             out_file.close();
 
     	    std::cout << "\nout_words.front().data() = " << out_words.front().data() << '\n';
@@ -224,10 +232,14 @@ void DES_encode(char *input, const char key)
 {
     std::array<char, N_CHAR> char_array;
 
-    DES_critical.lock();
+    
+    {
+        std::unique_lock<std::mutex> lock(DES_critical);
 
-        if (out_queue_is_occupied)
-            wait_for_out_queue.wait_for(critical, std::chrono::milliseconds(450));
+        if (!wait_for_out_queue.wait_for
+                (lock, std::chrono::milliseconds(450), []{ return !out_queue_is_occupied; })
+            )
+            return;
 
         out_queue_is_occupied = true;
 
@@ -239,7 +251,7 @@ void DES_encode(char *input, const char key)
 
     	out_queue_is_occupied = false;
 
-    DES_critical.unlock();
+    }
 
     wait_for_out_queue.notify_one();
 }
@@ -249,10 +261,13 @@ void DES_decode(char *input, const char key)
 {
     std::array<char, N_CHAR> char_array;
     
-    DES_critical.lock();
-        
-        if (out_queue_is_occupied)
-            wait_for_out_queue.wait_for(critical, std::chrono::milliseconds(450));
+    { 
+        std::unique_lock<std::mutex> lock(DES_critical);
+
+        if (!wait_for_out_queue.wait_for
+                (lock, std::chrono::milliseconds(450), []{ return !out_queue_is_occupied; })
+            )
+            return;
 
         out_queue_is_occupied = true;
 
@@ -263,8 +278,7 @@ void DES_decode(char *input, const char key)
         out_words.push(char_array);
 	
     	out_queue_is_occupied = false;
-
-    DES_critical.unlock();
+    }
 
     wait_for_out_queue.notify_one();
 }

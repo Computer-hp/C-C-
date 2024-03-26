@@ -36,7 +36,10 @@ public:
     
     Spillone() { }
 
-    void setOrdine(const ordine* o);
+    void setOrdine(ordine *o)
+    {
+        ordini.push(*o);
+    }
 
     ordine getOrdine()
     {
@@ -53,12 +56,6 @@ public:
         ordini.pop();
     }
 };
-
-
-void Spillone::setOrdine(const ordine* o)
-{
-    ordini.push(*o);
-}
 
 
 

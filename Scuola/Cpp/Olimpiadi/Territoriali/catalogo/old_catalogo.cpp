@@ -1,25 +1,26 @@
-#include <iostream>
+/*#include <iostream>
 #include <fstream>
-#include "bst.h"
+#include <vector>
+#include <algorithm>
 
 
 using namespace std;
 
 
-void add(long long int id);
-void remove(long long int id);
-int count(long long int id);
+void aggiungi(long long int id);
+void togli(long long int id);
+int conta(long long int id);
 
 
-BST bst;
+vector<vector<long long int>> v;
 
 
 int main() 
 {
     ios::sync_with_stdio(false);
 
-    ifstream cin("input0.txt");
-    ofstream cout("output0.txt");
+    ifstream cin("input.txt");
+    ofstream cout("output.txt");
 
     int Q;
     cin >> Q;
@@ -31,28 +32,21 @@ int main()
         cin >> t >> id;
 
         if (t == 'a') 
-            add(id);
+            aggiungi(id);
             
         else if (t == 't') 
-            remove(id);
+            togli(id);
 
         else if (t == 'c') 
-            cout << count(id) << '\n';
+            cout << conta(id) << '\n';
     }
 
     return 0;
 }
 
 
-void add(long long int id)
+void aggiungi(long long int id)
 {
-    // if (bst.search(id)) return;  in teoria bisogna mettere anche gli stessi numeri
-
-    bst.insert(id);
-
-
-    /*
-
     bool found = false;
 
     for (auto &v2 : v)
@@ -76,30 +70,23 @@ void add(long long int id)
     if (it != v.end())  v.insert(it, new_v2);
 
     else                v.push_back(new_v2);
-
-    */
 }
 
 
-void remove(long long int id)
+void togli(long long int id)
 {
-    bst.delete_node(id);
-
-    /*auto it = find_if(v.begin(), v.end(), [id](const vector<long long int> &v2)
+    auto it = find_if(v.begin(), v.end(), [id](const vector<long long int> &v2)
     {
         return v2[0] == id;
     });
 
     if (it != v.end())
-        it -> pop_back();*/
+        it -> pop_back();
 }
 
 
-int count(long long int id)
+int conta(long long int id)
 {
-    return bst.get_count(id);
-
-    /*
     int counter = 0;
 
     for (const auto &v2 : v)
@@ -112,5 +99,5 @@ int count(long long int id)
     }
 
     return counter;
-    */
 }
+*/

@@ -1,0 +1,203 @@
+#include <stdio.h>
+#include <stdlib.h>
+#include <assert.h>
+
+
+using namespace std;
+
+
+class Node
+{
+public:
+	long long int key, count;
+	Node *left, *right;
+
+	Node(long long int key);
+};
+
+
+Node::Node(long long int key)
+{
+	this->key = key;
+	count = 1;
+	left = nullptr;
+	right = nullptr;
+}
+
+// ######################################################
+
+class BST
+{
+public:
+	BST();
+	void insert(long long int key);
+	bool search(long long int key);
+	void delete_node(long long int key);
+	long long int get_count(long long int key);
+
+private:
+	Node *root;
+
+	Node* insert(Node *node, long long int key);
+	Node* search(Node *node, long long int key);
+	Node* min_value_node(Node *node);
+	Node* delete_node(Node *root, long long int key);
+};
+
+
+BST::BST()
+{
+	root = nullptr;
+}
+
+
+void BST::insert(long long int key)
+{
+	root = insert(root, key);
+}
+
+Node* BST::insert(Node *node, long long int key)
+{
+	if (node == nullptr) return new Node(key);
+
+	if (key < node->key)  node->left = insert(node->left, key);
+
+	else if (key > node->key)  node->right = insert(node->right, key);
+
+	else node->count++;
+
+	return node;
+}
+
+
+bool BST::search(long long int key)
+{
+	return (search(root, key) != nullptr);
+}
+
+Node* BST::search(Node *node, long long int key)
+{
+	if (node == nullptr || node->key == key) return node;
+
+	if (key < node->key) return search(node->left, key);
+
+	return search(node->right, key);
+}
+
+
+void BST::delete_node(long long int key)
+{
+	root = delete_node(root, key);
+}
+
+Node* BST::delete_node(Node *root, long long int key)
+{
+	if (root == nullptr) return root;
+
+	if (key < root->key) root->left = delete_node(root->left, key);
+	
+	else if (key > root->key) root->right = delete_node(root->right, key);
+
+	else
+	{
+		if (root->count > 1)
+		{
+			root->count--;
+			return root;
+		}
+
+		if (root->left == nullptr)
+		{
+			Node *temp = root->right;
+			delete root;
+			return temp;
+		}
+
+		if (root->right == nullptr)
+		{
+			Node *temp = root->left;
+			delete root;
+			return temp;
+		}
+
+		Node *temp = min_value_node(root->right);
+		root->key = temp->key;
+		root->count = temp->count;
+		root->right = delete_node(root->right, temp->key);
+	}
+
+	return root;
+}
+
+Node* BST::min_value_node(Node *node)
+{
+	Node *current = node;
+	
+	while (current && current->left != nullptr)
+		current = current->left;
+
+	return current;
+}
+
+
+long long int BST::get_count(long long int key)
+{
+	Node *node = search(root, key);
+
+	if (node != nullptr) return node->count;
+
+	return 0;
+}
+
+
+// ##########################################
+
+void aggiungi(long long id);
+void togli(long long id);
+int conta(long long id);
+
+
+BST bst;
+static int Q, i;
+static long long int id;
+static char t;
+
+
+int main() {
+    freopen("input.txt", "r", stdin);
+    freopen("output.txt", "w", stdout);
+
+    assert(1 == scanf("%d", &Q));
+
+    for(i = 0; i < Q; i++){
+        assert(2 == scanf(" %c %lld", &t, &id));
+
+        if(t == 'a') {
+            aggiungi(id);
+        } else if (t == 't') {
+            togli(id);
+        } else if (t == 'c') {
+            printf("%d\n", conta(id));
+        }
+    }
+
+    return 0;
+}
+
+
+void aggiungi(long long int id)
+{
+    bst.insert(id);
+}
+
+
+void togli(long long int id)
+{
+    bst.delete_node(id);
+}
+
+
+int conta(long long int id)
+{
+    return bst.get_count(id);
+}

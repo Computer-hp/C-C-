@@ -5,7 +5,7 @@ CXX = g++
 CXXFLAGS = -I./include -Wall -Wextra -std=c++17
 
 # Sources and headers
-SRC_DIR = ./src
+SRC_DIR = ./catalogue_BST
 SRC_FILES = $(wildcard $(SRC_DIR)/*.cpp)
 OBJ_FILES = $(SRC_FILES:.cpp=.o)
 

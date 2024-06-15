@@ -8,7 +8,7 @@ using namespace std;
 
 void add(long long int id);
 void remove(long long int id);
-long long int count(long long int id);
+int count(long long int id);
 
 
 BST bst;
@@ -18,8 +18,8 @@ int main()
 {
     ios::sync_with_stdio(false);
 
-    ifstream cin("input1.txt");
-    ofstream cout("output1.txt");
+    ifstream cin("ex.txt");
+    ofstream cout("out.txt");
 
     int Q;
     cin >> Q;
@@ -56,7 +56,7 @@ void remove(long long int id)
 }
 
 
-long long int count(long long int id)
+int count(long long int id)
 {
     return bst.get_count(id);
 }

@@ -4,33 +4,35 @@
 
 using namespace std;
 
-class NumberCatalogue {
-private:
-    std::unordered_map<long long int, long long int> catalogue;
 
-public:
-    void add(long long int number) {
-        catalogue[number]++;
+unordered_map<long long int, long long int> catalogue;
+
+
+void add(long long int number) 
+{
+    catalogue[number]++;
+}
+
+void remove(long long int number) 
+{
+    auto it = catalogue.find(number);
+    if (it == catalogue.end())
+    {
+        cout << "\nError occured while removing element from 'catalogue'\n";
+        return;
     }
 
-    void remove(long long int number) {
-        auto it = catalogue.find(number);
-        if (it != catalogue.end()) {
-            if (it->second > 1) {
-                it->second--;
-            } else {
-                catalogue.erase(it);
-            }
-        }
-    }
+    if (it->second > 1) it->second--;
 
-    int count(long long int number) const {
-        auto it = catalogue.find(number);
-        return (it != catalogue.end()) ? it->second : 0;
-    }
-};
+    else catalogue.erase(it);
+}
 
-NumberCatalogue catalogue;
+int count(long long int number) 
+{
+    auto it = catalogue.find(number);
+    return (it != catalogue.end()) ? it->second : 0;
+}
+
 
 static int Q, i;
 static long long int id;
@@ -67,28 +69,23 @@ int main()
             cout << count(id) << '\n';
     }
 
-    cin.close();
-    cout.close();
-
-    bst.print();
-
     return 0;
 }
 
 
 void aggiungi(long long int id)
 {
-    catalogue.add(id);
+    add(id);
 }
 
 
 void togli(long long int id)
 {
-    catalogue.remove(id);
+    remove(id);
 }
 
 
 int conta(long long int id)
 {
-    return catalogue.count(id);
+    return count(id);
 }

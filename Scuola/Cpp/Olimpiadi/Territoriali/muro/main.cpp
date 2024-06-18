@@ -3,8 +3,8 @@
 #include <vector>
 #include <climits>
 
-using namespace std;
 
+using namespace std;
 
 void put_color_in_vector(vector<int> &v, int color_to_add, int wall_length);
 int find_min_color_to_be_decreased(vector<int> &v, int color_to_add);
@@ -17,7 +17,7 @@ void print_vector(vector<int> &v, string vector_name, int i);
 
 int main() 
 {
-    freopen("input.txt", "r", stdin);
+    freopen("muro_input_6.txt", "r", stdin);
     freopen("output.txt", "w", stdout);
 
     int T;
@@ -182,8 +182,7 @@ void solve(int t)
     {
         cin >> L[i];
 
-		if (L[i] == N)
-            start = i;
+		if (L[i] == N) start = i;
     }
 
 
@@ -194,37 +193,47 @@ void solve(int t)
     {
         int white_spaces = N - get_sum_of_colors_behind(used_colors);
 
-		if (white_spaces > 0)
+		if (white_spaces <= 0)
 		{
-			used_colors.push_back(L[i]);
-			
-			if (white_spaces < L[i])
-			{
-				int rest = L[i] - white_spaces;
+			put_color_in_vector(used_colors, L[i], N);
+		//	print_vector(used_colors, "used_colors", i);
 
-				for (int j = used_colors.size() - 2; j >= 0; j--)
-				{
-					used_colors[j] -= rest;
-
-					if (used_colors[j] > 0)
-						break;
-
-					if (used_colors[j] == 0)
-					{
-						used_colors.erase(used_colors.begin() + j);
-						break;
-					}
-
-					rest = -used_colors[j];
-					used_colors.erase(used_colors.begin() + j);
-				}
-			}
 			continue;
-		}	
+		}
 
-    	put_color_in_vector(used_colors, L[i], N);
-	
-		//print_vector(used_colors, "used_colors", i);
+		used_colors.push_back(L[i]);  // *()
+		
+		if (white_spaces >= L[i]) continue;
+
+		int rest = L[i] - white_spaces;
+
+		// white spaces are not enough
+
+		/*
+			Solution (probably):
+
+			insert between each pair of color the new_color instead of *(pushing it back) immediately.
+
+			subtract from left, right or both colors some meters, then count used_colors.size() [ FIND MAX_SIZE ].
+
+
+		*/
+
+		for (int j = used_colors.size() - 2; j >= 0; j--)
+		{
+			used_colors[j] -= rest;
+
+			if (used_colors[j] > 0) break;
+
+			if (used_colors[j] == 0)
+			{
+				used_colors.erase(used_colors.begin() + j);
+				break;
+			}
+
+			rest = -used_colors[j];
+			used_colors.erase(used_colors.begin() + j);
+		}
     }
 
     cout << "Case #" << t << ": " << used_colors.size() << endl;
@@ -236,9 +245,7 @@ void print_vector(vector<int> &v, string vector_name, int i)
 	cout << '\n' << vector_name << " " << i << " = ";
 
 	for (int e : v)
-	{
 		cout << e << " ";
-	}
 
 	cout << '\n';
 }

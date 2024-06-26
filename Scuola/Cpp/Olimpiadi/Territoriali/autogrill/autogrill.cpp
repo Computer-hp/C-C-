@@ -3,8 +3,7 @@
 
 using namespace std;
 
-int my_binary_search(vector<long long> &v, int low, int high, int min_idx, long long p);
-
+int lower_bound(vector<long long> &v, int left, int right, long long p);
 
 vector<long long> auto_stops;
 
@@ -30,38 +29,26 @@ long long chiedi(long long p)
 {
     if (auto_stops.size() == 0) return -1;
 
-    int length = auto_stops.size();
-    int min_idx = my_binary_search(auto_stops, 0, length - 1, length - 1, p);
-    return auto_stops[min_idx];
+    int min_idx = lower_bound(auto_stops, 0, auto_stops.size(), p);
+
+    if (min_idx == 0 || min_idx == auto_stops.size()) return auto_stops[min_idx];
+
+    int left = abs(auto_stops[min_idx - 1] - p);
+    int right = abs(auto_stops[min_idx] - p);
+
+    if (left < right) return min_idx - 1;
+
+    return min_idx;
 }
 
 
-int my_binary_search(vector<long long> &v, int low, int high, int min_idx, long long p)
+int lower_bound(vector<long long> &v, int left, int right, long long p)
 {
-    if (low >= high) return min_idx;
+    if (left >= right) return left;
 
-    int mid = low + (high - low) / 2;
+    int mid = left + (right - left) / 2;
 
-    long long left = abs(v[mid] - p);
-    long long right = abs(v[mid + 1] - p);
+    if (v[mid] < p) return lower_bound(v, mid + 1, right, p);
 
-    if (left == right)
-    {
-        int min_idx_left = my_binary_search(v, low, mid, mid, p);
-        int min_idx_right = my_binary_search(v, mid + 1, high, mid + 1, p);
-
-        if (abs(v[min_idx_left] - p) < abs(v[min_idx_right] - p)) return min_idx_left;
-
-        if (abs(v[min_idx_right] - p) > abs(v[min_idx_left] - p)) return min_idx_right;
-
-        return max(min_idx_left, min_idx_right);
-    }
-
-    if (left < right && left < v[min_idx])
-        return my_binary_search(v, low, mid, mid, p);
-
-    if (right < left && right < v[min_idx])
-        return my_binary_search(v, mid + 1, high, mid + 1, p);
-
-    return min_idx;
+    return lower_bound(v, left, mid, p);
 }

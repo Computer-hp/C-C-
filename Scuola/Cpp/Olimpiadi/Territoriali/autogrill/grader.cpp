@@ -12,16 +12,13 @@ void apri(long long p);
 void chiudi(long long p);
 long long chiedi(long long p);
 
-string in1 = "autogrill.input0.txt";
-string in2 = "autogrill.input1.txt";
-
 
 int main() 
 {
     ios::sync_with_stdio(false);
 
-    ifstream cin(in2);
-    ofstream cout("out.txt");
+    ifstream cin("input.txt");
+    ofstream cout("output.txt");
 
     int Q;
     cin >> Q;

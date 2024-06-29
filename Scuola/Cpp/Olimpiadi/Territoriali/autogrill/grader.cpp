@@ -7,10 +7,6 @@
 
 using namespace std;
 
-void inizia();
-void apri(long long p);
-void chiudi(long long p);
-long long chiedi(long long p);
 
 
 int main() 

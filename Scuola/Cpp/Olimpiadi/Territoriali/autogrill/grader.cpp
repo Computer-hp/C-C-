@@ -13,7 +13,7 @@ int main()
 {
     ios::sync_with_stdio(false);
 
-    ifstream cin("input.txt");
+    ifstream cin("autogrill.input1.txt");
     ofstream cout("output.txt");
 
     int Q;
